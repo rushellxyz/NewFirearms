@@ -1,0 +1,30 @@
+{
+    "fullName": "Box of 5.56",
+    "description": "TODO",
+
+
+    "weight": 0.4,
+    "value": 31,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "woodpanel",
+        "plasticchunk",
+        "plasticchunk",
+    ],
+    "craftHammering": 0,
+    "craftCutting": 1,
+    "craftInt": 12,
+
+    "capacity": 24,
+    "magazineType": [ ],
+    "ammoTypes":
+    [
+        "556round",
+    ],
+
+
+
+}

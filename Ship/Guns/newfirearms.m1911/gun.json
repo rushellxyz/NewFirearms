@@ -1,0 +1,155 @@
+{
+    "fullName": "M1911",
+    "description": "An old, small, magazine-feed 9mm handgun. Would do well in combat. Can only fit m1911 magazines",
+
+
+    "weight": 0.6,
+    "value": 25,
+    "recognition": 10,
+    "milkyCanSell": true,
+
+    "craftable": true,
+    "recipe":
+    [
+        "newfirearms.makeshiftpistol",
+        "scrappanel",
+        "scrappanel",
+        "scrappanel",
+        "scrapcube",
+        "woodcube",
+        "magazinebase",
+        "plasticchunk",
+        "nails",
+        "string",
+        "string",
+        "rope",
+        "rope",
+    ],
+    "craftBiochem": 50,
+    "craftHammering": 3,
+    "craftCutting": 4,
+    "craftInt": 18,
+
+    "feedType": 1,
+
+    "ammoTypes":
+    [
+        {
+            "round": "9mmround",
+            "structureDamage": 81,
+            "animalDamage": 108,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 60,
+                "adrenaline": 30,
+                "skinDamage": 54,
+                "muscleDamage": 36,
+                "bleedAmount": 30,
+                "wearableDamage": 0.72,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.16,
+                "internalBleed": 13.5,
+                "brainDamage": 24,
+                "disfigureChance": 0.54,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3,
+
+            "verticalSpread": 0.0075,
+            "loudness": 2.5,
+            "conditionLoss": 0.002,
+        },
+        {
+            "round": "9mmhollow",
+            "structureDamage": 54,
+            "animalDamage": 135,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 85,
+                "adrenaline": 42.5,
+                "skinDamage": 63,
+                "muscleDamage": 27,
+                "bleedAmount": 30,
+                "wearableDamage": 0.9,
+
+                "shrapnelChance": 1.0,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.08,
+                "internalBleed": 9,
+                "brainDamage": 16,
+                "disfigureChance": 0.36,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3,
+
+            "verticalSpread": 0.015,
+            "loudness": 2.5,
+            "conditionLoss": 0.002,
+        },
+        {
+            "round": "9mmvenomus",
+            "structureDamage": 45,
+            "animalDamage": 135,
+
+            "playerDamage":
+            {
+                "traumaAmount": 5,
+                "pain": 80,
+                "adrenaline": 40,
+                "skinDamage": 54,
+                "muscleDamage": 18,
+                "bleedAmount": 25,
+                "wearableDamage": 0.72,
+                "venomAmount": 9,
+                "shrapnelChance": 0.8,
+                "infectionChance": 1.0,
+                "dislocationChance": 0.2,
+
+                "internalBleed": 9,
+                "brainDamage": 12,
+                "disfigureChance": 0.18,
+            },
+
+            "knockback": 3,
+            "muzzleRise": 2.5,
+
+            "verticalSpread": 0.0225,
+            "loudness": 2.25,
+            "conditionLoss": 0.002,
+        },
+    ],
+    "desiredGasTime": 0.075,
+    "fireModes": [ 0, 2, ],
+    "magazineType": [ "m1911", ],
+    "barrelOffset": 0.5,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
+
+
+
+
+
+
+
+    "fireModesSpritePath": [ "safe", "", "unsafe", ],
+
+    "magazineTexturesPath": { "newfirearms.m1911mag": "blank", },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+
+}

@@ -1,0 +1,12 @@
+{
+    // SP Only
+    "ignoreCourseLock": false, // Set it to true to always unlock course. Default false
+    // SP / MP
+    "maxSliderValue": 4.0, // How far can a gun jam/dmg slider go. Default 4.0
+    "useLegacyGunUi": false, // W.I.P.. Default true
+
+    // MP only, Host only
+    "strictSync": true, // If false, allows some illegal actions from clients, W.I.P.. Default true
+    "gunSyncRate": 1.0, // If you have performence isseuse, try to increase this value. Default 1.0
+    "magSyncRate": 1.0, // If you have performence isseuse, try to increase this value. Default 1.0
+}

@@ -1,0 +1,69 @@
+{
+    "fullName": "Carbine",
+    "description": "TODO",
+
+
+    "weight": 1.5,
+    "value": 45,
+    "recognition": 11,
+
+    "craftable": false,
+
+
+
+
+
+    "feedType": 1,
+    "internalCapacity": 1,
+    "ammoTypes":
+    [
+        {
+            "round": "556round",
+            "structureDamage": 200,
+            "animalDamage": 200,
+            "playerDamage":
+            {
+                "traumaAmount": 11,
+                "pain": 120,
+                "adrenaline": 60,
+                "skinDamage": 72,
+                "muscleDamage": 135,
+                "bleedAmount": 45,
+                "wearableDamage": 1.17,
+
+                "shrapnelChance": 0.9,
+
+
+                "fractureChance": 0.63,
+                "internalBleed": 20,
+                "brainDamage": 40,
+                "disfigureChance": 1.8,
+
+            },
+
+            "knockback": 6,
+            "muzzleRise": 8,
+
+            "verticalSpread": 0.01,
+            "loudness": 7,
+            "conditionLoss": 0.005,
+
+        },
+    ],
+    "desiredGasTime": 0.1,
+    "fireModes": [ 0, 3, ],
+    "magazineType": [ "rifflemagazine", ],
+    "barrelOffset": 1,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+
+
+
+
+
+
+
+
+    "magazineTexturesPath": { "riflemagazine": "riflemag" },
+}

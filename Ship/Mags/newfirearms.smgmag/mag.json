@@ -1,0 +1,32 @@
+{
+    "fullName": "SMG magazine",
+    "description": "An magazine for use in subamchine guns. Can hold up to thirty 9mm rounds",
+
+
+    "weight": 0.5,
+    "value": 30,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "magazinebase",
+        "plasticchunk",
+        "plasticchunk",
+    ],
+    "craftHammering": 1,
+    "craftCutting": 0,
+    "craftInt": 13,
+
+    "capacity": 30,
+    "magazineType": [ "smg", ],
+    "ammoTypes":
+    [
+        "9mmround",
+        "9mmhollow",
+        "9mmvenomus",
+    ],
+
+
+
+}

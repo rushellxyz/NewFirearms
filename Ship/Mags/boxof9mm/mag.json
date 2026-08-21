@@ -1,0 +1,32 @@
+{
+    "fullName": "Box of 9mm",
+    "description": "An box made to hold up to thirty-two 9mm round. Use to remove round",
+
+
+    "weight": 0.4,
+    "value": 30,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "woodpanel",
+        "plasticchunk",
+        "plasticchunk",
+    ],
+    "craftHammering": 0,
+    "craftCutting": 1,
+    "craftInt": 12,
+
+    "capacity": 32,
+    "magazineType": [ ],
+    "ammoTypes":
+    [
+        "9mmround",
+        "9mmhollow",
+        "9mmvenomus",
+    ],
+
+
+
+}

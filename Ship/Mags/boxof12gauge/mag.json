@@ -1,0 +1,32 @@
+{
+    "fullName": "Box of 12gauge",
+    "description": "TODO",
+
+
+    "weight": 0.4,
+    "value": 32,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "woodpanel",
+        "plasticchunk",
+        "plasticchunk",
+    ],
+    "craftHammering": 0,
+    "craftCutting": 1,
+    "craftInt": 12,
+
+    "capacity": 16,
+    "magazineType": [ ],
+    "ammoTypes":
+    [
+        "12gauge",
+        "12gaugebird",
+        "12gaugeslug",
+    ],
+
+
+
+}

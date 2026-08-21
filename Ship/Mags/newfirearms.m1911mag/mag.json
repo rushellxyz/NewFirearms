@@ -1,0 +1,31 @@
+{
+    "fullName": "M1911 magazine",
+    "description": "An handgun magazine. Can hold up to eight 9mm rounds in it",
+
+
+    "weight": 0.25,
+    "value": 8,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "magazinebase",
+        "plasticchunk",
+    ],
+    "craftHammering": 0.5,
+    "craftCutting": 0,
+    "craftInt": 12,
+
+    "capacity": 8,
+    "magazineType": [ "m1911", ],
+    "ammoTypes":
+    [
+        "9mmround",
+        "9mmhollow",
+        "9mmvenomus",
+    ],
+
+
+
+}

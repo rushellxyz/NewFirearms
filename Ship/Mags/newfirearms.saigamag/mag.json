@@ -1,0 +1,32 @@
+{
+    "fullName": "Saiga magazine",
+    "description": "TODO",
+
+
+    "weight": 0.4,
+    "value": 24,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "magazinebase",
+        "plasticchunk",
+        "scrappanel",
+    ],
+    "craftHammering": 1,
+    "craftCutting": 0,
+    "craftInt": 13,
+
+    "capacity": 10,
+    "magazineType": [ "saiga", ],
+    "ammoTypes":
+    [
+        "12gauge",
+        "12gaugebird",
+        "12gaugeslug",
+    ],
+
+
+
+}

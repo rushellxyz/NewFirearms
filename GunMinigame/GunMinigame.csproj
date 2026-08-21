@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GameDirectory Condition="'$(GameDirectory)' == '' and '$(CU_PATH)' != ''">$(GAME_PATH)</GameDirectory>
+    <GameDirectory Condition="'$(GameDirectory)' == '' and Exists('/home/rushell/Documents/CU/CasualtiesUnknown_Data/Managed/Assembly-CSharp.dll')">/home/rushell/Documents/CU/</GameDirectory>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AddImplicitlyTypedReferences>false</AddImplicitlyTypedReferences>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+      <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
+    <Reference Include="mscorlib">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/System.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp" Publicize="true">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>$(GameDirectory)/BepInEx/core/BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(GameDirectory)/BepInEx/core/0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,25 @@
+{
+    "category": "custom",
+    "fullName": "9mm hollow round",
+    "description": "An variation of 9mm round with hollow points, deals more damage against living targets, but not as penetrating. Can be loaded into magazines, or directly into the chamber if the gun's bolt is open.",
+
+
+    "weight": 0.03,
+
+    "recognition": 11,
+
+    "craftable": true,
+    "recipe":
+    [
+        "casing",
+        "casing",
+        "casing",
+        "casing",
+        "casing",
+        "flammablepowder",
+    ],
+    "craftHammering": 1,
+    "craftCutting": 1,
+    "craftInt": 16,
+    "craftAmount": 5,
+}

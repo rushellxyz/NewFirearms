@@ -1,0 +1,31 @@
+{
+    "fullName": "Small magazine",
+    "description": "An handgun magazine. Can hold up to seventeen 9mm rounds in it",
+
+
+    "weight": 0.3,
+    "value": 17,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "magazinebase",
+        "plasticchunk",
+    ],
+    "craftHammering": 1,
+    "craftCutting": 0,
+    "craftInt": 12,
+
+    "capacity": 17,
+    "magazineType": [ "glock17", ],
+    "ammoTypes":
+    [
+        "9mmround",
+        "9mmhollow",
+        "9mmvenomus",
+    ],
+
+
+
+}

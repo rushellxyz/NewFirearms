@@ -1,0 +1,23 @@
+{
+    "category": "custom",
+    "fullName": "12gauge birdshot",
+    "description": "An variation of 12gauge with more pellets and higher spread. Can be loaded into shotguns, or directly into the chamber if the gun's bolt is open.",
+
+
+    "weight": 0.05,
+
+    "recognition": 11,
+
+    "craftable": true,
+    "recipe":
+    [
+        "casing",
+        "casing",
+        "casing",
+        "flammablepowder",
+        "flexiglass",
+    ],
+    "craftHammering": 0.5,
+    "craftInt": 12,
+    "craftAmount": 3,
+}

@@ -1,0 +1,169 @@
+{
+    "fullName": "UZI",
+    "description": "A full-auto 9mm submachine gun. The recoil is rather, unplessant. Can fit small magazines or SMG magazines",
+
+
+    "weight": 1,
+    "value": 35,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "titaniumsheet",
+        "scraptube",
+        "scraptube",
+        "scraptube",
+        "scrappanel",
+        "scrappanel",
+        "scrappanel",
+        "scrappanel",
+        "scrappanel",
+        "scrappanel",
+        "scrapcube",
+        "woodcube",
+        "woodcube",
+        "plasticchunk",
+        "plasticchunk",
+        "magazinebase",
+        "magazinebase",
+        "flexiglass",
+        "nails",
+        "nails",
+        "string",
+        "string",
+        "string",
+        "rope",
+        "rope",
+    ],
+    "craftBiochem": 90,
+    "craftHammering": 5,
+    "craftCutting": 5,
+    "craftInt": 19,
+
+    "feedType": 1,
+
+    "ammoTypes":
+    [
+        {
+            "round": "9mmround",
+            "structureDamage": 81,
+            "animalDamage": 108,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 60,
+                "adrenaline": 30,
+                "skinDamage": 54,
+                "muscleDamage": 36,
+                "bleedAmount": 30,
+                "wearableDamage": 0.72,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.16,
+                "internalBleed": 13.5,
+                "brainDamage": 24,
+                "disfigureChance": 0.54,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 5,
+
+            "verticalSpread": 0.015,
+            "loudness": 2.5,
+            "conditionLoss": 0.0015,
+        },
+        {
+            "round": "9mmhollow",
+            "structureDamage": 54,
+            "animalDamage": 135,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 85,
+                "adrenaline": 42.5,
+                "skinDamage": 63,
+                "muscleDamage": 27,
+                "bleedAmount": 30,
+                "wearableDamage": 0.9,
+
+                "shrapnelChance": 1.0,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.08,
+                "internalBleed": 9,
+                "brainDamage": 16,
+                "disfigureChance": 0.36,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 5,
+
+            "verticalSpread": 0.03,
+            "loudness": 2.5,
+            "conditionLoss": 0.0015,
+        },
+        {
+            "round": "9mmvenomus",
+            "structureDamage": 45,
+            "animalDamage": 135,
+
+            "playerDamage":
+            {
+                "traumaAmount": 5,
+                "pain": 80,
+                "adrenaline": 40,
+                "skinDamage": 54,
+                "muscleDamage": 18,
+                "bleedAmount": 25,
+                "wearableDamage": 0.72,
+                "venomAmount": 9,
+                "shrapnelChance": 0.8,
+                "infectionChance": 1.0,
+                "dislocationChance": 0.2,
+
+                "internalBleed": 9,
+                "brainDamage": 12,
+                "disfigureChance": 0.18,
+            },
+
+            "knockback": 3,
+            "muzzleRise": 4.5,
+
+            "verticalSpread": 0.045,
+            "loudness": 2.25,
+            "conditionLoss": 0.0015,
+        },
+    ],
+    "desiredGasTime": 0.08,
+    "fireModes": [ 0, 3, ],
+    "magazineType": [ "glock17", "smg", ],
+    "barrelOffset": 1,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
+
+
+
+
+
+
+    "unrackSpritePath": "unrack",
+    "rackSpritePath": "rack",
+
+
+    "fireModesSpritePath": [ "safe", "", "", "unsafe", ],
+
+    "magazineTexturesPath": { "smallmagazine": "blank", "newfirearms.smgmag": "smgmag" },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+
+}

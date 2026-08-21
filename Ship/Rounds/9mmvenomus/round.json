@@ -1,0 +1,26 @@
+{
+    "category": "custom",
+    "fullName": "9mm venomus round",
+    "description": "An variation of 9mm round with venomus points, deals toxicosis against living targets, but not as penetrating. Can be loaded into magazines, or directly into the chamber if the gun's bolt is open.",
+
+
+    "weight": 0.03,
+
+    "recognition": 11,
+
+    "craftable": true,
+    "recipe":
+    [
+        "casing",
+        "casing",
+        "casing",
+        "casing",
+        "casing",
+        "venomgland",
+        "flammablepowder",
+    ],
+    "craftHammering": 0.5,
+
+    "craftInt": 15,
+    "craftAmount": 5,
+}

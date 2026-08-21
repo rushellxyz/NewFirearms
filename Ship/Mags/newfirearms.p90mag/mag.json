@@ -1,0 +1,26 @@
+{
+    "fullName": "P90 magazine",
+    "description": "TODO",
+
+
+    "weight": 0.8,
+    "value": 55,
+    "recognition": 11,
+
+    "craftable": false,
+
+
+
+
+    "capacity": 50,
+    "magazineType": [ "p90", ],
+    "ammoTypes":
+    [
+        "9mmround",
+        "9mmhollow",
+        "9mmvenomus",
+    ],
+
+
+
+}

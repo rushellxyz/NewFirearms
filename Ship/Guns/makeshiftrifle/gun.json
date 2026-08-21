@@ -1,0 +1,65 @@
+{
+    "fullName": "Bolt-action rifle",
+    "description": "TODO",
+
+
+    "weight": 2.0,
+    "value": 38,
+    "recognition": 11,
+
+    "craftable": false,
+
+
+
+
+
+    "feedType": 2,
+    "internalCapacity": 10,
+    "ammoTypes":
+    [
+        {
+            "round": "556round",
+            "structureDamage": 250,
+            "animalDamage": 250,
+            "playerDamage":
+            {
+                "traumaAmount": 11,
+                "pain": 120,
+                "adrenaline": 60,
+                "skinDamage": 80,
+                "muscleDamage": 150,
+                "bleedAmount": 45,
+                "wearableDamage": 1.3,
+
+                "shrapnelChance": 0.9,
+
+
+                "fractureChance": 0.7,
+                "internalBleed": 25,
+                "brainDamage": 50,
+                "disfigureChance": 2.0,
+
+            },
+
+            "knockback": 6,
+            "muzzleRise": 1,
+
+            "verticalSpread": 0,
+            "loudness": 5.5,
+            "conditionLoss": 0.0025,
+
+        },
+    ],
+
+    "fireModes": [ 0, 1, ],
+    "magazineType": [  ],
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+
+
+
+
+    "magazineTexturesPath": { },
+    //"attachmentTexturesPath: { },
+}

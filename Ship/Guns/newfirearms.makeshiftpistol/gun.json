@@ -1,0 +1,149 @@
+{
+    "fullName": "Makeshift pistol",
+    "description": "A crude basic handgun, holds two 9mm rounds in chambers. Doesn't have safety. Won't last for a long. Consider switching to more capacble firearms in case of combat",
+
+
+    "weight": 0.45,
+    "value": 13,
+    "recognition": 11,
+    "milkyCanSell": true,
+
+    "craftable": true,
+    "recipe":
+    [
+        "scraptube",
+        "scraptube",
+        "woodpanel",
+        "woodpanel",
+        "plasticchunk",
+        "nails",
+        "string",
+        "rope",
+    ],
+
+    "craftHammering": 1,
+    "craftCutting": 1,
+    "craftInt": 12,
+
+    "feedType": 3,
+    "internalCapacity": 2,
+    "ammoTypes":
+    [
+        {
+            "round": "9mmround",
+            "structureDamage": 72,
+            "animalDamage": 97,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 60,
+                "adrenaline": 30,
+                "skinDamage": 45,
+                "muscleDamage": 27,
+                "bleedAmount": 30,
+                "wearableDamage": 0.63,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.12,
+                "internalBleed": 12,
+                "brainDamage": 18,
+                "disfigureChance": 0.48,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3,
+
+            "verticalSpread": 0.03,
+            "loudness": 3,
+            "conditionLoss": 0.01,
+        },
+        {
+            "round": "9mmhollow",
+            "structureDamage": 54,
+            "animalDamage": 135,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 85,
+                "adrenaline": 42.5,
+                "skinDamage": 54,
+                "muscleDamage": 18,
+                "bleedAmount": 30,
+                "wearableDamage": 0.81,
+
+                "shrapnelChance": 1.0,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.06,
+                "internalBleed": 7.5,
+                "brainDamage": 12,
+                "disfigureChance": 0.32,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3,
+
+            "verticalSpread": 0.06,
+            "loudness": 3,
+            "conditionLoss": 0.01,
+        },
+        {
+            "round": "9mmvenomus",
+            "structureDamage": 45,
+            "animalDamage": 135,
+
+            "playerDamage":
+            {
+                "traumaAmount": 5,
+                "pain": 80,
+                "adrenaline": 40,
+                "skinDamage": 45,
+                "muscleDamage": 16,
+                "bleedAmount": 25,
+                "wearableDamage": 0.63,
+                "venomAmount": 9,
+                "shrapnelChance": 0.8,
+                "infectionChance": 1.0,
+                "dislocationChance": 0.2,
+
+                "internalBleed": 8,
+                "brainDamage": 9,
+                "disfigureChance": 0.16,
+            },
+
+            "knockback": 3,
+            "muzzleRise": 2.5,
+
+            "verticalSpread": 0.09,
+            "loudness": 2.75,
+            "conditionLoss": 0.01,
+        },
+    ],
+    "desiredGasTime": 0.0,
+    "fireModes": [ 2, ],
+
+    "barrelOffset": 0.5,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
+
+
+
+
+    "rackSpritePath": "rack",
+    "unrackSpritePath": "unrack",
+    "removeMagSpritePath": "removeMag",
+    "fireModesSpritePath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletEmpty", "COPY__Resources/bulletEmpty", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+
+
+}

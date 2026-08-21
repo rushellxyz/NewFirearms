@@ -1,0 +1,30 @@
+{
+    "fullName": "Rifle magazine",
+    "description": "TODO",
+
+
+    "weight": 0.5,
+    "value": 32,
+    "recognition": 10,
+
+    "craftable": true,
+    "recipe":
+    [
+        "magazinebase",
+        "scrappanel",
+        "scrappanel",
+    ],
+    "craftHammering": 1,
+    "craftCutting": 0,
+    "craftInt": 13,
+
+    "capacity": 25,
+    "magazineType": [ "rifflemagazine", ],
+    "ammoTypes":
+    [
+        "556round",
+    ],
+
+
+
+}

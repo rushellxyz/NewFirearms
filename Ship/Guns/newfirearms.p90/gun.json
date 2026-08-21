@@ -1,0 +1,140 @@
+{
+    "fullName": "P90",
+    "description": "A 9mm bullpup submachine gun, uses specialized P90 magazines.",
+
+
+    "weight": 1.25,
+    "value": 50,
+    "recognition": 11,
+
+    "craftable": false,
+
+
+
+
+
+    "feedType": 1,
+
+    "ammoTypes":
+    [
+        {
+            "round": "9mmround",
+            "structureDamage": 90,
+            "animalDamage": 120,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 60,
+                "adrenaline": 60,
+                "skinDamage": 60,
+                "muscleDamage": 40,
+                "bleedAmount": 30,
+                "wearableDamage": 0.8,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.2,
+                "internalBleed": 15,
+                "brainDamage": 30,
+                "disfigureChance": 0.3,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3.5,
+
+            "verticalSpread": 0.005,
+            "loudness": 2,
+            "conditionLoss": 0.001,
+        },
+        {
+            "round": "9mmhollow",
+            "structureDamage": 60,
+            "animalDamage": 150,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 85,
+                "adrenaline": 42.5,
+                "skinDamage": 70,
+                "muscleDamage": 30,
+                "bleedAmount": 30,
+                "wearableDamage": 1.0,
+
+                "shrapnelChance": 1.0,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.1,
+                "internalBleed": 10,
+                "brainDamage": 20,
+                "disfigureChance": 0.2,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3.5,
+
+            "verticalSpread": 0.01,
+            "loudness": 2,
+            "conditionLoss": 0.001,
+        },
+        {
+            "round": "9mmvenomus",
+            "structureDamage": 50,
+            "animalDamage": 150,
+
+            "playerDamage":
+            {
+                "traumaAmount": 5,
+                "pain": 80,
+                "adrenaline": 40,
+                "skinDamage": 60,
+                "muscleDamage": 20,
+                "bleedAmount": 25,
+                "wearableDamage": 0.8,
+                "venomAmount": 9,
+                "shrapnelChance": 0.8,
+                "infectionChance": 1.0,
+                "dislocationChance": 0.2,
+
+                "internalBleed": 10,
+                "brainDamage": 15,
+                "disfigureChance": 0.1,
+            },
+
+            "knockback": 3,
+            "muzzleRise": 3,
+
+            "verticalSpread": 0.015,
+            "loudness": 1.8,
+            "conditionLoss": 0.001,
+        },
+    ],
+    "desiredGasTime": 0.1,
+    "fireModes": [ 0, 3, ],
+    "magazineType": [ "p90", ],
+    "barrelOffset": 0,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "normal",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
+
+
+
+
+
+
+    "unrackSpritePath": "unrack",
+    "rackSpritePath": "rack",
+
+
+
+    "magazineTexturesPath": { "newfirearms.p90mag": "p90mag", },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+
+}

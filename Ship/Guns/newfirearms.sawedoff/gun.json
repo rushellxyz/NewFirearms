@@ -1,0 +1,159 @@
+{
+    "fullName": "Sawed off",
+    "description": "An level-action shotgun with cutoff barrels, only holds 2 rounds. Can be loaded with any 12-gauge round",
+
+
+    "weight": 1,
+    "value": 28,
+    "recognition": 11,
+
+    "craftable": true,
+    "recipe":
+    [
+        "scrappanel",
+        "scrappanel",
+        "scrapcube",
+        "nails",
+        "scraptube",
+        "scraptube",
+        "magazinebase",
+        "string",
+        "string",
+        "rope",
+    ],
+    "craftBiochem": 10,
+    "craftHammering": 1,
+    "craftCutting": 1,
+    "craftInt": 13,
+
+    "feedType": 3,
+    "internalCapacity": 2,
+    "ammoTypes":
+    [
+        {
+            "round": "12gauge",
+            "structureDamage": 40,
+            "animalDamage": 40,
+            "playerDamage":
+            {
+                "traumaAmount": 3,
+                "pain": 30,
+                "adrenaline": 15,
+                "skinDamage": 10,
+                "muscleDamage": 35,
+                "bleedAmount": 10,
+                "wearableDamage": 0.15,
+
+                "shrapnelChance": 0.3,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.15,
+                "internalBleed": 8,
+                "brainDamage": 7,
+                "disfigureChance": 0.4,
+
+            },
+
+            "knockback": 12,
+            "muzzleRise": 8,
+
+            "pellets": 8,
+            "verticalSpread": 0.35,
+            "loudness": 4,
+            "conditionLoss": 0.001,
+
+        },
+        {
+            "round": "12gaugebird",
+            "structureDamage": 10.5,
+            "animalDamage": 10.5,
+            "playerMultiplier": 0.09,
+            "playerDamage":
+            {
+                "traumaAmount": 0.75,
+                "pain": 7,
+                "adrenaline": 3.5,
+                "skinDamage": 2,
+                "muscleDamage": 7,
+                "bleedAmount": 2,
+                "wearableDamage": 0.025,
+
+                "shrapnelChance": 0.1,
+
+                "dislocationChance": 0.04,
+                "fractureChance": 0.03,
+                "internalBleed": 1.6,
+                "brainDamage": 1.5,
+                "disfigureChance": 0.06,
+
+            },
+
+            "knockback": 12,
+            "muzzleRise": 8,
+
+            "pellets": 32,
+            "verticalSpread": 0.45,
+            "loudness": 4,
+            "conditionLoss": 0.001,
+
+        },
+        {
+            "round": "12gaugeslug",
+            "structureDamage": 375,
+            "animalDamage": 375,
+            "playerDamage":
+            {
+                "traumaAmount": 18,
+                "pain": 180,
+                "adrenaline": 90,
+                "skinDamage": 80,
+                "muscleDamage": 200,
+                "bleedAmount": 60,
+                "wearableDamage": 1.0,
+
+                "shrapnelChance": 1.0,
+
+
+                "fractureChance": 0.6,
+                "internalBleed": 30,
+                "brainDamage": 50,
+                "disfigureChance": 1.6,
+
+            },
+
+            "knockback": 12,
+            "muzzleRise": 8,
+
+            "pellets": 1,
+            "verticalSpread": 0.02,
+            "loudness": 4,
+            "conditionLoss": 0.001,
+
+        },
+    ],
+    "desiredGasTime": 0,
+    "fireModes": [ 0, 2, ],
+
+    "barrelOffset": 0.5,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
+
+
+
+
+
+
+    "rackSpritePath": "rack",
+    "unrackSpritePath": "unrack",
+    "removeMagSpritePath": "removeMag",
+
+    "fireModesSpritePath": [ "safe", "unsafe", "unsafe", ],
+    "bulletsSpritesPath": [ "bulletEmpty", "bulletCasing", "bulletBuck", "bulletBird", "bulletSlug", ],
+
+}

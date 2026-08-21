@@ -1,0 +1,160 @@
+{
+    "fullName": "Pump-action shotgun",
+    "description": "A generic unbranded tube-feed pump-action shotgun, can be loaded with any 12gauge shell. PRE-RELEASE: Active minigame in settings to see new controls",
+
+
+    "weight": 1.25,
+    "value": 50,
+    "recognition": 11,
+
+    "craftable": false,
+
+
+
+
+
+    "feedType": 2,
+    "internalCapacity": 7,
+    "ammoTypes":
+    [
+        {
+            "round": "12gauge",
+            "structureDamage": 60,
+            "animalDamage": 60,
+            "playerDamage":
+            {
+                "traumaAmount": 3,
+                "pain": 30,
+                "adrenaline": 15,
+                "skinDamage": 20,
+                "muscleDamage": 40,
+                "bleedAmount": 10,
+                "wearableDamage": 0.3,
+
+                "shrapnelChance": 0.3,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.3,
+                "internalBleed": 10,
+                "brainDamage": 15,
+                "disfigureChance": 0.5,
+
+            },
+
+            "knockback": 12,
+            "muzzleRise": 10,
+
+            "pellets": 8,
+            "verticalSpread": 0.125,
+            "loudness": 4,
+            "conditionLoss": 0.015,
+
+        },
+        {
+            "round": "12gaugebird",
+            "structureDamage": 14.375,
+            "animalDamage": 14.375,
+            "playerDamage":
+            {
+                "traumaAmount": 0.75,
+                "pain": 7,
+                "adrenaline": 3.5,
+                "skinDamage": 4,
+                "muscleDamage": 8,
+                "bleedAmount": 2,
+                "wearableDamage": 0.05,
+
+                "shrapnelChance": 0.1,
+
+                "dislocationChance": 0.04,
+                "fractureChance": 0.07,
+                "internalBleed": 2.4,
+                "brainDamage": 3.5,
+                "disfigureChance": 0.1,
+
+            },
+
+            "knockback": 12,
+            "muzzleRise": 10,
+
+            "pellets": 32,
+            "verticalSpread": 0.175,
+            "loudness": 4,
+            "conditionLoss": 0.010,
+
+        },
+        {
+            "round": "12gaugeslug",
+            "structureDamage": 400,
+            "animalDamage": 400,
+            "playerDamage":
+            {
+                "traumaAmount": 18,
+                "pain": 180,
+                "adrenaline": 90,
+                "skinDamage": 120,
+                "muscleDamage": 240,
+                "bleedAmount": 60,
+                "wearableDamage": 1.8,
+
+                "shrapnelChance": 1.0,
+
+
+                "fractureChance": 1.0,
+                "internalBleed": 40,
+                "brainDamage": 80,
+                "disfigureChance": 3.0,
+
+            },
+
+            "knockback": 12,
+            "muzzleRise": 10,
+
+            "pellets": 1,
+            "verticalSpread": 0,
+            "loudness": 4,
+            "conditionLoss": 0.015,
+
+        },
+    ],
+
+    "fireModes": [ 0, 1, ],
+    "magazineType": [  ],
+    "barrelOffset": 0.5,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
+
+
+
+
+    "bulletsSpritesPath": [ "bulletEmpty", "bulletCasing", "bulletBuck", "bulletBird", "bulletSlut", ],
+    "magazineTexturesPath": { },
+    //"attachmentTexturesPath: { },
+
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiPumpFront",
+        "sliderBackPath": "uiPumpBack",
+
+        "unrackedOnlyPath": "uiUnrackedOnly",
+        "sliderMinimumPosition": -0.025,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePostion": 0,
+        "rackPoint": -0.0125,
+        "rackedIdlePosition": -0.025,
+        "casingPaths": [  ],
+        "casingDelay": 0.2,
+        "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
+        "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
+        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "sliderHandFollowOffset": -0.15625,
+        "canUseFannyPack": false,
+    }
+}

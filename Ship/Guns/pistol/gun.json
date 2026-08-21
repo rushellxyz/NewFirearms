@@ -1,0 +1,166 @@
+{
+    "fullName": "Glock 17",
+    "description": "A common 9mm semi-auto handgun. You remember your capitors carrying it back on Earth. Can only fit small magazines. PRE-RELEASE: Active minigame in settings to see new controls",
+
+
+    "weight": 0.8,
+    "value": 30,
+    "recognition": 10,
+    "milkyCanSell": true,
+
+    "craftable": false,
+
+
+
+
+
+
+    "feedType": 1,
+
+    "ammoTypes":
+    [
+        {
+            "round": "9mmround",
+            "structureDamage": 90,
+            "animalDamage": 120,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 60,
+                "adrenaline": 30,
+                "skinDamage": 60,
+                "muscleDamage": 40,
+                "bleedAmount": 30,
+                "wearableDamage": 0.8,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.2,
+                "internalBleed": 15,
+                "brainDamage": 30,
+                "disfigureChance": 0.6,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3.5,
+
+            "verticalSpread": 0.005,
+            "loudness": 2,
+            "conditionLoss": 0.001,
+        },
+        {
+            "round": "9mmhollow",
+            "structureDamage": 60,
+            "animalDamage": 150,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 85,
+                "adrenaline": 42.5,
+                "skinDamage": 70,
+                "muscleDamage": 30,
+                "bleedAmount": 30,
+                "wearableDamage": 1.0,
+
+                "shrapnelChance": 1.0,
+
+                "dislocationChance": 0.2,
+                "fractureChance": 0.1,
+                "internalBleed": 10,
+                "brainDamage": 20,
+                "disfigureChance": 0.4,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3.5,
+
+            "verticalSpread": 0.01,
+            "loudness": 2,
+            "conditionLoss": 0.001,
+        },
+        {
+            "round": "9mmvenomus",
+            "structureDamage": 50,
+            "animalDamage": 150,
+
+            "playerDamage":
+            {
+                "traumaAmount": 5,
+                "pain": 80,
+                "adrenaline": 40,
+                "skinDamage": 60,
+                "muscleDamage": 20,
+                "bleedAmount": 25,
+                "wearableDamage": 0.8,
+                "venomAmount": 9,
+                "shrapnelChance": 0.8,
+                "infectionChance": 1.0,
+                "dislocationChance": 0.2,
+
+                "internalBleed": 10,
+                "brainDamage": 15,
+                "disfigureChance": 0.2,
+            },
+
+            "knockback": 3,
+            "muzzleRise": 3,
+
+            "verticalSpread": 0.015,
+            "loudness": 1.8,
+            "conditionLoss": 0.001,
+        },
+    ],
+    "desiredGasTime": 0.1,
+    "fireModes": [ 0, 2, ],
+    "magazineType": [ "glock17", ],
+    "barrelOffset": 0.9,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+
+
+
+
+
+
+
+
+
+    "fireModesSpritePath": [ "safe", "", "unsafe", ],
+
+    "magazineTexturesPath": { "smallmagazine": "blank", },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiSliderFront",
+
+
+
+
+        "sliderMinimumPosition": -0.03,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePostion": 0,
+        "rackPoint": -0.025,
+        "rackedIdlePosition": -0.02,
+        "casingPaths": [  ],
+        "casingDelay": 0.2,
+        "ammosInHandPaths": [ "ui9mmInHand", ],//"ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "ui9mm", ],//"uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "sliderHandFollowOffset": -0.125,
+        "canUseFannyPack": true,
+        "magReleasePath": "magReleaseTrigger",
+        "magazinePaths": { "smallmagazine": "minigameSmallmagazine" },
+        "magazineXPosition": -0.0859375,
+        "magazineYPosition": 0.01388888888888889,
+    }
+
+}

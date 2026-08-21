@@ -1,0 +1,122 @@
+== GUN JSON TEMPLATE ==
+{
+    "fullName": "string",
+    "description": "string",
+    "category": "utility", // "utility" default, "custom" trader only, "unobtainable" console/milkyCanSell only
+    "slotRotation": -90.0,
+    "weight": 0.0,
+    "value": 0,
+    "recognition": 0, // INT to recognize
+    "milkyCanSell": true,
+
+    "craftable": false,
+    "recipe": [ "string", ], // ignores if craftable is false
+    "craftBiochem": 0.0,
+    "craftCutting": 0.0,
+    "craftHammering": 0.0,
+    "craftInt": 0,
+
+    "feedType": 0, // 1 - mag, 2 - tube, 3 - barrel, 4 - revolver
+    "internalCapacity": 1, // must always be 1 for mag feed
+    "ammoTypes":
+    [
+        {
+            "round": "string", // ID of item this ammo refereing to, highly recomended to be mirrored with mags "ammoTypes"
+            "structureDamage": 0.0, // Damage to tiles
+            "animalDamage": 0.0, // Damage to anything else
+            "stopAtFirstHit": false, // If true, raycast would stop at first hit
+
+            "playerDamage": // All damage applied to player, when it gets shot, have a fallback if you are too lazy to fill it out
+            { // All values below are affected by wearable protection, and randomly multiplied by 0.85 to 1.15 in each shot
+                traumaAmount: 0.0,
+                pain: 0.0,
+                adrenaline: 0.0,
+                skinDamage: 0.0,
+                muscleDamage: 0.0,
+                bleedAmount: 0.0, // max 100 = 1.5l/m
+                wearableDamage: 0.0, // 0.0-1.0, multiplier by wearableHitDurabilityLossMultiplier
+                venomAmount: 0.0,
+                shrapnelChance: 0.0, // 0.0-1.0, since wearables decreases this chance it still makes sense to make it above 1
+                infectionChance: 0.0, // refer to previous comment
+                dislocationChance: 0.0, // refer to previous comment, less likely when limb is healthy
+                fractureChance: 0.0, // refer to previous comment, less likely when limb is healthy
+                internalBleed: 0.0, // 0.085l/m per 10 internal, max 25, numbers displayed in health panel affected by hunger level
+                brainDamage: 0.0, // beside of mutiplication mentioned earlier, gets further multiplier by random 0.5-1.5
+                disfigureChance: 0.0, // actually, when rolled, 50% to lose an eye; and 50% to roll for disfigurment -> 0% when head muscle health at 100, and 100% when below 75, linear scale
+                chloroformAmount: 0.0,
+            },
+
+            "knockback": 0.0, // Force player knocked back with
+            "muzzleRise": 0.0, // Force muzzle rises with, Note: minigame would limit that number to 16 for itself if its above
+            "pellets": 1,
+            "verticalSpread": 0.0,
+            "loudness": 0.0, // Defines hearing loss
+            "conditionLoss": 0.0, // Up to 1.0 for -100% per shot
+            "caseless": false, // If true casing won't be created after fire
+        },
+    ],
+    "desiredGasTime": 0.0, // Must alwasy stay at 0 for barrel feed
+    "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full
+    "magazineType": [ "string", ], // If it inresects with "magazineType" in at least one entry, mag is considered compataible
+    "barrelOffset": 0.0, // Vertical offset of barrel from model
+    // normalTexturePath and rackedTexturePath are the only one mandatory, all other have a fallback, also all Texture and Sprite must be provided in .png, and all Audio must be provided in .wav
+    "normalTexturePath": "string",
+    "rackedTexturePath": "string",
+    "shootAudioPath": "string",
+    "unshootAudioPath": "string",
+    "jamAudioPath": "string",
+    "rackAudioPath": "string",
+    "unrackAudioPath": "string",
+    "loadRoundAudioPath": "string",
+    "loadMagAudioPath": "string",
+    "removeMagAudioPath": "string",
+    "toggleFireModeAudioPath': "string",
+    "rackSpritePath": "string",
+    "unrackSpritePath": "string",
+    "removeMagSpritePath": "string",
+    "fireModesSpritePath": [ "string", ] // UI Sprite to be shown on fire selector !! It indexes current fire mod, thus if you have only safe and semi-auto it should go like this [ "safe", "", "semiauto", ], you can pass empty string to have nothing
+    bulletsSpritesPath": [ "string", ] // Starts with empty, then casing, then all rouds from ammoTypes in same order
+    magazineTexturesPath: { "string": "string", }, // Key is item id of mag, and value is sprite
+    "ppu": 8.0. // Pixel Per Unit, less makes item appear bigger, use if you are using high resolution sprite. Default 8 in CU
+
+}
+== MAGAZINE JSON TEMPLATE ==
+{
+    "fullName": "string",
+    "description": "string",
+    "category": "utility", // "utility" default, "custom" trader only, "unobtainable" console/milkyCanSell only
+    "slotRotation": -90.0,
+    "weight": 0.0,
+    "value": 0,
+    "recognition": 0, // INT to recognize
+    "milkyCanSell": true, // Also determines if can be spawned in collapsed pod
+
+    "craftable": false,
+    "craftBiochem": 0.0,
+    "recipe": [ "string", ], // ignores if craftable is false
+    "craftCutting": 0.0,
+    "craftHammering": 0,
+    "craftInt": 0,
+
+    "capacity" 0, // Total amounts of rounds can be held
+    "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compataible
+    "ammoTypes": [ "string", ], // ID of all rounds can be putted into, highly recomended to be mirrored with gun's "ammoTypes"
+    // Not neccesary. Required in .wav
+    "loadRoundAudioPath": "string",
+    "unloadRoundAudioPath": "string",
+}
+== ROUND JSON TEMPLATE ==
+{
+    "fullName": "string",
+    "description": "string",
+    "category": "utility", // "utility" default, "custom" trader only, "unobtainable" console/milkyCanSell only
+    "slotRotation": -90.0,
+    "weight": 0.0,
+    "value": 0,
+    "recognition": 0, // INT to recognize
+
+    "craftable": false,
+    "recipe": [ "string", ], // ignores if craftable is false
+    "craftHammering": 0,
+    "craftInt": 0,
+}
