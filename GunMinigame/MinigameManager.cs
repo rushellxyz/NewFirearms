@@ -173,7 +173,7 @@ namespace GunMinigame
 
         public bool shouldUpdateMagazineCount;
 
-//        private GameObject[] placedMagazines;
+        private List<Image> placedMagazines;
 
 
         bool spinningBandol;
@@ -451,6 +451,8 @@ namespace GunMinigame
             handTransform.SetParent(maskBase.transform);
             handTransform.localScale = new Vector3((0.4f/2560f)*Screen.width, (0.4f/1440f)*Screen.height);
             handImage = handTransform.GetComponent<Image>();
+
+            placedMagazines = new List<Image>();
         }
 
         void EnsureAmmoIcons(int count)
@@ -534,7 +536,9 @@ namespace GunMinigame
             HandleCasings();
             HandleBandolier();
             HandleWindowAlpha();
+            HandleFannyPack();
 
+            shouldUpdateMagazineCount = true;
             if (handFaded)
             { // idk why that weird looking number for alpha, i stole it from decompiled code
                 handImage.color = new Color(1f, 1f - body.averagePain * 0.01f, 1f - body.averagePain * 0.01f, Mathf.Clamp(handImage.color.a - Time.deltaTime * 4f, 0f, 0.8235294f));
@@ -543,7 +547,7 @@ namespace GunMinigame
                     shouldntRefreshBandolierCount = false;
                     shouldResetHandSprite=true;
                     holdsSlide = false;
-                    shouldUpdateMagazineCount = true;
+                    shouldUpdateMagazineCount = false;
                     goto SliderHandle;
                 }
             }
@@ -581,7 +585,6 @@ namespace GunMinigame
                 ignoreNextMouseKey = false;
             }
 
-            HandleFannyPack();
             float num2 = 0.25f;
             float num3 = 4f + body.skills.STRFrom10 * 0.3f;
             float num4 = 1.5f;
@@ -736,11 +739,18 @@ namespace GunMinigame
             bool activateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("fannypack");
             fannyPack.gameObject.SetActive(activateWindows);
 
-            /*if (shouldUpdateMagazineCount&&activateWindows)
+            if (shouldUpdateMagazineCount&&activateWindows)
             {
+                UnityEngine.Debug.Log("lol"); // :tourniqet:
                 shouldUpdateMagazineCount = false;
                 Dictionary<string, int> itemsInFannyPack = CountAllItemsInContainer(PlayerCamera.main.body.GetWearableBySlotID("torsofront").transform);
                 int free = info.maximumMagazines;
+
+                foreach (Image go in placedMagazines)
+                    if (null != go)
+                        UnityEngine.Object.Destroy(go.gameObject);
+                placedMagazines.Clear();
+
                 foreach (KeyValuePair<string, int> kvp in itemsInFannyPack)
                 {
                     if (!info.magazineSprites.TryGetValue(kvp.Key, out Sprite sprite))
@@ -758,18 +768,18 @@ namespace GunMinigame
                     }
                     for (int i = 0; i < place; i++)
                     {
-                        UnityEngine.Debug.Log("lol");
-                        Transform transistor = new GameObject("FannyPackMagazine").transform;
-                        transistor.SetParent(fannyPack.transform);
-                        transistor.localScale = Vector3.one;
-                        transistor.localPosition = Vector3.one;
-                        transistor.gameObject.AddComponent<Image>().sprite = sprite;
+                        Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
+                        transistor.transform.SetParent(fannyPack.transform);
+                        transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
+                        transistor.transform.localPosition = new Vector3((90f/2560f)*Screen.width, (-60f/1440f)*Screen.height);
+                        transistor.sprite = sprite;
+                        placedMagazines.Add(transistor);
                     }
 
                     if (0 >= free)
                         break;
                 }
-            }*/
+            }
 
             if (fannyPack.gameObject.activeSelf)
             {
@@ -960,6 +970,8 @@ namespace GunMinigame
             fannyPack.color = colo;
             fannyPackZip.color = colo;
             foreach (Image i in ptrs)
+                i.color = colo;
+            foreach (Image i in placedMagazines)
                 i.color = colo;
             if (null != insertedMagazine)
                 insertedMagazine.color = colo;
