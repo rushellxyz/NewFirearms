@@ -2,7 +2,7 @@
 {
     "fullName": "string",
     "description": "string",
-    "category": "utility", // "utility" default, "custom" trader only, "unobtainable" console/milkyCanSell only
+    "category": "utility", // "utility" default, "custom" trader only, "unobtainable" console/crafting/milkyCanSell only
     "slotRotation": -90.0,
     "weight": 0.0,
     "value": 0,
@@ -47,7 +47,7 @@
             },
 
             "knockback": 0.0, // Force player knocked back with
-            "muzzleRise": 0.0, // Force muzzle rises with, Note: minigame would limit that number to 16 for itself if its above
+            "muzzleRise": 0.0, // Force muzzle rises with
             "pellets": 1,
             "verticalSpread": 0.0,
             "loudness": 0.0, // Defines hearing loss
@@ -55,11 +55,12 @@
             "caseless": false, // If true casing won't be created after fire
         },
     ],
-    "desiredGasTime": 0.0, // Must alwasy stay at 0 for barrel feed
+    "desiredGasTime": 0.0, // Must always stay at 0 for barrel feed
     "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full
     "magazineType": [ "string", ], // If it inresects with "magazineType" in at least one entry, mag is considered compataible
     "barrelOffset": 0.0, // Vertical offset of barrel from model
     // normalTexturePath and rackedTexturePath are the only one mandatory, all other have a fallback, also all Texture and Sprite must be provided in .png, and all Audio must be provided in .wav
+    // The COPY__ is a work in progress
     "normalTexturePath": "string",
     "rackedTexturePath": "string",
     "shootAudioPath": "string",
@@ -78,6 +79,7 @@
     bulletsSpritesPath": [ "string", ] // Starts with empty, then casing, then all rouds from ammoTypes in same order
     magazineTexturesPath: { "string": "string", }, // Key is item id of mag, and value is sprite
     "ppu": 8.0. // Pixel Per Unit, less makes item appear bigger, use if you are using high resolution sprite. Default 8 in CU
+    "minigame": Refer to minigame section
 
 }
 == MAGAZINE JSON TEMPLATE ==
@@ -99,12 +101,13 @@
     "craftInt": 0,
 
     "capacity" 0, // Total amounts of rounds can be held
-    "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compataible
+    "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compatabile
     "ammoTypes": [ "string", ], // ID of all rounds can be putted into, highly recomended to be mirrored with gun's "ammoTypes"
     // Not neccesary. Required in .wav
     "loadRoundAudioPath": "string",
     "unloadRoundAudioPath": "string",
 }
+
 == ROUND JSON TEMPLATE ==
 {
     "fullName": "string",
@@ -119,4 +122,9 @@
     "recipe": [ "string", ], // ignores if craftable is false
     "craftHammering": 0,
     "craftInt": 0,
+}
+
+== MINIGAME JSON TEMPLATE ==
+{
+    // work in progress
 }

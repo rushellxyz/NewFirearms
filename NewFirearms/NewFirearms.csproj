@@ -71,7 +71,7 @@
       <HintPath>$(GameDirectory)/BepInEx/plugins/Together/CasualtiesMP.dll</HintPath>
     </Reference>
     <Reference Include="CUCoreLib">
-      <HintPath>CUCoreLib.dll</HintPath>
+      <HintPath>$(GameDirectory)/BepInEx/plugins/CUCoreLib.dll</HintPath>
     </Reference>
     <Reference Include="LiteEntitySystem">
       <HintPath>$(GameDirectory)/BepInEx/plugins/Together/LiteEntitySystem.dll</HintPath>
