@@ -163,6 +163,7 @@
         "magazineYPosition": 0.01388888888888889,
 
 
+        "magazinesOffset": 0.025,
         "maximumMagazines": 4,
     }
 

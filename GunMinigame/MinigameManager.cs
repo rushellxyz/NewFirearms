@@ -54,6 +54,7 @@ namespace GunMinigame
         public float magazineYPosition;
         public float magazineXSpeed;
         public float magazineYSpeed;
+        public float magazinesOffset;
         public int maximumMagazines;
 
         // should never be declared in json
@@ -157,7 +158,8 @@ namespace GunMinigame
 
 
         public static Sprite fannyPackSprite;
-        public Image fannyPack;
+        public GameObject fannyPack;
+        public Image fannyPackImage;
 
         public static Sprite fannyPackZipSprite;
         public Image fannyPackZip;
@@ -351,13 +353,18 @@ namespace GunMinigame
             magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
             magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
 
-            fannyPack = new GameObject("MinigameFannyPack").AddComponent<Image>();
+            fannyPack = new GameObject("MinigameFannyPack");
             fannyPack.transform.SetParent(maskBase.transform);
             fannyPack.transform.localPosition = Vector3.zero;
             fannyPack.transform.localScale = Vector3.one;
-            fannyPack.GetComponent<RectTransform>().sizeDelta = size;
-            fannyPack.sprite = fannyPackSprite;
-            fannyPack.raycastTarget = false;
+
+            fannyPackImage = new GameObject("MinigameFannyPackImage").AddComponent<Image>();
+            fannyPackImage.transform.SetParent(fannyPack.transform);
+            fannyPackImage.transform.localScale = Vector3.one;
+            fannyPackImage.transform.localPosition = Vector3.zero;
+            fannyPackImage.GetComponent<RectTransform>().sizeDelta = size;
+            fannyPackImage.sprite = fannyPackSprite;
+            fannyPackImage.raycastTarget = false;
 
             fannyPackZip = new GameObject("MinigameFannyPackZip").AddComponent<Image>();
             fannyPackZip.transform.SetParent(fannyPack.transform);
@@ -751,6 +758,7 @@ namespace GunMinigame
                         UnityEngine.Object.Destroy(go.gameObject);
                 placedMagazines.Clear();
 
+                int placed = 0;
                 foreach (KeyValuePair<string, int> kvp in itemsInFannyPack)
                 {
                     if (!info.magazineSprites.TryGetValue(kvp.Key, out Sprite sprite))
@@ -771,14 +779,18 @@ namespace GunMinigame
                         Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
                         transistor.transform.SetParent(fannyPack.transform);
                         transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
-                        transistor.transform.localPosition = new Vector3((90f/2560f)*Screen.width, (-60f/1440f)*Screen.height);
+                        transistor.transform.localPosition = new Vector3(((80f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
                         transistor.sprite = sprite;
                         placedMagazines.Add(transistor);
+                        placed += 1;
                     }
 
                     if (0 >= free)
                         break;
                 }
+
+                fannyPackImage.transform.SetAsLastSibling();
+                fannyPackZip.transform.SetAsLastSibling();
             }
 
             if (fannyPack.gameObject.activeSelf)
@@ -967,7 +979,7 @@ namespace GunMinigame
             bandolierBase.color = colo;
             bandolierFront.color = colo;
             ammoSelectCursor.color = colo;
-            fannyPack.color = colo;
+            fannyPackImage.color = colo;
             fannyPackZip.color = colo;
             foreach (Image i in ptrs)
                 i.color = colo;
