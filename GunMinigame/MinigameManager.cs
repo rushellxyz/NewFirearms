@@ -526,6 +526,7 @@ namespace GunMinigame
                 if (handFaded && handIsHovered)
                 {
                     shouldResetHandSprite = true;
+                    shouldUpdateMagazineCount = true;
                     handPos = mousePos;
                 }
                 handFaded = !handIsHovered;
@@ -538,7 +539,6 @@ namespace GunMinigame
             HandleWindowAlpha();
             HandleFannyPack();
 
-            shouldUpdateMagazineCount = true;
             if (handFaded)
             { // idk why that weird looking number for alpha, i stole it from decompiled code
                 handImage.color = new Color(1f, 1f - body.averagePain * 0.01f, 1f - body.averagePain * 0.01f, Mathf.Clamp(handImage.color.a - Time.deltaTime * 4f, 0f, 0.8235294f));
@@ -547,7 +547,6 @@ namespace GunMinigame
                     shouldntRefreshBandolierCount = false;
                     shouldResetHandSprite=true;
                     holdsSlide = false;
-                    shouldUpdateMagazineCount = false;
                     goto SliderHandle;
                 }
             }
@@ -739,7 +738,8 @@ namespace GunMinigame
             bool activateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("fannypack");
             fannyPack.gameObject.SetActive(activateWindows);
 
-            if (shouldUpdateMagazineCount&&activateWindows)
+            shouldUpdateMagazineCount = shouldUpdateMagazineCount || 0f >= windowAlpha;
+            if (shouldUpdateMagazineCount&&activateWindows && 0f < windowAlpha)
             {
                 UnityEngine.Debug.Log("lol"); // :tourniqet:
                 shouldUpdateMagazineCount = false;
