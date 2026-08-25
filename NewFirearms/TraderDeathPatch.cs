@@ -4,25 +4,23 @@ using UnityEngine;
 
 namespace NewFirearms
 {
-    [HarmonyPatch(typeof(BuildingEntity), "Update")]
+    [HarmonyPatch(typeof(TraderScript), "Update")]
     [HarmonyPriority(Priority.First)] //
     static class TraderDeathPatch
     {
-        static void Prefix(BuildingEntity __instance)
+        static void Prefix(TraderScript __instance)
         {
-            if (__instance.health >= 200f)
+            if (__instance.build.health >= 200f)
                 return;
-            if (!__instance.TryGetComponent<TraderScript>(out var trader))
-                return;
-            if (trader.didDeathMoodDebuff)
+            if (__instance.didDeathMoodDebuff)
                 return;
 
-            trader.sitTime = Time.time;
-            trader.standTarget = -0.1f;
-            trader.eyes.sprite = trader.eyeSprites[0];
+            __instance.sitTime = Time.time;
+            __instance.standTarget = -0.1f;
+            __instance.eyes.sprite = __instance.eyeSprites[0];
 
-            trader.DropInventory();
-            trader.didDeathMoodDebuff = true;
+            __instance.DropInventory();
+            __instance.didDeathMoodDebuff = true;
 
             Body body = PlayerCamera.main.body;
             body.skills.AddExp(1, 60f);
@@ -31,9 +29,9 @@ namespace NewFirearms
             body.sicknessAmount += 30f;
             body.StartCoroutine(body.Cry());
             body.talker.Talk(Locale.GetCharacter("murderregret"));
-            __instance.description = Locale.GetBuilding("traderdscdead");
-            __instance.fullName = Locale.GetBuilding("corpseseen");
-            UnityEngine.Object.Destroy(trader.GetComponent<UsableObject>());
+            __instance.build.description = Locale.GetBuilding("traderdscdead");
+            __instance.build.fullName = Locale.GetBuilding("corpseseen");
+            UnityEngine.Object.Destroy(__instance.GetComponent<UsableObject>());
         }
 
     }
