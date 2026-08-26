@@ -67,7 +67,7 @@ namespace GunMinigame
     {
         public bool IsRacked();
         public void Rack();
-        public void DragOnto(Item item);
+        public bool DragOnto(Item item); // Returns whenever load is success
         public void RemoveMag();
         public string CurrentMag();
     }
@@ -955,8 +955,12 @@ namespace GunMinigame
         {
             if (null == holding)
                 return;
-            SpinBandolied();
-            gun.DragOnto(holding);
+            if (gun.DragOnto(holding))
+                SpinBandolied();
+       else { // TODO Test MP
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Deny);
+                holding = null;
+            }
         }
 
         public void HideShow()

@@ -357,14 +357,14 @@ namespace NewFirearms
             RemoveMag(null);
         }
 
-        public void DragOnto(Item item)
+        public bool DragOnto(Item item)
         {
             if (Plugin.togetherMpEnabled && RequestHostIfClient(2, item))
-                return;
+                return true;
             if (item.TryGetComponent<RshMag>(out var newMag))
             {
                 if (!CanFitMag(newMag.prop))
-                    return;
+                    return false;
 
                 if (GunMinigame.Plugin.useMinigame) // TODO MP Sync
                     GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(1f, 1f);
@@ -387,7 +387,7 @@ namespace NewFirearms
                     if (1 == prop.feedType)
                     {
                         if (!racked || -2 != rounds[0])
-                            return;
+                            return false;
                         rounds[0] = i;
                     }
                else if (2 == prop.feedType)
@@ -406,7 +406,7 @@ namespace NewFirearms
                             break;
                         }
                         if (!inserted)
-                            return;
+                            return false;
                     }
                else if (racked)
                     {
@@ -433,10 +433,10 @@ namespace NewFirearms
                                 if (!Input.GetKey(KeyCode.LeftShift))
                                     PlayerCamera.main.body.AutoPickUpItem(go.GetComponent<Item>());
                             }
-                    else     return;
+                    else     return false;
                         }
                     }
-               else     return;
+               else     return false;
                     Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
 
                     if (GunMinigame.Plugin.useMinigame) // TODO MP Sync
@@ -445,9 +445,10 @@ namespace NewFirearms
                     UpdateSprite();
                     if (Plugin.togetherMpEnabled)
                         SyncIfHost(4);
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
         public void RemoveMag(Body body=null)
