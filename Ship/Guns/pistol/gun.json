@@ -161,8 +161,9 @@
         "magazinePaths": { "smallmagazine": "minigameSmallmagazine" },
         "magazineXPosition": -0.0859375,
         "magazineYPosition": 0.01388888888888889,
-
-
+        "magazineXSpeed": -0.2,
+        "magazineYSpeed": -0.525,
+        "magazineAnimationTime": 0.2,
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
     }

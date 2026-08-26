@@ -54,6 +54,7 @@ namespace GunMinigame
         public float magazineYPosition;
         public float magazineXSpeed;
         public float magazineYSpeed;
+        public float magazineAnimationTime;
         public float magazinesOffset;
         public int maximumMagazines;
 
@@ -229,6 +230,8 @@ namespace GunMinigame
                 info.magazineXPosition *= Screen.width;
                 info.magazineYPosition *= Screen.height;
                 info.rackPoint *= Screen.width;
+                info.magazineXSpeed *= Screen.width;
+                info.magazineYSpeed *= Screen.height;
                 info.initialized = true;
             }
             mainImage.sprite = info.mainSprite;
@@ -663,9 +666,14 @@ namespace GunMinigame
 
         private void HandleMag()
         {
-            if (0f > magSyncIgnoreTime)
+            if (0f < magSyncIgnoreTime)
             {
                 magSyncIgnoreTime -= Time.deltaTime;
+                if (null == insertedMagazine)
+                    return;
+                UnityEngine.Debug.Log("lol");
+                insertedMagazine.transform.localPosition += new Vector3(info.magazineXSpeed * Time.deltaTime, info.magazineYSpeed * Time.deltaTime);
+                insertedMagazine.color = new Color(1f, 1f, 1f, insertedMagazine.color.a - (Time.deltaTime / info.magazineAnimationTime)); // evil division
                 return;
             }
             string currentMag = gun.CurrentMag();
@@ -705,6 +713,7 @@ namespace GunMinigame
 
         void MagRemoveButton()
         {
+            magSyncIgnoreTime = info.magazineAnimationTime;
             gun.RemoveMag();
         }
 
