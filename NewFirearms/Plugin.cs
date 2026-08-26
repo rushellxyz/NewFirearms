@@ -1,5 +1,3 @@
-// TODO Fix magazine count desync
-
 using BepInEx;
 using HarmonyLib;
 using System;

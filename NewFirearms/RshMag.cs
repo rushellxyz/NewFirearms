@@ -30,7 +30,10 @@ namespace NewFirearms
         void Start()
         {
             if (existed)
+            {
+                SyncIfHost();
                 return;
+            }
             Fill((sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count), Mathf.RoundToInt(prop.capacity * it.condition));
             it.condition = 1f;
             if (Plugin.togetherMpEnabled)
