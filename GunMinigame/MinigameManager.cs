@@ -790,6 +790,8 @@ namespace GunMinigame
                         transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
                         transistor.transform.localPosition = new Vector3(((80f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
                         transistor.sprite = sprite;
+                        transistor.alphaHitTestMinimumThreshold = 0.1f;
+                        transistor.gameObject.AddComponent<MagazineScript>();
                         placedMagazines.Add(transistor);
                         placed += 1;
                     }
