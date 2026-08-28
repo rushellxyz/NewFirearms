@@ -129,8 +129,8 @@
 
 
 
-    "unrackSpritePath": "unrack",
-    "rackSpritePath": "rack",
+    "unrackSpritePath": "COPY__Guns/newfirearms.mp5/unrack",
+    "rackSpritePath": "COPY__Guns/newfirearms.mp5/rack",
 
 
 

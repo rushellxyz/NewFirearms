@@ -147,7 +147,7 @@
 
 
 
-    "fireModesSpritePath": [ "safe", "", "unsafe", ],
+    "fireModesSpritePath": [ "COPY__Guns/newfirearms.glock18/safe", "", "unsafe", ],
 
     "magazineTexturesPath": { "newfirearms.m1911mag": "blank", },
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
