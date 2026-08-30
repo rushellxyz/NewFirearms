@@ -19,11 +19,11 @@ if os.path.exists(path + "/BepInEx/patchers/KrokMP/autoupdater_patcher.dll"):
 if os.path.exists(path + "/BepInEx/plugins/Together/Multiupdater.dll"):
     os.rename(path + "/BepInEx/plugins/Together/Multiupdater.dll", path + "/BepInEx/plugins/Together/Multiupdater.dll~")
 
-if 0 != os.system("dotnet build NewFirearms/NewFirearms.csproj"):
-    print("Compilation of NewFirearms failed")
-    exit()
 if 0 != os.system("dotnet build GunMinigame/GunMinigame.csproj"):
     print("Compilation of GunMinigame failed")
+    exit()
+if 0 != os.system("dotnet build NewFirearms/NewFirearms.csproj"):
+    print("Compilation of NewFirearms failed")
     exit()
 
 os.rename(path + "/BepInEx/plugins/Together/CasualtiesMP.dll", path + "/BepInEx/plugins/Together/CasualtiesMP.dll~")
