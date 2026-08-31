@@ -356,6 +356,10 @@ namespace NewFirearms
                     );
                     prop.minigame.magazines = prop.minigame.magazineSprites.Keys.ToArray();
                 }
+
+                if (!string.IsNullOrEmpty(prop.minigame.magazineDragPath))
+                    prop.minigame.magazineDragTrigger = LoadSprite(folder, prop.minigame.magazineDragPath);
+           else     prop.minigame.magazineDragTrigger = emptySprite;
             }
 
 

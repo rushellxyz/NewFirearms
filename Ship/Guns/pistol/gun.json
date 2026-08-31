@@ -166,6 +166,7 @@
         "magazineAnimationTime": 0.2,
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
+        "magazineDragPath": "magazineDragTrigger",
     }
 
 }

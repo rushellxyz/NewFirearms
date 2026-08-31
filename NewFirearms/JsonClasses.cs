@@ -107,6 +107,7 @@ namespace NewFirearms
         public string receiverPath;
         public string magReleasePath;
         public Dictionary<string, string> magazinePaths;
+        public string magazineDragPath;
     }
 
     // params of ammo shoot

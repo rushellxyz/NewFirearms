@@ -57,6 +57,7 @@ namespace GunMinigame
         public float magazineAnimationTime;
         public float magazinesOffset;
         public int maximumMagazines;
+        public Sprite magazineDragTrigger;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -178,6 +179,8 @@ namespace GunMinigame
 
         private List<Image> placedMagazines;
 
+        public Image magazineDragTrigger;
+
 
         bool spinningBandol;
 
@@ -239,6 +242,7 @@ namespace GunMinigame
             sliderBackImage.sprite = info.sliderBackSprite;
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
+            magazineDragTrigger.sprite = info.magazineDragTrigger;
             /*            if (it.Stats.rec.recognizable)
              *             {                     * *
              *
@@ -345,6 +349,17 @@ namespace GunMinigame
             receiverTriggerTrigger.triggers.Add(receiverTriggerEntry);
             receiverTrigger.color = new Color(1f, 1f, 1f, 0f);
             receiverTrigger.gameObject.SetActive(false);
+
+            magazineDragTrigger = new GameObject("MinigameMagazineDragTrigger").AddComponent<Image>();
+            magazineDragTrigger.transform.SetParent(gunBase.transform);
+            magazineDragTrigger.transform.localPosition = Vector3.zero;
+            magazineDragTrigger.transform.localScale = Vector3.one;
+            magazineDragTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            magazineDragTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            magazineDragTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            magazineDragTrigger.color = new Color(1f, 1f, 1f, 0f);
+            magazineDragTrigger.gameObject.AddComponent<MagazineDragTrigger>();
+            magazineDragTrigger.gameObject.SetActive(false);
 
             magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
             magReleaseTrigger.transform.SetParent(gunBase.transform);
@@ -671,7 +686,6 @@ namespace GunMinigame
                 magSyncIgnoreTime -= Time.deltaTime;
                 if (null == insertedMagazine)
                     return;
-                UnityEngine.Debug.Log("lol");
                 insertedMagazine.transform.localPosition += new Vector3(info.magazineXSpeed * Time.deltaTime, info.magazineYSpeed * Time.deltaTime);
                 insertedMagazine.color = new Color(1f, 1f, 1f, insertedMagazine.color.a - (Time.deltaTime / info.magazineAnimationTime)); // evil division
                 return;
@@ -714,6 +728,7 @@ namespace GunMinigame
         void MagRemoveButton()
         {
             magSyncIgnoreTime = info.magazineAnimationTime;
+            shouldUpdateMagazineCount = true;
             gun.RemoveMag();
         }
 
@@ -757,46 +772,32 @@ namespace GunMinigame
             shouldUpdateMagazineCount = shouldUpdateMagazineCount || 0f >= windowAlpha;
             if (shouldUpdateMagazineCount&&activateWindows && 0f < windowAlpha)
             {
-                UnityEngine.Debug.Log("lol"); // :tourniqet:
                 shouldUpdateMagazineCount = false;
-                Dictionary<string, int> itemsInFannyPack = CountAllItemsInContainer(PlayerCamera.main.body.GetWearableBySlotID("torsofront").transform);
-                int free = info.maximumMagazines;
+                int placed = 0;
 
                 foreach (Image go in placedMagazines)
                     if (null != go)
                         UnityEngine.Object.Destroy(go.gameObject);
                 placedMagazines.Clear();
 
-                int placed = 0;
-                foreach (KeyValuePair<string, int> kvp in itemsInFannyPack)
+                foreach (Transform trans in PlayerCamera.main.body.GetWearableBySlotID("torsofront").transform)
                 {
-                    if (!info.magazineSprites.TryGetValue(kvp.Key, out Sprite sprite))
+                    if (!trans.TryGetComponent<Item>(out Item it))
+                        return;
+                    if (!info.magazineSprites.TryGetValue(it.id, out Sprite sprite))
                         return;
 
-                    int place;
-                    if (kvp.Value > free)
-                    {
-                        place = free;
-                        free = 0;
-                    }
-               else {
-                        place = kvp.Value;
-                        free -= place;
-                    }
-                    for (int i = 0; i < place; i++)
-                    {
-                        Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
-                        transistor.transform.SetParent(fannyPack.transform);
-                        transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
-                        transistor.transform.localPosition = new Vector3(((80f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
-                        transistor.sprite = sprite;
-                        transistor.alphaHitTestMinimumThreshold = 0.1f;
-                        transistor.gameObject.AddComponent<MagazineScript>();
-                        placedMagazines.Add(transistor);
-                        placed += 1;
-                    }
+                    Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
+                    transistor.transform.SetParent(fannyPack.transform);
+                    transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
+                    transistor.transform.localPosition = new Vector3(((80f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
+                    transistor.sprite = sprite;
+                    transistor.alphaHitTestMinimumThreshold = 0.1f;
+                    transistor.gameObject.AddComponent<MagazineScript>().it = it;
+                    placedMagazines.Add(transistor);
 
-                    if (0 >= free)
+                    placed += 1;
+                    if (placed >= info.maximumMagazines)
                         break;
                 }
 
