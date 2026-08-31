@@ -30,7 +30,7 @@ os.rename(path + "/BepInEx/plugins/Together/CasualtiesMP.dll", path + "/BepInEx/
 
 print("Testing RshLib configuration")
 os.rename(path + "/BepInEx/plugins/CUCoreLib.dll", path + "/BepInEx/plugins/CUCoreLib.dll~")
-os.system(f'WINEDLLOVERRIDES="winhttp=n,b" timeout 14s wine {path}/CasualtiesUnknown.exe -logFile /tmp/log.tmp &> /dev/null')
+os.system(f'timeout 14s wine {path}/CasualtiesUnknown.exe -logFile /tmp/log.tmp &> /dev/null')
 print("Reading log file")
 with open("/tmp/log.tmp", 'r') as f:
     log = f.read()
@@ -48,7 +48,7 @@ else:
 print("Testing CUCoreLib configuration")
 os.rename(path + "/BepInEx/plugins/CUCoreLib.dll~", path + "/BepInEx/plugins/CUCoreLib.dll")
 os.rename(path + "/BepInEx/plugins/RshLib.dll", path + "/BepInEx/plugins/RshLib.dll~")
-os.system(f'WINEDLLOVERRIDES="winhttp=n,b" timeout 14s wine {path}/CasualtiesUnknown.exe -logFile /tmp/log.tmp &> /dev/null')
+os.system(f'timeout 13s wine {path}/CasualtiesUnknown.exe -logFile /tmp/log.tmp &> /dev/null')
 print("Reading log file")
 with open("/tmp/log.tmp", 'r') as f:
     log = f.read()
