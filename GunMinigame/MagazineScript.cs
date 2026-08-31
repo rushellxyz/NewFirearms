@@ -1,27 +1,24 @@
 using System.Threading.Tasks;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using UnityEngine;
 
 namespace GunMinigame
 {
     public class MagazineScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        public static Vector2 sensetivity;
         public Item it;
-
-        private void Awake()
-        {
-            sensetivity = new Vector2((2.15f/2560f)*Screen.width, (2.15f/1440f)*Screen.height);
-        }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             MinigameManager.GetOrAddInstance().magazineDragTrigger.gameObject.SetActive(true);
+            GetComponent<RectTransform>().SetParent(MinigameManager.GetOrAddInstance().handTransform);
+            GetComponent<Image>().raycastTarget = false;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            transform.localPosition += (Vector3)(MinigameManager.GetOrAddInstance().handVelocity * sensetivity);
+            // ???
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -32,6 +29,7 @@ namespace GunMinigame
                 it.transform.parent.GetComponent<Container>().UnloadItem(it);
             MinigameManager.GetOrAddInstance().magazineDragTrigger.gameObject.SetActive(false);
             var _ = ааа();
+            UnityEngine.Object.Destroy(gameObject);
         }
 
         private async Task ааа()
