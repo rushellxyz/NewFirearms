@@ -81,7 +81,7 @@ namespace NewFirearms
 
         public void Update()
         {
-            if (Plugin.togetherMpEnabled && !Plugin.IsHost())
+            if (Plugin.krokMpEnabled && !Plugin.IsHost())
             {
                 if (currentlyShooting && !Input.GetKey(KeyBinds.GetBind("attack")))
                 {
@@ -127,7 +127,7 @@ namespace NewFirearms
 
         public void FixedUpdate()
         {   // TODO Move that into Update?
-            if (!Plugin.togetherMpEnabled)
+            if (!Plugin.krokMpEnabled)
                 return;
             if (null == transform.parent || !transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) || slot.slot != slot.body.handSlot)
                 return;
@@ -153,8 +153,8 @@ namespace NewFirearms
 
         bool IsOnBack(Body body)
         {
-            Together.ScavPlayer plr = Together.ScavPlayer.GetNetPlayerFromBody(body);
-            if (!Together.NetBody.TryGetNetBodyFromId(plr.playerId, out var netBody))
+            KrokoshaCasualtiesMP.NetPlayer plr = KrokoshaCasualtiesMP.NetPlayer.GetNetPlayerFromBody(body);
+            if (!KrokoshaCasualtiesMP.NetBody.TryGetNetBodyFromId(plr.clientId, out var netBody))
                 return false;
             return null != netBody.piggybacking_on;
         }
@@ -171,12 +171,12 @@ namespace NewFirearms
             {
                 rounds = Enumerable.Repeat((sbyte)-2, prop.internalCapacity).ToList();
                 fireMode = prop.fireModes.Min();
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     MpStartOp();
            else     Rack(manual: true);
                 existed = true;
             }
-       else if (Plugin.togetherMpEnabled)
+       else if (Plugin.krokMpEnabled)
             {
                 MpStartOp();
             }
@@ -186,7 +186,7 @@ namespace NewFirearms
         public void MpStartOp()
         {
             InvokeRepeating("MpScareCheck", Plugin.sett.gunSyncRate, Plugin.sett.gunSyncRate * 0.2f);
-            if (!Together.Net.IsServer)
+            if (!KrokoshaCasualtiesMP.Net.is_server)
                 return;
             if (!existed)
             {
@@ -204,7 +204,7 @@ namespace NewFirearms
 
         public bool Shoot(Body body = null)
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(0))
+            if (Plugin.krokMpEnabled && RequestHostIfClient(0))
             {
                 currentlyShooting = true;
                 return true;
@@ -216,14 +216,14 @@ namespace NewFirearms
             if (!IsReady())
             {
                 Sound.Play(prop.unshootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     SyncIfHost(2);
                 return false;
             }
             if (JamChance())
             {
                 Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     SyncIfHost(3);
                 return false;
             }
@@ -240,12 +240,12 @@ namespace NewFirearms
             {
                 ShootManager.ShootLogic(info, barrelPosition, (transform.right + transform.up * (UnityEngine.Random.Range(-1f, 1f) * info.verticalSpread)) * num, shooter, ref visuals);
             }
-            if (!Plugin.togetherMpEnabled || (Plugin.togetherMpEnabled && !Plugin.IsDedicated()))
+            if (!Plugin.krokMpEnabled || (Plugin.krokMpEnabled && !Plugin.IsDedicated()))
             {
                 ShootManager.DrawVisuals(visuals);
                 Sound.Play(prop.shootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it), pitchShift: false);
             }
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
                 NotifyShoot(visuals, info.knockback, info.muzzleRise, info.ragdollRecoil);
             body.rb.velocity -= (Vector2)base.transform.right * num * info.knockback;
             body.lastTimeStepVelocity -= (Vector2)base.transform.right * num * info.knockback;
@@ -264,7 +264,7 @@ namespace NewFirearms
             if (1 == fireMode)
             {
                 gasTime = 0f;
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     SyncIfHost();
             }
        else {
@@ -273,7 +273,7 @@ namespace NewFirearms
                     if (JamChance())
                     {
                         Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                        if (Plugin.togetherMpEnabled)
+                        if (Plugin.krokMpEnabled)
                             SyncIfHost(3);
                         return true;
                     }
@@ -281,12 +281,12 @@ namespace NewFirearms
                     gasTime = prop.desiredGasTime;
                     if (4 != prop.feedType)
                         Rack(manual: false);
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.krokMpEnabled)
                         SyncIfHost();
                 }
            else {
                     Plugin.ShiftLeft(ref rounds);
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.krokMpEnabled)
                         SyncIfHost();
                 }
             }
@@ -295,7 +295,7 @@ namespace NewFirearms
 
         public void Rack(bool manual)
         {
-            if (manual && Plugin.togetherMpEnabled && RequestHostIfClient(1))
+            if (manual && Plugin.krokMpEnabled && RequestHostIfClient(1))
                 return;
             racked = !racked;
             if (manual)
@@ -303,7 +303,7 @@ namespace NewFirearms
                 if (JamChance())
                 {
                     Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.krokMpEnabled)
                         SyncIfHost(3);
                     return;
                 }
@@ -319,7 +319,7 @@ namespace NewFirearms
                 else if (-2 == rounds[0])
                     Plugin.ShiftLeft(ref rounds);
             }
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
             {
                 if (manual)
                     SyncIfHost(5);
@@ -333,7 +333,7 @@ namespace NewFirearms
             if (-2 == rounds[index])
                 return;
             string round = "casing";
-            if (!Plugin.togetherMpEnabled && GunMinigame.Plugin.useMinigame)
+            if (!Plugin.krokMpEnabled && GunMinigame.Plugin.useMinigame)
                 GunMinigame.MinigameManager.GetOrAddInstance().CreateCasing();
             if (0 <= rounds[index])
                 round = prop.ammoTypes[rounds[index]].round;
@@ -352,14 +352,14 @@ namespace NewFirearms
 
         public void OnInventoryUse()
         {
-            if (Plugin.togetherMpEnabled && !Plugin.IsHost())
+            if (Plugin.krokMpEnabled && !Plugin.IsHost())
                 return;
             RemoveMag(null);
         }
 
         public bool DragOnto(Item item)
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(2, item))
+            if (Plugin.krokMpEnabled && RequestHostIfClient(2, item))
                 return true;
             if (item.TryGetComponent<RshMag>(out var newMag))
             {
@@ -374,7 +374,7 @@ namespace NewFirearms
                 mag = newMag.it.id;
                 UnityEngine.Object.Destroy(item.gameObject);
                 UpdateSprite();
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     SyncIfHost();
             }
        else {
@@ -443,7 +443,7 @@ namespace NewFirearms
                         GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(0.5f, 0.5f);
                     UnityEngine.Object.Destroy(item.gameObject);
                     UpdateSprite();
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.krokMpEnabled)
                         SyncIfHost(4);
                     return true;
                 }
@@ -453,14 +453,14 @@ namespace NewFirearms
 
         public void RemoveMag(Body body=null)
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(3))
+            if (Plugin.krokMpEnabled && RequestHostIfClient(3))
                 return;
             if (3 <= prop.feedType && racked)
             {
                 Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 for (int i = 0; i < rounds.Count(); i++)
                     EjectRound(i);
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     SyncIfHost(1);
             }
        else if (!string.IsNullOrEmpty(mag))
@@ -485,7 +485,7 @@ namespace NewFirearms
                     Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                     body.AutoPickUpItem(go.GetComponent<Item>());
                     UpdateSprite();
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.krokMpEnabled)
                     {
                         rshMag.SyncIfHost();
                         SyncIfHost();
@@ -511,7 +511,7 @@ namespace NewFirearms
             Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             body.AutoPickUpItem(go.GetComponent<Item>());
             UpdateSprite();
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
             {
                 rshMag.SyncIfHost();
                 SyncIfHost();
@@ -525,7 +525,7 @@ namespace NewFirearms
             fireMode = prop.fireModes.Max();
             it.condition = Mathf.Max(0.014f, it.condition);
             UpdateSprite();
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
                 SyncIfHost();
         }
 
@@ -561,66 +561,50 @@ namespace NewFirearms
             DestroyComposedSprite();
         }
 
-
-        public void SyncIfHostt()
-         => SyncIfHost(reliable: false);
-
-
-
-       /*
-        * 0 - Try to shoot
-        * 1 - Manual rack
-        * 2 - Drag onto
-        * 3 - Remove mag
-        * 4 - Toggle fire mode
-        * 5 - Stop shooting
-        */
+        /*
+         * 0 - Try to shoot
+         * 1 - Manual rack
+         * 2 - Drag onto
+         * 3 - Remove mag
+         * 4 - Toggle fire mode
+         * 5 - Stop shooting
+         */
         public bool RequestHostIfClient(byte action, Item second=null)
         {
-            if (Together.Net.IsServer)
+            if (KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server)
                 return false;
-            LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_ACTION);
-            Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(true) as Together.SyncInfoGameObjectTracker);
-            writer.Put(tracker.syncId);
+            LiteNetLib.Utils.NetDataWriter writer = KrokoshaCasualtiesMP.Net.CreateWriter(31803);
+            writer.Put((ushort)(GetMpTracker() as KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker).syncinfo.syncId);
             writer.Put((byte)action);
             if (null != second)
             {
-                if (!second.TryGetComponent<Together.SyncInfoGameObjectTracker>(out var ksmgont2))
-                    throw new Exception("[NewFirearms] Attempt to gun action on drag onto without ScavMultiGameObjectNetworkTracker :hmm:");
-                writer.Put((ushort)ksmgont2.syncId);
+                if (!second.TryGetComponent<KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker>(out var ksmgont2))
+                    throw new Exception("[NewFirearms] Attempt to gun action on drag onto without KrokoshaScavMultiGameObjectNetworkTracker :hmm:");
+                writer.Put((ushort)ksmgont2.syncinfo.syncId);
             }
-            Together.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer);
+            KrokoshaCasualtiesMP.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer);
             return true;
         }
         /*
-        * 1 - Play removeMag audio
-        * 2 - Play unshoot audio
-        * 3 - Play jam audio
-        * 4 - Play load round audio
-        * 5 - Play rack audio
-        */
-        public override void SyncIfHost(byte extraData=0, bool reliable=true)
+         * 1 - Play removeMag audio
+         * 2 - Play unshoot audio
+         * 3 - Play jam audio
+         * 4 - Play load round audio
+         * 5 - Play rack audio
+         */
+        public void SyncIfHost(byte extraData=0, bool reliable=true)
         {
-            if (!Together.Net.IsServer)
+            if (!KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server)
                 return;
-            Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(reliable) as Together.SyncInfoGameObjectTracker);
-            if (null == tracker)
+            var tracker = (GetMpTracker() as KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker); // too much to type, duh
+            if (!tracker.is_within_anyones_view)
                 return;
-            if (!tracker.isVisible)
-                return;
-            LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_SYNC);
+            LiteNetLib.Utils.NetDataWriter writer = KrokoshaCasualtiesMP.Net.CreateWriter(31802);
 
-            writer.Put((ushort)tracker.syncId);
+            writer.Put((ushort)tracker.syncinfo.syncId);
             writer.Put((byte)fireMode);
             writer.Put((bool)racked);
-            if (string.IsNullOrEmpty(mag))
-            {
-                writer.Put((bool)false);
-            }
-       else {
-                writer.Put((bool)true);
-                Together.MyLiteNetLibExtensions.Put(writer, (string)mag, oneByteChars:true);
-            }
+            writer.Put((string)mag);
 
             writer.Put((ushort)rounds.Count());
             for (int i = 0; i < rounds.Count(); i++)
@@ -631,13 +615,15 @@ namespace NewFirearms
             LiteNetLib.DeliveryMethod method;
             if (reliable)
                 method = LiteNetLib.DeliveryMethod.ReliableUnordered;
-       else     method = LiteNetLib.DeliveryMethod.Unreliable;
-            Together.Net.Server_SendToClients(method, in writer, Together.ServerMain.AllClientIdsExceptHost);
+            else     method = LiteNetLib.DeliveryMethod.Unreliable;
+            KrokoshaCasualtiesMP.Net.Server_SendToClients(method, in writer, KrokoshaCasualtiesMP.ServerMain.AllClientIdsExceptHost);
         }
 
         void MpScareCheck()
         {
-            if (!Together.Multiplayer.rules.PVP)
+            if (!(GetMpTracker() as KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker).is_super_close)
+                return;
+            if (!KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.rules.PVP)
                 return;
             if (null == transform.parent || !transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) || slot.slot != slot.body.handSlot)
                 return;
@@ -648,13 +634,13 @@ namespace NewFirearms
             Vector2 barrelPos = (Vector2)transform.position + (Vector2)(transform.up * prop.barrelOffset);
             RaycastHit2D[] hits = Physics2D.RaycastAll(barrelPos, direction, 4f);
             foreach (RaycastHit2D hit in hits)
-            { // TODO REwrite thta
+            {
                 Limb limb = null;
                 if (hit.collider.TryGetComponent<Limb>(out var hitLimb) && hitLimb.isVital)
                     limb = hitLimb;
                 if (null == limb)
                 {
-                    if (!hit.collider.TryGetComponent<Together.NetBody>(out var netBody))
+                    if (!hit.collider.TryGetComponent<KrokoshaCasualtiesMP.NetBody>(out var netBody))
                         continue;
                     Vector2 toHead = ((Vector2)netBody.GetHeadPos() - barrelPos).normalized;
                     if (0.9f > Vector2.Dot(direction, toHead))
@@ -662,7 +648,7 @@ namespace NewFirearms
                     limb = netBody.head;
                 }
                 // Yet another bug fix here
-                // 1. It doesnt account for teams, lol
+                // 1. It doesnt account for teams, lmao
                 // 2. It compare to happiness not totalHappiness
                 if (ShootManager.CantHitThisPlayer(limb.body, holder) || -40f > limb.body.totalHappiness)
                     continue;
@@ -672,24 +658,21 @@ namespace NewFirearms
 
         public void NotifyShoot(ShootVisuals visuals, float knockback, float muzzleRise, bool ragdollRecoil)
         {
-            if (!Together.Net.IsServer)
+            if (!KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server)
                 return;
-            LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_SHOOT_VISUALS);
-            Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(false) as Together.SyncInfoGameObjectTracker);
-            if (null == tracker)
-                return;
-            writer.Put((ushort)tracker.syncId);
+            LiteNetLib.Utils.NetDataWriter writer = KrokoshaCasualtiesMP.Net.CreateWriter(31804);
+            writer.Put((ushort)(GetMpTracker() as KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker).syncinfo.syncId);
             writer.Put((float)knockback);
             writer.Put((float)muzzleRise);
             writer.Put((bool)ragdollRecoil);
             visuals.Serialize(ref writer);
-            Together.Net.Server_SendToClients(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer, Together.ServerMain.AllClientIdsExceptHost);
+            KrokoshaCasualtiesMP.Net.Server_SendToClients(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer, KrokoshaCasualtiesMP.ServerMain.AllClientIdsExceptHost);
         }
 
-        public static void ClientSync(LiteNetLib.Utils.NetDataReader reader)
+        public static void ClientSync(KrokoshaCasualtiesMP.knetid _, ref LiteNetLib.Utils.NetDataReader reader)
         { // the var is evil
             reader.Get(out ushort syncId);
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var _, out var it))
+            if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(syncId), out var _, out var it))
                 throw new Exception("[NewFirearms] Recived gun sync info for non-registred gun!");
             if (!it.TryGetComponent<RshGun>(out var rshGun))
                 throw new Exception("[NewFirearms] Gun sync packet refering to item without RshGun component :tourniqet:");
@@ -698,31 +681,30 @@ namespace NewFirearms
 
             reader.Get(out byte newFireMode);
             if (newFireMode != rshGun.fireMode)
-                Sound.Play(rshGun.prop.toggleFireModeAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                Sound.Play(rshGun.prop.toggleFireModeAudio, rshGun.transform.position);
             rshGun.fireMode = newFireMode;
 
             reader.Get(out bool newRack);
 
-            string newMag = null;
-            reader.Get(out bool haveMag);
-            if (haveMag)
-                Together.MyLiteNetLibExtensions.Get(reader, out newMag, oneByteChars: true);
+            reader.Get(out string newMag);//, 0Plugin.sett.maxArraySize);
             if (string.IsNullOrEmpty(newMag) && !string.IsNullOrEmpty(rshGun.mag))
             {
                 shouldUpdateSprite = true;
-                Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position);
             }
             else if (!string.IsNullOrEmpty(newMag) && string.IsNullOrEmpty(rshGun.mag))
             {
                 shouldUpdateSprite = true;
-                Sound.Play(rshGun.prop.loadMagAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                Sound.Play(rshGun.prop.loadMagAudio, rshGun.transform.position);
             }
             rshGun.mag = newMag;
 
             reader.Get(out ushort roundsCount);
             if (0 == roundsCount)
                 throw new Exception("[NewFirearms] Attempt to initalize rounds with count of 0!");
-            rshGun.rounds.Clear();
+/*            if (Plugin.sett.maxArraySize < roundsCount)
+                throw new Exception($"[NewFirearms] Attempt to initalize list with count of {roundsCount}!");*/
+            rshGun.rounds = new List<sbyte>(roundsCount); // do i need to delete old list?
             for (ushort i = 0; i < roundsCount; i++)
             {
                 reader.Get(out sbyte newRound);
@@ -731,25 +713,25 @@ namespace NewFirearms
 
             reader.Get(out byte extraData);
             if (1 == extraData)
-                Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-       else if (2 == extraData)
-                Sound.Play(rshGun.prop.unshootAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-       else if (3 == extraData)
-                Sound.Play(rshGun.prop.jamAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-       else if (4 == extraData)
-                Sound.Play(rshGun.prop.loadRoundAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position);
+            else if (2 == extraData)
+                Sound.Play(rshGun.prop.unshootAudio, rshGun.transform.position);
+            else if (3 == extraData)
+                Sound.Play(rshGun.prop.jamAudio, rshGun.transform.position);
+            else if (4 == extraData)
+                Sound.Play(rshGun.prop.loadRoundAudio, rshGun.transform.position);
 
             if (newRack && !rshGun.racked)
             {
                 shouldUpdateSprite = true;
                 if (5 == extraData)
-                    Sound.Play(rshGun.prop.rackAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                    Sound.Play(rshGun.prop.rackAudio, rshGun.transform.position);
             }
-       else if (!newRack && rshGun.racked)
+            else if (!newRack && rshGun.racked)
             {
                 shouldUpdateSprite = true;
                 if (5 == extraData)
-                    Sound.Play(rshGun.prop.unrackAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                    Sound.Play(rshGun.prop.unrackAudio, rshGun.transform.position);
             }
             rshGun.racked = newRack;
 
@@ -757,106 +739,73 @@ namespace NewFirearms
                 rshGun.UpdateSprite();
         }
 
-        public static readonly Dictionary<byte, string> ACTIONS_NAME = new Dictionary<byte, string>
-        {
-            {0, "shoot"},
-            {1, "rack"},
-            {2, "chamber load"},
-            {3, "remove mag"},
-            {4, "toggle fire mode"},
-            {5, "stop shooting"},
-        };
-
-        public static void ServerReceiver(Together.ScavPlayer plr, LiteNetLib.Utils.NetDataReader reader)
+        public static void ServerReceiver(KrokoshaCasualtiesMP.knetid clientId, ref LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);
-            reader.Get(out byte action);
-
-            if (6 <= action)
-            {
-                DenyAction(plr, "Denied unknown gun action");
-                return;
-            }
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var si, out Item it))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nGun is not registred!");
-                return;
-            }
+            if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(syncId), out var si, out var it))
+                throw new Exception("[NewFirearms] Recived gun action request for non-registred item!");
             if (!it.TryGetComponent<RshGun>(out var rshGun))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nThis is not a gun?!");
-                return;
-            }
-            if (!plr.TryGetNetBody(out var pb))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou dont have a body, whaaa??!!");
-                return;
-            }
-            if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(si, pb.body, check_obstruction:true))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou can't reach that gun.", canBeFixedWithSwitchingStrictSync:true);
-                return;
-            }
+                throw new Exception("[NewFirearms] Gun action request refering to item without RshGun component :tourniqet:");
+            if (!KrokoshaCasualtiesMP.NetPlayer.TryGetNetPlayerAndNetBodyFromClientId(clientId, out var plr, out var pb))
+                throw new Exception("[NewFirearms] Recived gun action from client without body????!!!! WTF!!!!????");
+            if (!KrokoshaCasualtiesMP.ItemSync.CheckIfBodyReachThisItem(si, pb.body))
+                throw new Exception($"[NewFirearms] SUS: {plr} is trying to perfome action on gun they can not reach!");
 
+            reader.Get(out byte action);
             if (0 == action)
                 rshGun.Shoot(pb.body);
-       else if (1 == action)
+            else if (1 == action)
                 rshGun.Rack(manual: true);
-       else if (2 == action)
+            else if (2 == action)
             {
                 reader.Get(out ushort ontoSyncId);
-                if (!Together.ItemSync.TryGetItem(new Together.knetid(ontoSyncId), out var ontoSi, out var ontoIt))
-                {
-                    DenyAction(plr, "Denied chamber load\nRound is not registred!");
-                    return;
-                }
-                if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(ontoSi, pb.body, check_obstruction:true))
-                {
-                    DenyAction(plr, "Denied chamber load\nYou can't reach that round.", canBeFixedWithSwitchingStrictSync:true);
-                    return;
-                }
+                if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(ontoSyncId), out var ontoSi, out var ontoIt))
+                    throw new Exception("[NewFirearms] Recived gun action drag onto for non-registred item!");
+                if (!KrokoshaCasualtiesMP.ItemSync.CheckIfBodyReachThisItem(ontoSi, pb.body))
+                    throw new Exception($"[NewFirearms] SUS: {plr} is trying to drag onto gun item they can not reach!");
                 rshGun.DragOnto(ontoIt);
             }
-       else if (3 == action)
+            else if (3 == action)
                 rshGun.RemoveMag(pb.body);
-       else if (4 == action)
+            else if (4 == action)
             {
-                Sound.Play(rshGun.prop.toggleFireModeAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                Sound.Play(rshGun.prop.toggleFireModeAudio, rshGun.transform.position);
                 rshGun.fireMode = rshGun.prop.fireModes[(rshGun.prop.fireModes.IndexOf(rshGun.fireMode) + 1) % rshGun.prop.fireModes.Count];
                 rshGun.SyncIfHost();
             }
-       else if (5 == action)
+            else if (5 == action)
+            {
                 rshGun.shooter = null;
+            }
+            else     UnityEngine.Debug.LogWarning($"[NewFirearms] {plr} is trying to perform unknown gun action {action}");
         }
 
-        public static void ReceiveShoot(LiteNetLib.Utils.NetDataReader reader)
+        public static void ReciveShoot(KrokoshaCasualtiesMP.knetid _, ref LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);
-            RshGun rshGun = null;
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var si, out var _1))
-                UnityEngine.Debug.LogWarning("[NewFirearms] Recived shoot notify for non-registred item! Are you missing addon?");
-       else if (!si.IsItem())
-                UnityEngine.Debug.LogWarning("[NewFirearms] Shoot notify refering to not item :tourniqet:");
-       else if (!si.go.TryGetComponent<RshGun>(out rshGun))
-                UnityEngine.Debug.LogWarning("[NewFirearms] Shoot notify refering to item without RshGun component :tourniqet:");
+            if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(syncId), out var si, out var _1))
+                throw new Exception("[NewFirearms] Recived shoot notify for non-registred item!");
+            if (!si.IsItem())
+                throw new Exception("[NewFirearms] Shoot notify refering to not item :tourniqet:");
+            if (!si.go.TryGetComponent<RshGun>(out var rshGun))
+                throw new Exception("[NewFirearms] Shoot notify refering to item without RshGun component :tourniqet:");
 
+            Sound.Play(rshGun.prop.shootAudio, rshGun.transform.position);
             reader.Get(out float knockback);
             reader.Get(out float muzzleRise);
             reader.Get(out bool ragdollRecoil);
-            if (null != rshGun)
-                Sound.Play(rshGun.prop.shootAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(si.item), pitchShift: false);
-            if (null != rshGun && null != rshGun.transform.parent && rshGun.transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot))
+            if (null != rshGun.transform.parent && rshGun.transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot))
             {
                 float num = slot.body.isRight ? 1f : (-1f);
                 slot.body.rb.velocity -= (Vector2)rshGun.transform.right * num * knockback;
                 slot.body.lastTimeStepVelocity -= (Vector2)rshGun.transform.right * num * knockback;
-                slot.body.armsAnimator.SetFloat("gunangle", slot.body.armsAnimator.GetFloat("gunangle") + muzzleRise * MUZZLE_RISE_MODIFIER);
-                if (PlayerCamera.main.body == slot.body && GunMinigame.Plugin.useMinigame)
+                slot.body.armsAnimator.SetFloat("gunangle", slot.body.armsAnimator.GetFloat("gunangle") + muzzleRise * 8f);
+                if (PlayerCamera.main.body == slot.body)
                     GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(knockback, muzzleRise);
                 if (ragdollRecoil)
                     slot.body.Ragdoll();
             }
-       else     UnityEngine.Debug.LogWarning("[NewFirearms] Host says that gun is being shot, but im unable to find who shoots it, ummm, okay ig???");
+            else     UnityEngine.Debug.LogWarning("[NewFirearms] Host says that gun is being shot, but im unable to find who shoots it, ummm, okay ig???");
             ShootManager.DrawVisuals(ShootVisuals.Deserialize(ref reader));
         }
     }

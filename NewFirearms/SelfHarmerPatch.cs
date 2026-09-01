@@ -113,17 +113,17 @@ namespace NewFirearms
 
         public static void RequestGunSuicide()
         {
-            Together.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, Together.Multiplayer.CreateNamedWriter(MSGID_SUICIDE_REQUEST));
+            KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.Client_SendSimpleMessageToServer(31807);
         }
     }
 
     // idfk tf is going on in krok's selfharmer sync, its broken beyond repair
     class YOU_SHOULD_KILL_YOURSELF_NOOOWPatch
     {
-        static bool Prefix(Together.knetid servid, ref LiteNetLib.Utils.NetDataReader reader)
+        static bool Prefix(KrokoshaCasualtiesMP.knetid servid, ref LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out byte result);
-            Together.MyLiteNetLibExtensions.Get(reader, out Together.LimbNetId result2);
+            KrokoshaCasualtiesMP.MyLiteNetLibExtensions.Get(reader, out KrokoshaCasualtiesMP.LimbNetId result2);
             if (!result2.TryGetNetBodyAndLimb(out var nb, out var limb))
             {
                 return false;
@@ -135,40 +135,39 @@ namespace NewFirearms
                 {
                     if (body.FindByIdThorough("plushie", out var _))
                     {
-                        Together.YOU_SHOULD_KILL_YOURSELF_NOOOW.Force(body.GetComponent<SelfHarmer>());
+                        KrokoshaCasualtiesMP.YOU_SHOULD_KILL_YOURSELF_NOOOW.Force(body.GetComponent<SelfHarmer>());
                     }
                     break;
                 }
                 case 10:
                 {
-                    if (body.FindByTagThorough("gun", out var it))
+                    if (body.FindByTagThorough("gun", out Item it))
                     {
-                        // why og code had GetComponent<SelfHarmer>() if its already cacched in harmer?
                         body.harmer.StartCoroutine(SelfHarmerPatch.GunSuicide(body.harmer, it));
                     }
                     break;
                 }
                 default:
-                    if (!CasualtiesTogetherUtils.Util.IsBodyLocal(body))
+                    if (!KrokoshaCasualtiesUtils.Util.IsBodyLocal(body))
                     {
-                        Together.YOU_SHOULD_KILL_YOURSELF_NOOOW.SelfHarm_Copypasted(result, body, ref limb);
+                        KrokoshaCasualtiesMP.YOU_SHOULD_KILL_YOURSELF_NOOOW.SelfHarm_Copypasted(result, body, ref limb);
                     }
                     break;
             }
             return false;
         }
 
-        public static void ReciveGunSuicideRequest(Together.ScavPlayer plr, LiteNetLib.Utils.NetDataReader reader)
+        public static void ReciveGunSuicideRequest(KrokoshaCasualtiesMP.knetid clientid, ref LiteNetLib.Utils.NetDataReader reader)
         {
-            if (null == plr.body || !plr.body.alive || !plr.body.conscious || !plr.body.FindByTagThorough("gun", out var it) || !it.TryGetComponent<RshGun>(out var rshGun) || (Plugin.sett.strictSync && !rshGun.IsReady()))
+            if (!KrokoshaCasualtiesMP.NetPlayer.TryGetNetPlayerAndNetBodyFromClientId(clientid, out var plr, out var pb) || !pb.body.FindByTagThorough("gun", out var it) || !it.TryGetComponent<RshGun>(out var rshGun) || !rshGun.IsReady())
             {
                 plr.Server_DoAlertSingle("Denied gun suicide");
                 return;
             }
-            float oldHappiness = plr.body.happiness;
-            plr.body.happiness = -100000f;
-            plr.body.harmer.AttemptHarm();
-            plr.body.happiness = oldHappiness;
+            float oldHappiness = pb.body.happiness;
+            pb.body.happiness = -100000f;
+            pb.body.harmer.AttemptHarm();
+            pb.body.happiness = oldHappiness;
         }
     }
 }

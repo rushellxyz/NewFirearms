@@ -29,29 +29,19 @@ namespace NewFirearms
         // if it returns KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker
         // then the entire game would crash on saving without mp mod dll
         // instead return monobehaviour and convert it on caller
-        public MonoBehaviour GetMpTracker(bool mustHave)
+        public MonoBehaviour GetMpTracker()
         {
             if (null != mpTracker)
                 return mpTracker;
-            mpTracker = GetComponent<Together.SyncInfoGameObjectTracker>();
-            if (mustHave && null == mpTracker)
-                throw new Exception("[NewFirearms] Attempt to action on item without SyncInfoGameObjectTracker :hmm:");
+            mpTracker = GetComponent<KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker>();
+            if (null == mpTracker)
+                throw new Exception("[NewFirearms] Attempt to action on item without KrokoshaScavMultiGameObjectNetworkTracker :hmm:");
             return mpTracker;
         }
 
-        public static void DenyAction(Together.ScavPlayer plr, string msg, bool canBeFixedWithSwitchingStrictSync=false)
-        {
-            if (canBeFixedWithSwitchingStrictSync)
-                UnityEngine.Debug.LogWarning($"[NewFirearms] {plr}: {msg}\nThis can be fixing by toggling strictSync in Settings.json");
-       else     UnityEngine.Debug.LogWarning($"[NewFirearms] {plr}: {msg}");
-            plr.Server_DoAlertSingle(msg);
-        }
-
-        public abstract void SyncIfHost(byte extraData=0, bool reliable=true);
-
         public static bool IsClient()
         {
-            return Together.Net.IsClient;
+            return KrokoshaCasualtiesMP.Net.is_client;
         }
 
         /*public static void DestroyEverything()

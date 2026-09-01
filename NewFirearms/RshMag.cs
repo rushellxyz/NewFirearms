@@ -33,14 +33,14 @@ namespace NewFirearms
                 return;
             Fill((sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count), Mathf.RoundToInt(prop.capacity * it.condition));
             it.condition = 1f;
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
                 MpStartOp();
             existed = true;
         }
 
         public void MpStartOp()
         {
-            if (Together.Net.IsServer)
+            if (KrokoshaCasualtiesMP.Net.is_server)
             {
                 InvokeRepeating("SyncIfHostt", Plugin.sett.magSyncRate, Plugin.sett.magSyncRate);
             }
@@ -55,14 +55,14 @@ namespace NewFirearms
             if (-1 == round)
                 return;
 
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(1, item))
+            if (Plugin.krokMpEnabled && RequestHostIfClient(1, item))
                 return;
 
             Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             Plugin.ShiftRight(ref rounds);
             rounds[0] = round;
             UnityEngine.Object.Destroy(item.gameObject);
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
                 SyncIfHost(1);
         }
 
@@ -82,7 +82,7 @@ namespace NewFirearms
             body.AutoPickUpItem(Utils.Create(round, transform.position, 0f).GetComponent<Item>());
             rounds[0] = -2;
             Plugin.ShiftLeft(ref rounds);
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.krokMpEnabled)
                 SyncIfHost(2);
         }
 
@@ -95,28 +95,26 @@ namespace NewFirearms
         {
             rounds = Enumerable.Repeat(type, amount).ToList();
             rounds.AddRange(Enumerable.Repeat((sbyte)-2, prop.capacity - amount));
-            if (Plugin.togetherMpEnabled && existed)
+            if (Plugin.krokMpEnabled && existed)
                 SyncIfHost();
         }
 
         public void SyncIfHostt()
          => SyncIfHost(reliable: false);
 
-         /*
-          * 1 - Play load round
-          * 2 - Play unload round
-          */
-        public override void SyncIfHost(byte extraData=0, bool reliable=true)
+        /*
+         * 1 - Play load round
+         * 2 - Play unload round
+         */
+        public void SyncIfHost(byte extraData=0, bool reliable=true)
         {
-            if (!Together.Net.IsServer)
+            if (!KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server)
                 return;
-            Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(reliable) as Together.SyncInfoGameObjectTracker);
-            if (null == tracker)
+            var tracker = (GetMpTracker() as KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker); // too much to type, duh
+            if (!tracker.is_within_anyones_view)
                 return;
-            if (!tracker.isVisible)
-                return;
-            LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_SYNC);
-            writer.Put((ushort)tracker.syncId);
+            LiteNetLib.Utils.NetDataWriter writer = KrokoshaCasualtiesMP.Net.CreateWriter(31805);
+            writer.Put((ushort)tracker.syncinfo.syncId);
 
             writer.Put((ushort)rounds.Count());
             for (ushort i = 0; i < rounds.Count(); i++)
@@ -127,41 +125,42 @@ namespace NewFirearms
             LiteNetLib.DeliveryMethod method;
             if (reliable)
                 method = LiteNetLib.DeliveryMethod.ReliableUnordered;
-       else     method = LiteNetLib.DeliveryMethod.Unreliable;
-            Together.Net.Server_SendToClients(method, in writer, Together.ServerMain.AllClientIdsExceptHost);
+            else     method = LiteNetLib.DeliveryMethod.Unreliable;
+            KrokoshaCasualtiesMP.Net.Server_SendToClients(method, in writer, KrokoshaCasualtiesMP.ServerMain.AllClientIdsExceptHost);
         }
 
         public bool RequestHostIfClient(byte action, Item second=null)
         {
-            if (Together.Net.IsServer)
+            if (KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server)
                 return false;
-            LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_ACTION);
-            Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(true) as Together.SyncInfoGameObjectTracker);
-            writer.Put((ushort)tracker.syncId);
+            LiteNetLib.Utils.NetDataWriter writer = KrokoshaCasualtiesMP.Net.CreateWriter(31806);
+            writer.Put((ushort)(GetMpTracker() as KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker).syncinfo.syncId);
             writer.Put((byte)action);
             if (null != second)
             {
-                if (!second.TryGetComponent<Together.SyncInfoGameObjectTracker>(out var ksmgont2))
-                    throw new Exception("[NewFirearms] Attempt to mag action on drag onto without ScavMultiGameObjectNetworkTracker :hmm:");
-                writer.Put((ushort)ksmgont2.syncId);
+                if (!second.TryGetComponent<KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker>(out var ksmgont2))
+                    throw new Exception("[NewFirearms] Attempt to mag action on drag onto without KrokoshaScavMultiGameObjectNetworkTracker :hmm:");
+                writer.Put((ushort)ksmgont2.syncinfo.syncId);
             }
-            Together.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer);
+            KrokoshaCasualtiesMP.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer);
             return true;
         }
 
-        public static void ClientSync(LiteNetLib.Utils.NetDataReader reader)
+        public static void ClientSync(KrokoshaCasualtiesMP.knetid _, ref LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var _, out Item it))
+            if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(syncId), out var _, out Item item))
                 throw new Exception("[NewFirearms] Recived mag sync info for non-registred mag!");
-            if (!it.TryGetComponent<RshMag>(out var rshMag))
+            if (!item.TryGetComponent<RshMag>(out var rshMag))
                 throw new Exception("[NewFirearms] Mag sync packet refering to item without RshMag component :tourniqet:");
             rshMag.existed = true;
 
             reader.Get(out ushort roundsCount);
             if (0 == roundsCount)
                 throw new Exception("[NewFirearms] Attempt to initalize rounds with count of 0!");
-            rshMag.rounds.Clear();
+/*            if (Plugin.sett.maxArraySize < roundsCount)
+                throw new Exception($"[NewFirearms] Attempt to initalize array with count of {roundsCount}!");*/
+            rshMag.rounds = new List<sbyte>(roundsCount); // do i need to delete old list?
             for (ushort i = 0; i < roundsCount; i++)
             {
                 reader.Get(out sbyte newRound);
@@ -170,65 +169,36 @@ namespace NewFirearms
 
             reader.Get(out byte extraData);
             if (1 == extraData)
-                Sound.Play(rshMag.prop.loadRoundAudio, rshMag.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-       else if (2 == extraData)
-                Sound.Play(rshMag.prop.unloadRoundAudio, rshMag.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                Sound.Play(rshMag.prop.loadRoundAudio, rshMag.transform.position);
+            else if (2 == extraData)
+                Sound.Play(rshMag.prop.unloadRoundAudio, rshMag.transform.position);
         }
 
-        public static readonly Dictionary<byte, string> ACTIONS_NAME = new Dictionary<byte, string>
-        {
-            {0, "remove round"},
-            {1, "load round"},
-        };
-
-        public static void ServerReceiver(Together.ScavPlayer plr, LiteNetLib.Utils.NetDataReader reader)
+        public static void ServerReceiver(KrokoshaCasualtiesMP.knetid clientId, ref LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);
-            reader.Get(out byte action);
-
-            if (2 <= action)
-            {
-                DenyAction(plr, "Denied unknown mag action");
-                return;
-            }
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var si, out var item))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nMag is not registred!");
-                return;
-            }
+            if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(syncId), out var si, out var item))
+                throw new Exception("[NewFirearms] Recived mag action request for non-registred item!");
             if (!item.TryGetComponent<RshMag>(out var rshMag))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nThis is not a mag?!");
-                return;
-            }
-            if (!plr.TryGetNetBody(out var pb))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou dont have a body, whaaa??!!");
-                return;
-            }
-            if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(si, pb.body, check_obstruction:true))
-            {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou can't reach that mag.", canBeFixedWithSwitchingStrictSync:true);
-                return;
-            }
+                throw new Exception("[NewFirearms] Mag action request refering to item without RshMag component :tourniqet:");
+            if (!KrokoshaCasualtiesMP.NetPlayer.TryGetNetPlayerAndNetBodyFromClientId(clientId, out var plr, out var pb))
+                throw new Exception("[NewFirearms] Recived mag action from client without body????!!!! WTF!!!!????");
+            if (!KrokoshaCasualtiesMP.ItemSync.CheckIfBodyReachThisItem(si, pb.body))
+                throw new Exception($"[NewFirearms] SUS: {plr} is trying to perfom action on mag they can not reach!");
 
+            reader.Get(out byte action);
             if (0 == action)
                 rshMag.RemoveRound(pb.body);
-       else if (1 == action)
+            else if (1 == action)
             {
                 reader.Get(out ushort ontoSyncId);
-                if (!Together.ItemSync.TryGetItem(new Together.knetid(ontoSyncId), out var ontoSi, out var ontoItem))
-                {
-                    DenyAction(plr, "Denied load round\nRound is not registred!");
-                    return;
-                }
-                if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(ontoSi, pb.body, check_obstruction:true))
-                {
-                    DenyAction(plr, "Denied load round\nYou can't reach that round.", canBeFixedWithSwitchingStrictSync:true);
-                    return;
-                }
+                if (!KrokoshaCasualtiesMP.ItemSync.TryGetItem(new KrokoshaCasualtiesMP.knetid(ontoSyncId), out var ontoSi, out var ontoItem))
+                    throw new Exception("[NewFirearms] Recived mag action drag onto for non-registred round!");
+                if (!KrokoshaCasualtiesMP.ItemSync.CheckIfBodyReachThisItem(ontoSi, pb.body))
+                    throw new Exception($"[NewFirearms] SUS: {plr} is trying to darg onto mag item they can not reach!");
                 rshMag.DragOnto(ontoItem);
             }
+            else     UnityEngine.Debug.LogWarning($"[NewFirearms] {plr} is trying to perform unknown mag action {action}");
         }
     }
 }

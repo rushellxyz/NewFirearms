@@ -163,7 +163,7 @@ namespace NewFirearms
                     raycastHit2D.rigidbody.AddForceAtPosition(dir * info.structureDamage, raycastHit2D.point, ForceMode2D.Impulse);
                 }
                 PlayerCamera.main.body.CreateCloudSmall(raycastHit2D.point, Vector2.zero);
-                if (!Plugin.togetherMpEnabled || !IsPvpEnabled())
+                if (!Plugin.krokMpEnabled || !IsPvpEnabled())
                 {
                     continue;
                 }
@@ -184,7 +184,7 @@ namespace NewFirearms
                 if (victim == shooter)
                     continue;
 
-                if ((Plugin.togetherMpEnabled && CantHitThisPlayer(shooter, victim)) || victim == shooter)
+                if ((Plugin.krokMpEnabled && CantHitThisPlayer(shooter, victim)) || victim == shooter)
                 {
                     continue;
                 }
@@ -199,7 +199,7 @@ namespace NewFirearms
                     break;
                 list.Add(victim);
                 Vector2 impulse = dir * info.knockback;
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     RecordShootKnockback(victim, impulse, visuals);
            else     ApplyShootKnockback(victim, impulse);
                 InduceDamage(limb, info.playerDamage, num * PvpDamageMult() / limb.GetArmorReduction());
@@ -248,7 +248,7 @@ namespace NewFirearms
             if (!isBulletproof && UnityEngine.Random.value < info.infectionChance * mult)
             {
                 limb.infectionAmount += 1f;
-                limb.infected = true; 
+                limb.infected = true;
             }
             if (UnityEngine.Random.value < info.dislocationChance * mult * (1f - limb.muscleHealth * 0.01f))
                 limb.Dislocate();
@@ -286,7 +286,7 @@ namespace NewFirearms
        else if (limb.isHead && 0f > limb.muscleHealth)
                 limb.body.brainHealth += limb.muscleHealth;
 
-            if (Plugin.togetherMpEnabled && PvpDismemberAllowed())
+            if (Plugin.krokMpEnabled && PvpDismemberAllowed())
                 DismemberCheck(limb);
         }
 
@@ -330,7 +330,7 @@ namespace NewFirearms
             if (UnityEngine.Random.value > (limb.muscleHealth - 10f) * multiplier)
                 return;
 
-            Together.CombatStuff.BetterDismember(limb, do_checks_to_not_break_the_game: false);
+            KrokoshaCasualtiesMP.CombatStuff.BetterDismember(limb, do_checks_to_not_break_the_game: false);
             /*limb.Dismember();
 
             if (!limb.isHead)
@@ -354,7 +354,7 @@ namespace NewFirearms
             {
                 WorldGeneration.CreateDamageNumber(hitNumber.Item1, hitNumber.Item2);
             }
-            if (!Plugin.togetherMpEnabled)
+            if (!Plugin.krokMpEnabled)
                 return;
             foreach ((ushort netId, Vector2 impulse) in visual.knockbacks)
             {
@@ -364,43 +364,43 @@ namespace NewFirearms
 
         public static Body GetBodyFromId(ushort netId)
         {
-            if (!Together.NetBody.TryGetNetBodyFromId(new Together.knetid(netId), out var netBody) || null == netBody.body)
+            if (!KrokoshaCasualtiesMP.NetBody.TryGetNetBodyFromId(new KrokoshaCasualtiesMP.knetid(netId), out var netBody) || null == netBody.body)
                 throw new Exception($"[NewFirearms] Attempt to apply knockback for non-registred body {netId}! Wtf?");
             return netBody.body;
         }
 
         public static bool IsPvpEnabled()
         {
-            return Together.Multiplayer.rules.PVP;
+            return KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.rules.PVP;
         }
 
         public static float PvpDamageMult()
         {
-            return Together.Multiplayer.rules.PVPDamageMultiplier;
+            return KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.rules.PVPDamageMultiplier;
         }
 
         public static float PvpMoodDebuff()
         {
-            return Together.Multiplayer.rules.PVPMoodDebuff;
+            return KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.rules.PVPMoodDebuff;
         }
 
         public static bool CantHitThisPlayer(Body shooter, Body victim)
         {
             if (shooter == victim)
                 return false;
-            if (!Together.Multiplayer.rules.Teams)
+            if (!KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.rules.Teams)
                 return false;
-            return !Together.ScavPlayer.BodyToPlayerDict[shooter].IsInSameTeamAs(Together.ScavPlayer.BodyToPlayerDict[victim]);
+            return !KrokoshaCasualtiesMP.NetPlayer.BodyToPlayerDict[shooter].IsInSameTeamAs(KrokoshaCasualtiesMP.NetPlayer.BodyToPlayerDict[victim]);
         }
 
         public static bool PvpDismemberAllowed()
         {
-            return Together.Multiplayer.rules.PVPCombatDismember;
+            return KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.rules.PVPCombatDismember;
         }
 
         public static void RecordShootKnockback(Body victim, Vector2 impulse, ShootVisuals visuals)
         {
-            visuals.knockbacks.Add((Together.ScavPlayer.GetClientIdFromBody(victim), impulse));
+            visuals.knockbacks.Add((KrokoshaCasualtiesMP.NetPlayer.GetClientIdFromBody(victim), impulse));
         }
     }
 }

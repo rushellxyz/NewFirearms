@@ -65,16 +65,13 @@
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.TilemapModule.dll</HintPath>
     </Reference>
     <Reference Include="LiteNetLib">
-      <HintPath>$(GameDirectory)/BepInEx/plugins/Together/LiteNetLib.dll</HintPath>
+      <HintPath>$(GameDirectory)/BepInEx/plugins/KrokMP/LiteNetLib.dll</HintPath>
     </Reference>
-    <Reference Include="CasualtiesMP" Publicize="true">
-      <HintPath>$(GameDirectory)/BepInEx/plugins/Together/CasualtiesMP.dll</HintPath>
+    <Reference Include="KrokoshaCasualtiesMP" Publicize="true">
+      <HintPath>$(GameDirectory)/BepInEx/plugins/KrokMP/KrokoshaCasualtiesMP.dll</HintPath>
     </Reference>
     <Reference Include="CUCoreLib">
       <HintPath>$(GameDirectory)/BepInEx/plugins/CUCoreLib.dll</HintPath>
-    </Reference>
-    <Reference Include="LiteEntitySystem">
-      <HintPath>$(GameDirectory)/BepInEx/plugins/Together/LiteEntitySystem.dll</HintPath>
     </Reference>
     <Reference Include="GunMinigame">
       <HintPath>$(GameDirectory)/BepInEx/plugins/GunMinigame.dll</HintPath>

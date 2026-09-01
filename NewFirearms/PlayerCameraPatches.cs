@@ -146,11 +146,11 @@ namespace NewFirearms
         {
             if (__instance.body.HoldingItem(__instance.body.handSlot) && __instance.body.GetItem(__instance.body.handSlot).TryGetComponent<RshGun>(out var component))
             { // TODO i think it eould be great to move it into funciton in RshGun
-                if (Plugin.togetherMpEnabled && component.RequestHostIfClient(4))
+                if (Plugin.krokMpEnabled && component.RequestHostIfClient(4))
                     return false;
                 Sound.Play(component.prop.toggleFireModeAudio, component.transform.position);
                 component.fireMode = component.prop.fireModes[(component.prop.fireModes.IndexOf(component.fireMode) + 1) % component.prop.fireModes.Count];
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.krokMpEnabled)
                     component.SyncIfHost();
             }
             return false;

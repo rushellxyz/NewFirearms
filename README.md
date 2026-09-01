@@ -1,5 +1,4 @@
 A source code for mod of mine [New Firearms](https://www.nexusmods.com/scavprototype/mods/122)
-You cant compile it for now because it requires .dll for multiplayer 5 that is not publicly avalible
 
 It is splitted into 3 pieces:
  - NewFirearms - the main .dll json loader
