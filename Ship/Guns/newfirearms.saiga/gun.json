@@ -129,7 +129,7 @@
 
 
 
-    "bulletsSpritesPath": [ "bulletEmpty", "bulletCasing", "bulletBuck", "bulletBird", "bulletSlut", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "bulletBuck", "bulletBird", "COPY__Resources/bulletRound", ],
     "magazineTexturesPath": { "newfirearms.saigamag": "saigamag" },
     //"attachmentTexturesPath: { },
 }

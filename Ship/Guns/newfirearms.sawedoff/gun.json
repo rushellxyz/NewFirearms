@@ -154,6 +154,6 @@
     "removeMagSpritePath": "removeMag",
 
     "fireModesSpritePath": [ "safe", "unsafe", "unsafe", ],
-    "bulletsSpritesPath": [ "bulletEmpty", "bulletCasing", "bulletBuck", "bulletBird", "bulletSlug", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/newfirearms.saiga/bulletBuck", "COPY__Guns/newfirearms.saiga/bulletBird", "COPY__Resources/bulletRound", ],
 
 }
