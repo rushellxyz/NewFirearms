@@ -9,13 +9,11 @@ namespace GunMinigame
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            UnityEngine.Debug.Log("Enter");
             isHovering = true;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            UnityEngine.Debug.Log("Exit");
             isHovering = false;
         }
     }

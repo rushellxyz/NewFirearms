@@ -46,5 +46,8 @@
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
+    <Reference Include="GunsawGenetics" Publicize="true">
+      <HintPath>$(GameDirectory)/BepInEx/plugins/GunsawGenetics.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

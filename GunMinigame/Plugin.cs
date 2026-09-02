@@ -56,11 +56,26 @@ namespace GunMinigame
 
         public static bool IsMarksman(Body body)
         {
-            return WorldGeneration.GetRunSettingBool("gunminigame.alwaysmarksman") || (ggEnabled && IsMilkyOrVoyboy(body));
+            if (WorldGeneration.GetRunSettingBool("gunminigame.alwaysmarksman"))
+                return true;
+            if (ggEnabled)
+            {
+                try
+                {
+                    return IsMilkyOrVoyboy(body);
+                }
+           catch{
+                    UnityEngine.Debug.LogError("[NewFirearms] Gunsaw Genetics integration failed! Send a bug report.");
+                    return false;
+                }
+            }
+       else    return false;
         }
 
         private static bool IsMilkyOrVoyboy(Body body)
-         => false; // TODO
+        { // evil string comparassions
+            return "Milky" == GunsawGenetics.SpeciesAbilityManager.ActiveSpecies || "Voyager" == GunsawGenetics.SpeciesAbilityManager.ActiveSpecies || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Milky") || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Voyager");
+        }
     }
 
     [HarmonyPatch(typeof(Settings), "DefaultSettings")]
