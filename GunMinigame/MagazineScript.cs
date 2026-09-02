@@ -11,9 +11,10 @@ namespace GunMinigame
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            MinigameManager.GetOrAddInstance().magazineDragTrigger.gameObject.SetActive(true);
-            GetComponent<RectTransform>().SetParent(MinigameManager.GetOrAddInstance().handTransform);
-            GetComponent<Image>().raycastTarget = false;
+            MinigameManager mang = MinigameManager.GetOrAddInstance();
+            mang.magazineDragTrigger.gameObject.SetActive(true);
+            GetComponent<RectTransform>().SetParent(mang.handTransform);
+            GetComponent<Image>().raycastTarget = false; // scary fix
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -23,11 +24,12 @@ namespace GunMinigame
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            MinigameManager mang = MinigameManager.GetOrAddInstance();
             if (MagazineDragTrigger.isHovering)
-                MinigameManager.GetOrAddInstance().gun.DragOnto(it);
-       else if (!Plugin.IsMarksman(PlayerCamera.main.body))
+                mang.gun.DragOnto(it);
+       else if (!FannyPackScript.isHovering && !Plugin.IsMarksman(PlayerCamera.main.body))
                 it.transform.parent.GetComponent<Container>().UnloadItem(it);
-            MinigameManager.GetOrAddInstance().magazineDragTrigger.gameObject.SetActive(false);
+            mang.magazineDragTrigger.gameObject.SetActive(false);
             var _ = ааа();
             UnityEngine.Object.Destroy(gameObject);
         }

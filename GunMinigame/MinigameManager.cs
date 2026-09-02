@@ -371,7 +371,7 @@ namespace GunMinigame
             magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
             magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
 
-            fannyPack = new GameObject("MinigameFannyPack");
+            fannyPack = new GameObject("MinigameFannyPackBase");
             fannyPack.transform.SetParent(maskBase.transform);
             fannyPack.transform.localPosition = Vector3.zero;
             fannyPack.transform.localScale = Vector3.one;
@@ -382,7 +382,9 @@ namespace GunMinigame
             fannyPackImage.transform.localPosition = Vector3.zero;
             fannyPackImage.GetComponent<RectTransform>().sizeDelta = size;
             fannyPackImage.sprite = fannyPackSprite;
-            fannyPackImage.raycastTarget = false;
+            fannyPackImage.raycastTarget = true;
+            fannyPackImage.alphaHitTestMinimumThreshold = 0.1F;
+            fannyPackImage.gameObject.AddComponent<FannyPackScript>();
 
             fannyPackZip = new GameObject("MinigameFannyPackZip").AddComponent<Image>();
             fannyPackZip.transform.SetParent(fannyPack.transform);
@@ -772,6 +774,7 @@ namespace GunMinigame
             shouldUpdateMagazineCount = shouldUpdateMagazineCount || 0f >= windowAlpha;
             if (shouldUpdateMagazineCount&&activateWindows && 0f < windowAlpha)
             {
+                MagazineDragTrigger.isHovering = false;
                 shouldUpdateMagazineCount = false;
                 int placed = 0;
 
