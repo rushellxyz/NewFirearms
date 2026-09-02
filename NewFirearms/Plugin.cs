@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 
 namespace NewFirearms
 {
-    [BepInPlugin("com.rushellxyz.newfirearms", "New Firearms", "1.6.1")]
+    [BepInPlugin("com.rushellxyz.newfirearms", "New Firearms", "1.6.2")]
     [BepInDependency("com.rushellxyz.gunminigame", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rushellxyz.rshlib", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.SoftDependency)]
