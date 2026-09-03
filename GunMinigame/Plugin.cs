@@ -26,7 +26,7 @@ namespace GunMinigame
                 Logger.LogInfo("GunMinigame/ not detected, running in api-only mode");
        else {
                 Logger.LogInfo("Running in standalone mode");
-                throw new NotImplementedException();//standalone = true;
+                PrepareStandaloneMode();
             }
             var harmony = new Harmony("com.rushellxyz.gunminigame");
             harmony.PatchAll();
@@ -75,6 +75,23 @@ namespace GunMinigame
         private static bool IsMilkyOrVoyboy(Body body)
         { // evil string comparassions
             return "Milky" == GunsawGenetics.SpeciesAbilityManager.ActiveSpecies || "Voyager" == GunsawGenetics.SpeciesAbilityManager.ActiveSpecies || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Milky") || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Voyager");
+        }
+
+        private void PrepareStandaloneMode()
+        {
+            MinigameManager.bulletToShow = (mag) => {
+                AmmoScript ass = mag.GetComponent<AmmoScript>();
+                if (null == ass)
+                {
+                    UnityEngine.Debug.LogWarning("[GunMinigame] Expected item doesnt have a AmmoScript :tourniqet:");
+                    return null;
+                }
+                if (0 == mag.GetComponent<AmmoScript>().rounds)
+                    return null;
+                return AmmoScript.AmmoTypeToItem(ass.ammoType);
+
+            };
+            throw new NotImplementedException();//standalone = true;
         }
     }
 

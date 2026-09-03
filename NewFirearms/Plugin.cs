@@ -74,6 +74,7 @@ namespace NewFirearms
             recipes = new List<Recipe>();
 
             SetupResourcesDict();
+            SetupGunminigame();
             LoadSettings();
             LoadFallbackResources();
             LoadGuns();
@@ -358,6 +359,12 @@ namespace NewFirearms
                 if (!string.IsNullOrEmpty(prop.minigame.magazineDragPath))
                     prop.minigame.magazineDragTrigger = LoadSprite(folder, prop.minigame.magazineDragPath);
            else     prop.minigame.magazineDragTrigger = emptySprite;
+
+                if (null != prop.minigame.ammosInMagazinePaths)
+                    prop.minigame.ammosInMagazine = prop.minigame.ammosInMagazinePaths.ToDictionary(
+                        pair => pair.Key,
+                        pair => LoadSpriteArray(folder, pair.Value)
+                    );
             }
 
 
@@ -799,6 +806,29 @@ namespace NewFirearms
                 PatchPostfix(harmony, "KrokoshaCasualtiesMP.Net", "ShutdownReset", "NewFirearms.NetworkMsgRegister"); // << this mf
                 //PatchPrefix(harmony, "KrokoshaCasualtiesMP.YOU_SHOULD_KILL_YOURSELF_NOOOW", "Client_SelfHarmMinigameMinigameEnd", "YOU_SHOULD_KILL_YOURSELF_NOOOWPatch");
                 NetworkMsgRegister.Postfix();
+        }
+
+        void SetupGunminigame()
+        {
+            GunMinigame.MinigameManager.bulletToShow = (it) => {
+                RshMag mag = it.GetComponent<RshMag>();
+                if (null == it)
+                {
+                    UnityEngine.Debug.LogWarning("[GunMinigame-NewFirearms] Expected item doesnt have a RshMag :tourniqet:");
+                    return null;
+                }
+                if (0 < mag.rounds[0])
+                    return null;
+                return mag.prop.ammoTypes[mag.rounds[0]];
+            };
+        }
+
+        public static Sprite[] LoadSpriteArray(string baseFolder, string[] paths)
+        {
+            Sprite[] result = new Sprite[paths.Length];
+            for (int i = 0; i < paths.Length; i++)
+                result[i] = LoadSprite(baseFolder, paths[i]);
+            return result;
         }
 
         public static Sprite LoadSprite(string baseFolder, string path, float ppu=8.0f)

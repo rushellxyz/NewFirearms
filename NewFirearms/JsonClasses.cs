@@ -107,6 +107,7 @@ namespace NewFirearms
         public string receiverPath;
         public string magReleasePath;
         public Dictionary<string, string> magazinePaths;
+        public Dictionary<string, string[]> ammosInMagazinePaths;
         public string magazineDragPath;
     }
 

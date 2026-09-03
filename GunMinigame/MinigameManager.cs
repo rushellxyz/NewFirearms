@@ -49,6 +49,7 @@ namespace GunMinigame
         public bool canUseFannyPack;
         public Sprite magReleaseTrigger;
         public Dictionary<string, Sprite> magazineSprites;
+        public Dictionary<string, Sprite[]> ammosInMagazine;
         public string[] magazines;
         public float magazineXPosition;
         public float magazineYPosition;
@@ -183,6 +184,8 @@ namespace GunMinigame
 
 
         bool spinningBandol;
+
+        public static Func<Item, string> bulletToShow;
 
         public static MinigameManager GetOrAddInstance()
         {
@@ -798,6 +801,25 @@ namespace GunMinigame
                     transistor.alphaHitTestMinimumThreshold = 0.1f;
                     transistor.gameObject.AddComponent<MagazineScript>().it = it;
                     placedMagazines.Add(transistor);
+
+                    if (null != info.ammosInMagazine)
+                    {
+                        string ammo = bulletToShow(it);
+                        if (!string.IsNullOrEmpty(ammo))
+                        {
+                            int index = Array.IndexOf(info.ammos, ammo);
+                            if (-1 != index)
+                            {
+                                Image ammoFillup = new GameObject("FannyPackMagazineFillup").AddComponent<Image>();
+                                ammoFillup.transform.SetParent(transistor.transform);
+                                ammoFillup.transform.localScale = Vector3.one;
+                                ammoFillup.transform.localPosition = Vector3.zero;
+                                ammoFillup.sprite = info.ammosInMagazine[it.id][index];
+                                ammoFillup.raycastTarget = false;
+                            }
+                       else     UnityEngine.Debug.LogWarning($"[NewFirearms] Magazine {it.id} doesnt have a ammo fillup for {ammo}");
+                        }
+                    }
 
                     placed += 1;
                     if (placed >= info.maximumMagazines)
