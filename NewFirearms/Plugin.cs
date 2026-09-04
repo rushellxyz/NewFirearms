@@ -817,7 +817,7 @@ namespace NewFirearms
                     UnityEngine.Debug.LogWarning("[GunMinigame-NewFirearms] Expected item doesnt have a RshMag :tourniqet:");
                     return null;
                 }
-                if (0 < mag.rounds[0])
+                if (0 > mag.rounds[0])
                     return null;
                 return mag.prop.ammoTypes[mag.rounds[0]];
             };

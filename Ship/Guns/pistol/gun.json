@@ -159,7 +159,7 @@
         "canUseFannyPack": true,
         "magReleasePath": "magReleaseTrigger",
         "magazinePaths": { "smallmagazine": "minigameSmallmagazine" },
-        "ammosInMagazinePaths": { "smallmagazine": [ "minigameSmallmagazine9mm" ] },
+        "ammosInMagazinePaths": { "smallmagazine": [ "minigameSmallmagazine9mmround", "minigameSmallmagazine9mmhollow", "minigameSmallmagazine9mmvenomus" ] },
         "magazineXPosition": -0.0859375,
         "magazineYPosition": 0.01388888888888889,
         "magazineXSpeed": -0.2,

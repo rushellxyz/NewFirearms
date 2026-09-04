@@ -1025,7 +1025,13 @@ namespace GunMinigame
             foreach (Image i in ptrs)
                 i.color = colo;
             foreach (Image i in placedMagazines)
+            {
                 i.color = colo;
+                if (0 < i.transform.childCount)
+                {
+                    i.transform.GetChild(0).GetComponent<Image>().color = colo;
+                }
+            }
             if (null != insertedMagazine)
                 insertedMagazine.color = colo;
         }
