@@ -149,12 +149,11 @@
         "unrackedIdlePostion": 0,
         "rackPoint": -0.0125,
         "rackedIdlePosition": -0.025,
-        "casingPaths": [  ],
-        "casingDelay": 0.2,
         "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
         "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
+        "casingPath": "casing",
     }
 }

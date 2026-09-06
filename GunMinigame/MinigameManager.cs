@@ -38,8 +38,6 @@ namespace GunMinigame
         public float unrackedIdlePostion;
         public float rackPoint;
         public float rackedIdlePosition;
-        public Sprite[] casingSprites;
-        public float casingDelay;
         public string[] ammos;
         public Sprite[] ammosInHand;
         public Sprite[] ammosInPtr;
@@ -59,6 +57,7 @@ namespace GunMinigame
         public float magazinesOffset;
         public int maximumMagazines;
         public Sprite magazineDragTrigger;
+        public Sprite casingSprite;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -88,10 +87,6 @@ namespace GunMinigame
 
         public Image sliderFrontImage;
         public Image sliderBackImage;
-
-        public Image casingAnim;
-        private ushort casingIndex;
-        private float casingTimer;
 
         public float sliderHoldOffset;
         public GameObject canvas;
@@ -181,7 +176,7 @@ namespace GunMinigame
         private List<Image> placedMagazines;
 
         public Image magazineDragTrigger;
-
+        public static Vector3 size;
 
         bool spinningBandol;
 
@@ -285,7 +280,7 @@ namespace GunMinigame
             hideShowButton.gameObject.AddComponent<Button>().onClick.AddListener(()=>HideShow());
             hideShowButton.gameObject.AddComponent<ImageHoverror>();
 
-            Vector3 size = new Vector3((670f/2560f)*Screen.width, (335f/1440f)*Screen.height);
+            size = new Vector3((670f/2560f)*Screen.width, (335f/1440f)*Screen.height);
 
             maskBase = new GameObject("MaskBase");
             maskBase.transform.SetParent(uiBase.transform);
@@ -319,13 +314,6 @@ namespace GunMinigame
             rackedSpecific.transform.localPosition = Vector3.zero;
             rackedSpecific.transform.localScale = Vector3.one;
             rackedSpecific.GetComponent<RectTransform>().sizeDelta = size;
-
-            casingAnim = new GameObject("MinigameCasingAnim").AddComponent<Image>();
-            casingAnim.transform.SetParent(gunBase.transform);
-            casingAnim.transform.localPosition = Vector3.zero;
-            casingAnim.transform.localScale = Vector3.one;
-            casingAnim.GetComponent<RectTransform>().sizeDelta = size;
-            casingAnim.enabled = false;
 
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
@@ -536,7 +524,6 @@ namespace GunMinigame
                 handIsHovered = false;
                 holdsSlide = false;
                 shouldResetHandSprite = true;
-                casingIndex = ushort.MaxValue;
                 xInertia = 0f;
                 rotInertia = 0f;
                 return;
@@ -564,7 +551,6 @@ namespace GunMinigame
             }
 
             HandleMag();
-            HandleCasings();
             HandleBandolier();
             HandleWindowAlpha();
             HandleFannyPack();
@@ -712,24 +698,6 @@ namespace GunMinigame
             insertedMagazine.color = new Color(1f, 1f, 1f, windowAlpha);
         }
 
-        private void HandleCasings()
-        {
-            if (ushort.MaxValue == casingIndex)
-                return;
-
-            casingTimer += Time.deltaTime;
-            if (casingTimer < info.casingDelay)
-                return;
-            casingIndex += 1;
-            casingTimer = 0f;
-            if (casingIndex >= info.casingSprites.Length)
-            {
-                casingIndex = ushort.MaxValue;
-                casingAnim.enabled = false;
-            }
-            casingAnim.sprite = info.casingSprites[casingIndex];
-        }
-
         void MagRemoveButton()
         {
             magSyncIgnoreTime = info.magazineAnimationTime;
@@ -871,11 +839,7 @@ namespace GunMinigame
 
         public void CreateCasing()
         {
-            if (null == info || null == info.casingSprites || 0 == info.casingSprites.Length)
-                return;
-            casingAnim.enabled = true;
-            casingIndex = 0;
-            casingAnim.sprite = info.casingSprites[casingIndex];
+            Casing.Create(info.casingSprite);
         }
 
         public void SliderClickDown()

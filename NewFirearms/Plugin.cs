@@ -303,13 +303,6 @@ namespace NewFirearms
                     prop.minigame.unrackedOnlySprite = LoadSprite(folder, prop.minigame.unrackedOnlyPath);
            else     prop.minigame.unrackedOnlySprite = emptySprite;
 
-                if (null != prop.minigame.casingPaths && 0 != prop.minigame.casingPaths.Length)
-                {
-                    prop.minigame.casingSprites = new Sprite[prop.minigame.casingPaths.Length];
-                    for (int i = 0; i < prop.minigame.casingPaths.Length; i++)
-                        prop.minigame.casingSprites[i] = LoadSprite(folder, prop.minigame.casingPaths[i]);
-                }
-
                 if (null == prop.minigame.ammos)
                     prop.minigame.ammos = new string[prop.ammoTypes.Count];
 
@@ -365,6 +358,10 @@ namespace NewFirearms
                         pair => pair.Key,
                         pair => LoadSpriteArray(folder, pair.Value)
                     );
+
+                if (!string.IsNullOrEmpty(prop.minigame.casingPath))
+                    prop.minigame.casingSprite = LoadSprite(folder, prop.minigame.casingPath);
+           else     prop.minigame.casingSprite = emptySprite;
             }
 
 

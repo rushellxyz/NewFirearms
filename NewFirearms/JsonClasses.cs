@@ -101,7 +101,6 @@ namespace NewFirearms
         public string sliderBackPath;
         public string rackedOnlyPath;
         public string unrackedOnlyPath;
-        public string[] casingPaths;
         public string[] ammosInHandPaths;
         public string[] ammosInPtrPaths;
         public string receiverPath;
@@ -109,6 +108,7 @@ namespace NewFirearms
         public Dictionary<string, string> magazinePaths;
         public Dictionary<string, string[]> ammosInMagazinePaths;
         public string magazineDragPath;
+        public string casingPath;
     }
 
     // params of ammo shoot
