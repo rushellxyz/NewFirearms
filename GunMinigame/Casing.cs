@@ -12,9 +12,19 @@ namespace GunMinigame
             casingImage.transform.SetParent(MinigameManager.GetOrAddInstance().maskBase.transform);
             casingImage.transform.localPosition = Vector3.zero;
             casingImage.transform.localScale = Vector3.one;
-            casingImage.GetComponent<RectTransform>().sizeDelta = MinigameManager.size;
+            casingImage.GetComponent<RectTransform>().sizeDelta = MinigameManager.size * 0.1f;
             casingImage.sprite = casing;
-//            UnityEngine.Object.Destroy(casingImage.gameObject, 10f);
+            casingImage.gameObject.AddComponent<Casing>();
+            casingImage.raycastTarget = false;
+            UnityEngine.Object.Destroy(casingImage.gameObject, 2f);
+        }
+
+
+        public Vector3 inertia;
+        private void Update()
+        {
+            transform.localPosition += inertia * Time.deltaTime;
+            inertia += new Vector3(0f, -9.81f * Time.deltaTime);
         }
     }
 }
