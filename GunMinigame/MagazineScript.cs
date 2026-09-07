@@ -5,9 +5,10 @@ using UnityEngine;
 
 namespace GunMinigame
 {
-    public class MagazineScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class MagazineScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
         public Item it;
+        public static MagazineScript currentlyHovering;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
@@ -20,6 +21,11 @@ namespace GunMinigame
         public void OnDrag(PointerEventData eventData)
         {
             // ???
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            currentlyHovering = this;
         }
 
         public void OnEndDrag(PointerEventData eventData)

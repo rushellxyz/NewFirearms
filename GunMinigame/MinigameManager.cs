@@ -64,15 +64,6 @@ namespace GunMinigame
         public bool initialized;
     }
 
-    public interface IMinigameGun
-    {
-        public bool IsRacked();
-        public void Rack();
-        public bool DragOnto(Item item); // Returns whenever load is success
-        public void RemoveMag();
-        public string CurrentMag();
-    }
-
     public class MinigameManager : MonoBehaviour
     {
         public bool active;
@@ -341,6 +332,16 @@ namespace GunMinigame
             receiverTrigger.color = new Color(1f, 1f, 1f, 0f);
             receiverTrigger.gameObject.SetActive(false);
 
+            magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
+            magReleaseTrigger.transform.SetParent(gunBase.transform);
+            magReleaseTrigger.transform.localPosition = Vector3.zero;
+            magReleaseTrigger.transform.localScale = Vector3.one;
+            magReleaseTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            magReleaseTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
+            magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
+
             magazineDragTrigger = new GameObject("MinigameMagazineDragTrigger").AddComponent<Image>();
             magazineDragTrigger.transform.SetParent(gunBase.transform);
             magazineDragTrigger.transform.localPosition = Vector3.zero;
@@ -351,16 +352,6 @@ namespace GunMinigame
             magazineDragTrigger.color = new Color(1f, 1f, 1f, 0f);
             magazineDragTrigger.gameObject.AddComponent<MagazineDragTrigger>();
             magazineDragTrigger.gameObject.SetActive(false);
-
-            magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
-            magReleaseTrigger.transform.SetParent(gunBase.transform);
-            magReleaseTrigger.transform.localPosition = Vector3.zero;
-            magReleaseTrigger.transform.localScale = Vector3.one;
-            magReleaseTrigger.alphaHitTestMinimumThreshold = 0.1f;
-            magReleaseTrigger.GetComponent<RectTransform>().sizeDelta = size;
-            magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
-            magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
-            magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
 
             fannyPack = new GameObject("MinigameFannyPackBase");
             fannyPack.transform.SetParent(maskBase.transform);
@@ -580,13 +571,24 @@ namespace GunMinigame
                     holdsSlide = false;
                     if (null != holding)
                     {
-                        if (!Plugin.IsMarksman(PlayerCamera.main.body) && !handIsInBandolier)
+                        if (handIsInBandolier)
+                            shouldntRefreshBandolierCount = false;
+                   else if (null != MagazineScript.currentlyHovering && null != MagazineScript.currentlyHovering.it)
+                        {
+                            IMinigameMag mag = (MagazineScript.currentlyHovering.it.GetComponent(typeof(IMinigameMag)) as IMinigameMag);
+                            if (null != mag)
+                            {
+                                mag.DragOnto(holding);
+                                SpinBandolied();
+                                shouldUpdateMagazineCount = true;
+                            }
+                       else     UnityEngine.Debug.LogWarning("[GunMinigame] Target magazine doesnt implement IMinigameMag!");
+                        }
+                   else if (!Plugin.IsMarksman(PlayerCamera.main.body))
                         {
                             SpinBandolied();
                             holding.transform.parent.GetComponent<Container>().UnloadItem(holding);
-
                         }
-                    else    shouldntRefreshBandolierCount=false;
                         holding = null;
                         UnityEngine.Object.Destroy(holdingInMinigame);
                     }

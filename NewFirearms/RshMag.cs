@@ -9,7 +9,7 @@ namespace NewFirearms
     // MonoBehaviour script for each individual mag
     [Saveable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class RshMag : RshComponent
+    public class RshMag : RshComponent, GunMinigame.IMinigameMag
     {
         public const string MSGID_SYNC = "NewFirearms_RshMagSync";
         public const string MSGID_ACTION = "NewFirearms_RshMagAction";
