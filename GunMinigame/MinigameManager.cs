@@ -149,8 +149,11 @@ namespace GunMinigame
 
 
         public static Sprite fannyPackSprite;
+        public static Sprite traumarigForegroundSprite;
+        public static Sprite traumarigBackgroundSprite;
         public GameObject fannyPack;
         public Image fannyPackImage;
+        public Image traumarigBackground;
 
         public static Sprite fannyPackZipSprite;
         public Image fannyPackZip;
@@ -362,6 +365,15 @@ namespace GunMinigame
             fannyPack.transform.localPosition = Vector3.zero;
             fannyPack.transform.localScale = Vector3.one;
 
+            traumarigBackground = new GameObject("MinigameTraumarigBackground").AddComponent<Image>();
+            traumarigBackground.transform.SetParent(fannyPack.transform);
+            traumarigBackground.transform.localScale = Vector3.one;
+            traumarigBackground.transform.localPosition = Vector3.one;
+            traumarigBackground.GetComponent<RectTransform>().sizeDelta = size;
+            traumarigBackground.sprite = traumarigBackgroundSprite;
+            traumarigBackground.raycastTarget = false;
+            traumarigBackground.gameObject.SetActive(false);
+
             fannyPackImage = new GameObject("MinigameFannyPackImage").AddComponent<Image>();
             fannyPackImage.transform.SetParent(fannyPack.transform);
             fannyPackImage.transform.localScale = Vector3.one;
@@ -501,6 +513,8 @@ namespace GunMinigame
             ammoSelectCursorSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameAmmoSelectCursor.png");
             fannyPackSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameFannyPack.png");
             fannyPackZipSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameFannyPackZip.png");
+            traumarigBackgroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameTraumarigBackground.png");
+            traumarigForegroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameTraumarigForeground.png");
         }
 
         public Vector2 GetMousePos()
@@ -746,10 +760,23 @@ namespace GunMinigame
         void HandleFannyPack()
         {
             bool activateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("fannypack");
-            fannyPack.gameObject.SetActive(activateWindows);
+            bool goToSettingsToActivateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("traumarig");
+            fannyPack.gameObject.SetActive(activateWindows || goToSettingsToActivateWindows);
+            if (activateWindows)
+            {
+                fannyPackImage.sprite = fannyPackSprite;
+                fannyPackZip.gameObject.SetActive(true);
+                traumarigBackground.gameObject.SetActive(false);
+            }
+       else if (goToSettingsToActivateWindows)
+            {
+                fannyPackImage.sprite = traumarigForegroundSprite;
+                fannyPackZip.gameObject.SetActive(false);
+                traumarigBackground.gameObject.SetActive(true);
+            }
 
             shouldUpdateMagazineCount = shouldUpdateMagazineCount || 0f >= windowAlpha;
-            if (shouldUpdateMagazineCount&&activateWindows && 0f < windowAlpha)
+            if (shouldUpdateMagazineCount&&(activateWindows || goToSettingsToActivateWindows) && 0f < windowAlpha)
             {
                 MagazineDragTrigger.isHovering = false;
                 shouldUpdateMagazineCount = false;
@@ -992,6 +1019,7 @@ namespace GunMinigame
             ammoSelectCursor.color = colo;
             fannyPackImage.color = colo;
             fannyPackZip.color = colo;
+            traumarigBackground.color = colo;
             foreach (Image i in ptrs)
                 i.color = colo;
             foreach (Image i in placedMagazines)
