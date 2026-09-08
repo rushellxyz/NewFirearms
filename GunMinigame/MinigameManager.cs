@@ -57,6 +57,8 @@ namespace GunMinigame
         public float magazinesOffset;
         public int maximumMagazines;
         public Sprite magazineDragTrigger;
+        public float cassingXPosition;
+        public float cassingYPosition;
         public Sprite casingSprite;
 
         // should never be declared in json
@@ -224,6 +226,8 @@ namespace GunMinigame
                 info.rackPoint *= Screen.width;
                 info.magazineXSpeed *= Screen.width;
                 info.magazineYSpeed *= Screen.height;
+                info.cassingXPosition *= Screen.width;
+                info.cassingYPosition *= Screen.height;
                 info.initialized = true;
             }
             mainImage.sprite = info.mainSprite;
@@ -840,8 +844,8 @@ namespace GunMinigame
         }
 
         public void CreateCasing()
-        {
-            Casing.Create(info.casingSprite);
+        { // TODO
+            //Casing.Create(info.casingSprite, new Vector3(info.cassingXPosition, info.cassingYPosition));
         }
 
         public void SliderClickDown()

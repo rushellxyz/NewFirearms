@@ -154,6 +154,8 @@
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
+        "casingXPosition": 0,
+        "casingYPosition": -50,
         "casingPath": "casing",
     }
 }
