@@ -608,6 +608,7 @@ namespace GunMinigame
                             SpinBandolied();
                             holding.transform.parent.GetComponent<Container>().UnloadItem(holding);
                         }
+                   else     shouldntRefreshBandolierCount = false;
                         holding = null;
                         UnityEngine.Object.Destroy(holdingInMinigame);
                     }
