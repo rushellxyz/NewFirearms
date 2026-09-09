@@ -1,17 +1,31 @@
 {
     "fullName": "Semi-auto shotgun",
-    "description": "TODO",
+    "description": "A Semi-automatic tube-feed shotgun, it is clearly handmade. Can be loaded with any 12gauge shells",
 
 
     "weight": 1.25,
     "value": 60,
     "recognition": 11,
 
-    "craftable": false,
-
-
-
-
+    "craftable": true,
+    "recipe":
+    [
+        "shotgun",
+        "scrappanel",
+        "scrappanel",
+        "scraptube",
+        "scrapcube",
+        "nails",
+        "string",
+        "string",
+        "rope",
+        "rope",
+        "rope",
+    ],
+    "craftBiochem": 30,
+    "craftHammering": 2,
+    "craftCutting": 2,
+    "craftInt": 16,
 
     "feedType": 2,
     "internalCapacity": 7,
@@ -130,5 +144,22 @@
 
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/newfirearms.saiga/bulletBuck", "COPY__Guns/newfirearms.saiga/bulletBird", "COPY__Resources/bulletRound" ],
     "magazineTexturesPath": { },
-    //"attachmentTexturesPath: { },
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiPumpFront",
+
+
+        "unrackedOnlyPath": "uiUnrackedOnly",
+        "sliderMinimumPosition": -0.025,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePostion": 0,
+        "rackPoint": -0.0125,
+        "rackedIdlePosition": -0.025,
+        "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
+        "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
+        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "sliderHandFollowOffset": -0.15625,
+        "canUseFannyPack": false,
+    }
 }

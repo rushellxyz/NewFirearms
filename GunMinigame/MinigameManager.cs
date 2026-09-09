@@ -301,17 +301,18 @@ namespace GunMinigame
             sliderBackImage.transform.localScale = Vector3.one;
             sliderBackImage.GetComponent<RectTransform>().sizeDelta = size;
 
-            mainImage = new GameObject("MinigameMainSprite").AddComponent<Image>();
-            mainImage.transform.SetParent(gunBase.transform);
-            mainImage.transform.localPosition = Vector3.zero;
-            mainImage.transform.localScale = Vector3.one;
-            mainImage.GetComponent<RectTransform>().sizeDelta = size;
-
             rackedSpecific = new GameObject("MinigameRackedSpecific").AddComponent<Image>();
             rackedSpecific.transform.SetParent(gunBase.transform);
             rackedSpecific.transform.localPosition = Vector3.zero;
             rackedSpecific.transform.localScale = Vector3.one;
             rackedSpecific.GetComponent<RectTransform>().sizeDelta = size;
+            rackedSpecific.raycastTarget = false;
+
+            mainImage = new GameObject("MinigameMainSprite").AddComponent<Image>();
+            mainImage.transform.SetParent(gunBase.transform);
+            mainImage.transform.localPosition = Vector3.zero;
+            mainImage.transform.localScale = Vector3.one;
+            mainImage.GetComponent<RectTransform>().sizeDelta = size;
 
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
