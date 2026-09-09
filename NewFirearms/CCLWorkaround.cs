@@ -1,13 +1,15 @@
+using System.Collections.Generic;
 using HarmonyLib;
 
 namespace NewFirearms
 {
-    // Worka around, around, around what?
-    // Cuz my best guess that CCL overrides eveythinbg except onUseAction?! Very weird.
-    // Anyway without this patch you cant unload smallmagazine boxof12gauge and riflemagazine when using CUCoreLib
+    // CCL Can't preoperly overrite vanilla items
+    // Боже мой, такой колхоз, хотя ccl supposed to make modding easier
     [HarmonyPatch(typeof(Item), "SetupItems")]
-    static class CCLWorkaround
+    public static class CCLWorkaround
     {
+        public static Dictionary<string, string> itemsToDesc;
+
         static void Postfix()
         {
             Item.GlobalItems["boxof12gauge"].useAction = delegate(Body body, Item item)
@@ -22,9 +24,35 @@ namespace NewFirearms
             {
                 item.GetComponent<RshMag>().RemoveRound(body);
             };
+            Item.GlobalItems["pistol"].useAction = delegate(Body body, Item item)
+            {
+                item.GetComponent<RshGun>().RemoveMag(body);
+            };
+            Item.GlobalItems["shotgun"].useAction = delegate(Body body, Item item)
+            {
+                item.GetComponent<RshGun>().RemoveMag(body);
+            };
+            Item.GlobalItems["rifle"].useAction = delegate(Body body, Item item)
+            {
+                item.GetComponent<RshGun>().RemoveMag(body);
+            };
+            Item.GlobalItems["makeshiftrifle"].useAction = delegate(Body body, Item item)
+            {
+                item.GetComponent<RshGun>().RemoveMag(body);
+            };
+
+            foreach (KeyValuePair<string, string> kvp in itemsToDesc)
+                Item.GlobalItems[kvp.Key].description = kvp.Value;
         }
 
         static bool Prepare()
-         => Plugin.useCuCore;
+        {
+            if (Plugin.useCuCore)
+            {
+                itemsToDesc = new Dictionary<string, string>();
+                return true;
+            }
+       else     return false;
+        }
     }
 }

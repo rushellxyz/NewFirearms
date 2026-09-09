@@ -731,6 +731,7 @@ namespace NewFirearms
             });
         }
 
+        private static readonly HashSet<string> vanillaItems = new HashSet<string> { "boxof12gauge", "riflemagazine", "smallmagazine", "pistol", "shotgun", "rifle", "makeshiftrifle" };
         void RegisterGunCuCore(string id, ItemInfo info, Sprite sprite, GunJson prop)
         {
             CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
@@ -756,6 +757,8 @@ namespace NewFirearms
             };
             cuInfo.SetTags();
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
+            if (vanillaItems.Contains(id))
+                CCLWorkaround.itemsToDesc.Add(id, info.description);
         }
 
         void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)
