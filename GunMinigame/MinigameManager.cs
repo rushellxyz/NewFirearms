@@ -783,6 +783,8 @@ namespace GunMinigame
                 MagazineDragTrigger.isHovering = false;
                 shouldUpdateMagazineCount = false;
                 int placed = 0;
+                if (goToSettingsToActivateWindows)
+                    placed = -1;
 
                 foreach (Image go in placedMagazines)
                     if (null != go)
@@ -799,7 +801,7 @@ namespace GunMinigame
                     Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
                     transistor.transform.SetParent(fannyPack.transform);
                     transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
-                    transistor.transform.localPosition = new Vector3(((80f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
+                    transistor.transform.localPosition = new Vector3(((85f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
                     transistor.sprite = sprite;
                     transistor.alphaHitTestMinimumThreshold = 0.1f;
                     transistor.gameObject.AddComponent<MagazineScript>().it = it;
