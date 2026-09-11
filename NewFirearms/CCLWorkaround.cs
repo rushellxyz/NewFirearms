@@ -54,7 +54,7 @@ namespace NewFirearms
         {
             if (Plugin.useCuCore)
             {
-                itemsToDesc = new Dictionary<string, string>();
+                itemsToDesc = new Dictionary<string, (string, string)>();
                 return true;
             }
        else     return false;
