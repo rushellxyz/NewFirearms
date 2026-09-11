@@ -794,9 +794,9 @@ namespace GunMinigame
                 foreach (Transform trans in PlayerCamera.main.body.GetWearableBySlotID("torsofront").transform)
                 {
                     if (!trans.TryGetComponent<Item>(out Item it))
-                        return;
+                        continue;
                     if (!info.magazineSprites.TryGetValue(it.id, out Sprite sprite))
-                        return;
+                        continue;
 
                     Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
                     transistor.transform.SetParent(fannyPack.transform);
