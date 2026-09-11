@@ -105,7 +105,7 @@ namespace NewFirearms
             go.transform.SetParent(original.transform.parent);
             RectTransform rect = go.GetComponent<RectTransform>();
             rect.position = new Vector2(originalPostion.x + (40f/2560f)*Screen.width, originalPostion.y);
-            rect.sizeDelta *= 1.32f;
+            rect.sizeDelta *= (1.32f/2560f)*Screen.width;
             bulletImages.Add(go.GetComponent<Image>());
         }
     }
