@@ -38,7 +38,19 @@ namespace NewFirearms
                 {
                     GunMinigame.MinigameManager.GetOrAddInstance().Show(rshGun.prop.minigame, rshGun);
 
-                    // TODO TODO TODO
+                    if (it.Stats.rec.recognizable && rshGun.IsReady())
+                    {
+                        __instance.gunCrosshair.gameObject.SetActive(true);
+                        float num = Vector2.Distance(rshGun.transform.position, __instance.body.targetLookPos);
+                        if (!__instance.body.isRight)
+                        {
+                            num *= -1f;
+                        }
+                        __instance.gunCrosshair.position = Camera.main.WorldToScreenPoint(rshGun.transform.position + rshGun.transform.right * num);
+                    }
+               else     __instance.gunCrosshair.gameObject.SetActive(false);
+
+                    // TODO TODO
                     rshGun.fireMode = rshGun.prop.fireModes.Max();
                 }
            else     HandleLegacyGunUi(__instance, holdinChecksCanBeIgonredForPerfomnrenr:true);
