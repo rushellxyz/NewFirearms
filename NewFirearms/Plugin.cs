@@ -758,7 +758,7 @@ namespace NewFirearms
             cuInfo.SetTags();
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
             if (vanillaItems.Contains(id))
-                CCLWorkaround.itemsToDesc.Add(id, info.description);
+                CCLWorkaround.itemsToDesc.Add(id, (info.description, info.fullName));
         }
 
         void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)

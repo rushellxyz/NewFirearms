@@ -5,10 +5,12 @@ namespace NewFirearms
 {
     // CCL Can't preoperly overrite vanilla items
     // Боже мой, такой колхоз, хотя ccl supposed to make modding easier
+    // Ааааа, почему CCL такой убогий, сидели бы мы на rshlib и не было бы проблем
+    // да ИИ слоп было бы сложнее генерить без CCL но может это и к лучшему
     [HarmonyPatch(typeof(Item), "SetupItems")]
     public static class CCLWorkaround
     {
-        public static Dictionary<string, string> itemsToDesc;
+        public static Dictionary<string, (string, string)> itemsToDesc;
 
         static void Postfix()
         {
@@ -41,8 +43,11 @@ namespace NewFirearms
                 item.GetComponent<RshGun>().RemoveMag(body);
             };
 
-            foreach (KeyValuePair<string, string> kvp in itemsToDesc)
-                Item.GlobalItems[kvp.Key].description = kvp.Value;
+            foreach (KeyValuePair<string, (string, string)> kvp in itemsToDesc)
+            {
+                Item.GlobalItems[kvp.Key].description = kvp.Value.Item1;
+                Item.GlobalItems[kvp.Key].fullName = kvp.Value.Item2;
+            }
         }
 
         static bool Prepare()
