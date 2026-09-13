@@ -228,14 +228,14 @@ namespace GunMinigame
             {
                 if (!info.rackByRotation)
                 {
-                info.sliderMaximumPosition *= Screen.width;
-                info.sliderMinimumPosition *= Screen.width;
+                    info.sliderMaximumPosition *= Screen.width;
+                    info.sliderMinimumPosition *= Screen.width;
+                    info.unrackedIdlePostion *= Screen.width;
+                    info.rackedIdlePosition *= Screen.width;
+                    info.rackPoint *= Screen.width;
                 }
-                info.unrackedIdlePostion *= Screen.width;
-                info.rackedIdlePosition *= Screen.width;
                 info.magazineXPosition *= Screen.width;
                 info.magazineYPosition *= Screen.height;
-                info.rackPoint *= Screen.width;
                 info.magazineXSpeed *= Screen.width;
                 info.magazineYSpeed *= Screen.height;
                 info.cassingXPosition *= Screen.width;
