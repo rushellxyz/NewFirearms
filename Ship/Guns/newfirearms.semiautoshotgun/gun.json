@@ -160,7 +160,7 @@
         "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
         "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
-        "sliderHandFollowOffset": -0.15625,
+        "sliderHandFollowOffset": -0.1375,
         "canUseFannyPack": false,
     }
 }

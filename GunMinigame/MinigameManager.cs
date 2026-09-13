@@ -17,6 +17,9 @@
  мышка/курсор ------> картинка руки с коллайдером -----> колайдер/хит-бокс предмета  -----> картинка руки с коллайдером
 */
 
+// Sprite was changed for one not readable or with Crunch Compression. Resetting the AlphaHitThreshold to 0.
+// Че бля это значит :doom:
+
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
@@ -38,6 +41,9 @@ namespace GunMinigame
         public float unrackedIdlePostion;
         public float rackPoint;
         public float rackedIdlePosition;
+        public bool rackByRotation;
+        public float rackRotationCenterXPosition;
+        public float rackRotationCenterYPosition;
         public string[] ammos;
         public Sprite[] ammosInHand;
         public Sprite[] ammosInPtr;
@@ -81,7 +87,7 @@ namespace GunMinigame
         public Image sliderFrontImage;
         public Image sliderBackImage;
 
-        public float sliderHoldOffset;
+        public Vector2 sliderHoldOffset;
         public GameObject canvas;
         public GameObject uiBase;
         public GameObject gunBase;
@@ -220,8 +226,11 @@ namespace GunMinigame
             info = newInfo;
             if (!info.initialized)
             {
+                if (!info.rackByRotation)
+                {
                 info.sliderMaximumPosition *= Screen.width;
                 info.sliderMinimumPosition *= Screen.width;
+                }
                 info.unrackedIdlePostion *= Screen.width;
                 info.rackedIdlePosition *= Screen.width;
                 info.magazineXPosition *= Screen.width;
@@ -231,6 +240,8 @@ namespace GunMinigame
                 info.magazineYSpeed *= Screen.height;
                 info.cassingXPosition *= Screen.width;
                 info.cassingYPosition *= Screen.height;
+                info.rackRotationCenterXPosition *= Screen.width;
+                info.rackRotationCenterYPosition *= Screen.height;
                 info.initialized = true;
             }
             mainImage.sprite = info.mainSprite;
@@ -239,6 +250,8 @@ namespace GunMinigame
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
+            sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterYPosition, info.rackRotationCenterYPosition);
+            sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
             /*            if (it.Stats.rec.recognizable)
              *             {                     * *
              *
@@ -321,6 +334,7 @@ namespace GunMinigame
             sliderFrontImage.alphaHitTestMinimumThreshold = 0.1f;
             sliderFrontImage.GetComponent<RectTransform>().sizeDelta = size;
             sliderFrontImage.gameObject.AddComponent<AlphaRaycastFilter>();
+            sliderFrontImage.gameObject.AddComponent<RotatingSlider>().enabled = false;
             EventTrigger sliderTrigger = sliderFrontImage.gameObject.AddComponent<EventTrigger>();
             EventTrigger.Entry sliderDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
             sliderDownEntry.callback.AddListener((data) => { SliderClickDown(); });
@@ -635,7 +649,7 @@ namespace GunMinigame
 
             // handPos = Vector2.Lerp(Minigame.game.handPos, mousePos, Time.deltaTime * 10f);
 
-            float xPos;
+
 
             handTransform.position = handPos;
             SliderHandle:
@@ -643,9 +657,12 @@ namespace GunMinigame
             if (racked)
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
+            if (info.rackByRotation)
+                return;
+            float xPos;
             if (holdsSlide)
             {
-                xPos = (handPos.x - onBeginHoldSlide.x) + sliderHoldOffset;
+                xPos = (handPos.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 if (xPos < info.sliderMinimumPosition)
                     xPos = info.sliderMinimumPosition;
                 else if (xPos > info.sliderMaximumPosition)
@@ -882,7 +899,7 @@ namespace GunMinigame
         public void SliderClickDown()
         {
             holdsSlide = true;
-            sliderHoldOffset = sliderFrontImage.transform.localPosition.x;
+            sliderHoldOffset = sliderFrontImage.transform.localPosition;
             onBeginHoldSlide = handPos;
         }
 
@@ -1201,4 +1218,94 @@ namespace GunMinigame
             }
         }
     }
+
+    public class RotatingSlider : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    {
+        MinigameManager minigame;
+
+        private RectTransform rectTransform;
+        private float currentTrackedAngle = 0f;
+        private float lastPointerAngle = 0f;
+
+        bool dragged;
+
+        void Awake()
+        {
+            minigame = MinigameManager.GetOrAddInstance();
+            rectTransform = GetComponent<RectTransform>();
+
+            // Start the tracked angle at whatever the object is set to in the editor
+            currentTrackedAngle = rectTransform.localEulerAngles.z;
+
+            // Fix Unity's 0-360 angle system to handle negative numbers nicely
+            if (currentTrackedAngle > 180f) currentTrackedAngle -= 360f;
+        }
+
+        void Update()
+        {
+            if (dragged)
+                return;
+
+            bool racked = minigame.gun.IsRacked();
+            if (racked)
+            {
+                lastPointerAngle = minigame.info.rackedIdlePosition;
+                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.rackedIdlePosition);
+            }
+       else {
+                lastPointerAngle = minigame.info.unrackedIdlePostion; // TODO fix typo
+                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.unrackedIdlePostion);
+            }
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            // Find where the pointer is relative to the center when the drag first starts
+            lastPointerAngle = GetPointerAngle(eventData);
+
+            dragged = true;
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+         => dragged = false;
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            // 1. Get the new angle of the pointer
+            float currentPointerAngle = GetPointerAngle(eventData);
+
+            // 2. Find out how much the pointer moved since the last frame
+            float angleDelta = Mathf.DeltaAngle(lastPointerAngle, currentPointerAngle);
+
+            // 3. Add that movement to our total tracked angle and clamp it
+            currentTrackedAngle += angleDelta;
+            currentTrackedAngle = Mathf.Clamp(currentTrackedAngle, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition);
+
+            bool racked = minigame.gun.IsRacked();
+            if ((!racked && currentTrackedAngle < minigame.info.rackPoint) || (racked && currentTrackedAngle > minigame.info.rackPoint))
+                minigame.gun.Rack();
+
+            // 4. Apply the safe, limited angle to the UI element
+            rectTransform.localRotation = Quaternion.Euler(0, 0, currentTrackedAngle);
+
+            // 5. Save the current pointer angle for the next frame
+            lastPointerAngle = currentPointerAngle;
+        }
+
+        // Helper method to find the angle between the UI center and the mouse/finger
+        private float GetPointerAngle(PointerEventData eventData)
+        {
+            Vector2 uiCenterScreenPos = RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, rectTransform.position);
+            Vector2 direction = eventData.position - uiCenterScreenPos;
+            return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        }
+
+        private void OnDisable()
+        {
+            currentTrackedAngle = 0f;
+            lastPointerAngle = 0f;
+            rectTransform.localRotation = Quaternion.identity;
+        }
+    }
+
 }

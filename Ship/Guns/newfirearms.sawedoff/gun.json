@@ -155,5 +155,26 @@
 
     "fireModesSpritePath": [ "safe", "unsafe", "unsafe", ],
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/newfirearms.saiga/bulletBuck", "COPY__Guns/newfirearms.saiga/bulletBird", "COPY__Resources/bulletRound", ],
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiBarrel",
+
+
+
+        "sliderMinimumPosition": -80,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePostion": 0,
+        "rackPoint": -40,
+        "rackedIdlePosition": -60,
+        "rackByRotation": true,
+        "rackRotationCenterXPosition": 0,
+        "rackRotationCenterYPosition": 0,
+        "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
+        "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
+        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "sliderHandFollowOffset": -0.15625,
+        "canUseFannyPack": false,
+    }
 
 }
