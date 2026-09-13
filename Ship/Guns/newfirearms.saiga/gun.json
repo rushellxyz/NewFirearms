@@ -1,6 +1,6 @@
 {
     "fullName": "Saiga",
-    "description": "TODO",
+    "description": "Magazine-feed shotgun",
 
 
     "weight": 1.75,
@@ -124,6 +124,11 @@
 
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+
+
+    "rackAudioPath": "rack",
+    "unrackAudioPath": "unrack",
 
 
 
