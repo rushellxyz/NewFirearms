@@ -44,6 +44,7 @@ namespace GunMinigame
         public bool rackByRotation;
         public float rackRotationCenterXPosition;
         public float rackRotationCenterYPosition;
+        public bool removeMagazineOnRack;
         public string[] ammos;
         public Sprite[] ammosInHand;
         public Sprite[] ammosInPtr;
@@ -250,7 +251,8 @@ namespace GunMinigame
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
-            sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterYPosition, info.rackRotationCenterYPosition);
+            if (info.rackByRotation)
+                sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterYPosition, info.rackRotationCenterYPosition);
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
             /*            if (it.Stats.rec.recognizable)
              *             {                     * *
@@ -668,7 +670,11 @@ namespace GunMinigame
                 else if (xPos > info.sliderMaximumPosition)
                     xPos = info.sliderMaximumPosition;
                 if ((!racked && xPos < info.rackPoint) || (racked && xPos > info.rackPoint))
+                {
                     gun.Rack();
+                    if (info.removeMagazineOnRack)
+                        gun.RemoveMag();
+                }
                 sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
                 sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
                 xInertia += (xPos - sliderLastXPos) * 0.5f;
@@ -1283,7 +1289,11 @@ namespace GunMinigame
 
             bool racked = minigame.gun.IsRacked();
             if ((!racked && currentTrackedAngle < minigame.info.rackPoint) || (racked && currentTrackedAngle > minigame.info.rackPoint))
+            {
                 minigame.gun.Rack();
+                if (minigame.info.removeMagazineOnRack)
+                    minigame.gun.RemoveMag();
+            }
 
             // 4. Apply the safe, limited angle to the UI element
             rectTransform.localRotation = Quaternion.Euler(0, 0, currentTrackedAngle);

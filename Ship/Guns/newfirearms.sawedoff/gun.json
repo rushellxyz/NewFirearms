@@ -168,6 +168,7 @@
         "rackPoint": -40,
         "rackedIdlePosition": -60,
         "rackByRotation": true,
+        "removeMagazineOnRack": true,
         "rackRotationCenterXPosition": 0,
         "rackRotationCenterYPosition": 0,
         "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
