@@ -157,9 +157,9 @@
         "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
         "sliderHandFollowOffset": -0.125,
         "canUseFannyPack": true,
-        "magReleasePath": "magReleaseTrigger",
-        "magazinePaths": { "smallmagazine": "minigameSmallmagazine" },
-        "ammosInMagazinePaths": { "smallmagazine": [ "minigameSmallmagazine9mmround", "minigameSmallmagazine9mmhollow", "minigameSmallmagazine9mmvenomus" ] },
+        "magReleasePath": "uiReleaseTrigger",
+        "magazinePaths": { "smallmagazine": "uiSmallmagazine" },
+        "ammosInMagazinePaths": { "smallmagazine": [ "uiSmallmagazine9mmround", "uiSmallmagazine9mmhollow", "uiSmallmagazine9mmvenomus" ] },
         "magazineXPosition": -0.0859375,
         "magazineYPosition": 0.01388888888888889,
         "magazineXSpeed": -0.2,
@@ -167,7 +167,7 @@
         "magazineAnimationTime": 0.2,
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
-        "magazineDragPath": "magazineDragTrigger",
+        "magazineDragPath": "uiDragTrigger",
     }
 
 }

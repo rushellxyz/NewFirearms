@@ -152,4 +152,37 @@
     "magazineTexturesPath": { "newfirearms.m1911mag": "blank", },
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
 
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiSliderFront",
+
+
+
+
+        "sliderMinimumPosition": -0.03,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePostion": 0,
+        "rackPoint": -0.025,
+        "rackedIdlePosition": -0.02,
+        "casingPaths": [  ],
+        "casingDelay": 0.2,
+        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
+        "sliderHandFollowOffset": -0.125,
+        "canUseFannyPack": true,
+        "magReleasePath": "uiReleaseTrigger",
+        "magazinePaths": { "newfirearms.m1911mag": "uiM1911mag" },
+        "ammosInMagazinePaths": { "newfirearms.m1911mag": [ "uiM1911mag9mmround", "uiM1911mag9mmhollow", "uiM1911mag9mmvenomus" ] },
+        "magazineXPosition": -0.0859375,
+        "magazineYPosition": 0.01388888888888889,
+        "magazineXSpeed": -0.175,
+        "magazineYSpeed": -0.55,
+        "magazineAnimationTime": 0.2,
+        "magazinesOffset": 0.025,
+        "maximumMagazines": 4,
+        "magazineDragPath": "uiDragTrigger",
+    }
+
 }
