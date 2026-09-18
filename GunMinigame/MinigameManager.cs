@@ -235,14 +235,16 @@ namespace GunMinigame
                     info.rackedIdlePosition *= Screen.width;
                     info.rackPoint *= Screen.width;
                 }
+           else {
+                    info.rackRotationCenterXPosition *= Screen.width;
+                    info.rackRotationCenterYPosition *= Screen.height;
+                }
                 info.magazineXPosition *= Screen.width;
                 info.magazineYPosition *= Screen.height;
                 info.magazineXSpeed *= Screen.width;
                 info.magazineYSpeed *= Screen.height;
                 info.cassingXPosition *= Screen.width;
                 info.cassingYPosition *= Screen.height;
-                info.rackRotationCenterXPosition *= Screen.width;
-                info.rackRotationCenterYPosition *= Screen.height;
                 info.initialized = true;
             }
             mainImage.sprite = info.mainSprite;
@@ -252,7 +254,7 @@ namespace GunMinigame
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
             if (info.rackByRotation)
-                sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterYPosition, info.rackRotationCenterYPosition);
+                sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
             /*            if (it.Stats.rec.recognizable)
              *             {                     * *
