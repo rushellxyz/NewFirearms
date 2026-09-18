@@ -525,10 +525,11 @@ namespace NewFirearms
                 }
                 if (0f < prop.craftBiochem)
                 {
-                    recipe.items.Add(new RecipeItem(0f)
+                    recipe.items.Add(new RecipeItem(prop.craftBiochem)
                     {
-                        specificId = "biochem",
                         isLiquid = true,
+                        specificId = "biochem",
+                        specific = true,
                         minimumCondition = prop.craftBiochem,
                     });
                 }
