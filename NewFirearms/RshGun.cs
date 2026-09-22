@@ -127,9 +127,6 @@ namespace NewFirearms
 
         public void FixedUpdate()
         {   // TODO Move that into Update?
-            if (Plugin.useCuCore)
-                UpdateSprite(); // ААААААААААААААААААААААААА
-
             if (!Plugin.krokMpEnabled)
                 return;
             if (null == transform.parent || !transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) || slot.slot != slot.body.handSlot)
