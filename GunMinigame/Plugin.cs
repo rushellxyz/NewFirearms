@@ -7,7 +7,7 @@ using HarmonyLib;
 
 namespace GunMinigame
 {
-    [BepInPlugin("com.rushellxyz.gunminigame", "Gun Minigame", "0.3.0")]
+    [BepInPlugin("com.rushellxyz.gunminigame", "Gun Minigame", "0.3.1")]
     [BepInDependency("GunsawGenetics", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
