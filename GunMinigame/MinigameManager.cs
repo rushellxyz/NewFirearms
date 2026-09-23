@@ -64,9 +64,9 @@ namespace GunMinigame
         public float magazinesOffset;
         public int maximumMagazines;
         public Sprite magazineDragTrigger;
-        public float cassingXPosition;
-        public float cassingYPosition;
-        public Sprite casingSprite;
+        public float casingXPosition;
+        public float casingYPosition;
+        public Sprite[] casingsSprite;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -243,8 +243,8 @@ namespace GunMinigame
                 info.magazineYPosition *= Screen.height;
                 info.magazineXSpeed *= Screen.width;
                 info.magazineYSpeed *= Screen.height;
-                info.cassingXPosition *= Screen.width;
-                info.cassingYPosition *= Screen.height;
+                info.casingXPosition *= Screen.width;
+                info.casingYPosition *= Screen.height;
                 info.initialized = true;
             }
             mainImage.sprite = info.mainSprite;
@@ -899,9 +899,9 @@ namespace GunMinigame
             Update();
         }
 
-        public void CreateCasing()
-        { // TODO
-            //Casing.Create(info.casingSprite, new Vector3(info.cassingXPosition, info.cassingYPosition));
+        public void CreateCasing(int index)
+        {
+            Casing.Create(info.casingsSprite[index+1], new Vector3(info.casingXPosition, info.casingYPosition));
         }
 
         public void SliderClickDown()

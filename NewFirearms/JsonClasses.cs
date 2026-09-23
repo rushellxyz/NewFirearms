@@ -108,7 +108,7 @@ namespace NewFirearms
         public Dictionary<string, string> magazinePaths;
         public Dictionary<string, string[]> ammosInMagazinePaths;
         public string magazineDragPath;
-        public string casingPath;
+        public string[] casingsPath;
     }
 
     // params of ammo shoot

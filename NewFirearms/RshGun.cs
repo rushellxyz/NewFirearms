@@ -334,7 +334,7 @@ namespace NewFirearms
                 return;
             string round = "casing";
             if (!Plugin.krokMpEnabled && GunMinigame.Plugin.useMinigame)
-                GunMinigame.MinigameManager.GetOrAddInstance().CreateCasing();
+                GunMinigame.MinigameManager.GetOrAddInstance().CreateCasing(rounds[index]);
             if (0 <= rounds[index])
                 round = prop.ammoTypes[rounds[index]].round;
             Utils.Create(round, transform.position, transform.rotation.eulerAngles.z).GetComponent<Rigidbody2D>().velocity = transform.up * 12f;

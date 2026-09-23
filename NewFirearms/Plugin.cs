@@ -359,9 +359,12 @@ namespace NewFirearms
                         pair => LoadSpriteArray(folder, pair.Value)
                     );
 
-                if (!string.IsNullOrEmpty(prop.minigame.casingPath))
-                    prop.minigame.casingSprite = LoadSprite(folder, prop.minigame.casingPath);
-           else     prop.minigame.casingSprite = emptySprite;
+                if (null != prop.minigame.casingsPath && 0 != prop.minigame.casingsPath.Length)
+                {
+                    prop.minigame.casingsSprite = new Sprite[prop.minigame.casingsPath.Length];
+                    for (int i = 0; i < prop.minigame.casingsPath.Length; i++)
+                        prop.minigame.casingsSprite[i] = LoadSprite(folder, prop.minigame.casingsPath[i]);
+                }
             }
 
 
