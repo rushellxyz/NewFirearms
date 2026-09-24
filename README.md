@@ -5,3 +5,6 @@ It is splitted into 3 pieces:
  - GunMinigame - the plugin responsable for minigame, it is planned to later made a standalone mod from it
  - Ship - .json and .pngs of builtin guns for json loader
  
+TODO List:
+ - On CU release: update ShootManager logic to respect new legs rule, and rename all prefixes into nfa.
+ 

@@ -1,0 +1,69 @@
+{
+    "fullName": "M-16",
+    "description": "TODO",
+
+
+    "weight": 1.75,
+    "value": 50,
+    "recognition": 10,
+
+    "craftable": false,
+
+
+
+
+
+    "feedType": 1,
+    "internalCapacity": 1,
+    "ammoTypes":
+    [
+        {
+            "round": "556round",
+            "structureDamage": 250,
+            "animalDamage": 250,
+            "playerDamage":
+            {
+                "traumaAmount": 11,
+                "pain": 120,
+                "adrenaline": 60,
+                "skinDamage": 80,
+                "muscleDamage": 150,
+                "bleedAmount": 45,
+                "wearableDamage": 1.3,
+
+                "shrapnelChance": 0.9,
+
+
+                "fractureChance": 0.7,
+                "internalBleed": 25,
+                "brainDamage": 50,
+                "disfigureChance": 2.0,
+
+            },
+
+            "knockback": 6,
+            "muzzleRise": 5,
+
+            "verticalSpread": 0.001,
+            "loudness": 6.0,
+            "conditionLoss": 0.0025,
+
+        },
+    ],
+    "desiredGasTime": 0.1,
+    "fireModes": [ 0, 3, ],
+    "magazineType": [ "rifflemagazine", ],
+    "barrelOffset": 1,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+
+
+
+
+
+
+
+
+    "magazineTexturesPath": { "riflemagazine": "riflemag" },
+}

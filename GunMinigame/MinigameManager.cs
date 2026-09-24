@@ -901,6 +901,8 @@ namespace GunMinigame
 
         public void CreateCasing(int index)
         {
+            if (null == info || null == info.casingsSprite)
+                return;
             Casing.Create(info.casingsSprite[index+1], new Vector3(info.casingXPosition, info.casingYPosition));
         }
 
