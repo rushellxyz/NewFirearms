@@ -53,7 +53,7 @@
     "desiredGasTime": 0.1,
     "fireModes": [ 0, 3, ],
     "magazineType": [ "rifflemagazine", ],
-    "barrelOffset": 1,
+    "barrelOffset": 0.8,
 
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
