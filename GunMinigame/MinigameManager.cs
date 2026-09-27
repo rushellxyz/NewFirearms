@@ -185,6 +185,12 @@ namespace GunMinigame
 
         public static Func<Item, string> bulletToShow;
 
+#if DEBUG
+        private static Sprite debugGreen;
+        private static Sprite debugRed;
+        private bool hoveringOverReciever;
+#endif
+
         public static MinigameManager GetOrAddInstance()
         {
             if (null == instance)
@@ -357,6 +363,14 @@ namespace GunMinigame
             receiverTriggerTrigger.triggers.Add(receiverTriggerEntry);
             receiverTrigger.color = new Color(1f, 1f, 1f, 0f);
             receiverTrigger.gameObject.SetActive(false);
+#if DEBUG
+            EventTrigger.Entry a = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            a.callback.AddListener((data) => { hoveringOverReciever=true; });
+            EventTrigger.Entry b = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+            b.callback.AddListener((data) => { hoveringOverReciever=false; });
+            receiverTriggerTrigger.triggers.Add(a);
+            receiverTriggerTrigger.triggers.Add(b);
+#endif
 
             magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
             magReleaseTrigger.transform.SetParent(gunBase.transform);
@@ -534,6 +548,10 @@ namespace GunMinigame
             fannyPackZipSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameFannyPackZip.png");
             traumarigBackgroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameTraumarigBackground.png");
             traumarigForegroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameTraumarigForeground.png");
+#if DEBUG
+            debugGreen = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameDebugGreen.png");
+            debugRed = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameDebugRed.png");
+#endif
         }
 
         public Vector2 GetMousePos()
@@ -545,6 +563,9 @@ namespace GunMinigame
 
         public void Update()
         {
+#if DEBUG
+            hideShowButton.sprite = hoveringOverReciever ? debugGreen : debugRed;
+#endif
             if (!active)
             {
                 shouldntRefreshBandolierCount = false;
@@ -604,6 +625,9 @@ namespace GunMinigame
            else if (Input.GetKeyUp(precachingcahce) || shouldResetHandSprite)
                 {
                     receiverTrigger.gameObject.SetActive(false);
+#if DEBUG
+                    hoveringOverReciever = false;
+#endif
                     shouldResetHandSprite = false;
                     holdsSlide = false;
                     if (null != holding)
@@ -928,7 +952,9 @@ namespace GunMinigame
             holdingInMinigame.transform.SetParent(handTransform);
             holdingInMinigame.transform.localScale = Vector3.one;
             holdingInMinigame.transform.localPosition = new Vector3(-195f, 600f);
-            holdingInMinigame.AddComponent<Image>().sprite = info.ammosInHand[info.dCurrentAmmo];
+            Image holdingInMinigameImage = holdingInMinigame.AddComponent<Image>();
+            holdingInMinigameImage.sprite = info.ammosInHand[info.dCurrentAmmo];
+            holdingInMinigameImage.raycastTarget = false;
             holdingInMinigame.GetComponent<RectTransform>().sizeDelta = new Vector2(80f, 160f);
             receiverTrigger.gameObject.SetActive(true);
             handIsInBandolier = true;
