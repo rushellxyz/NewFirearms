@@ -65,7 +65,7 @@ namespace GunMinigame
                     return IsMilkyOrVoyboy(body);
                 }
            catch{
-                    UnityEngine.Debug.LogError("[NewFirearms] Gunsaw Genetics integration failed! Send a bug report.");
+                    UnityEngine.Debug.LogError("[GunMinigame] Gunsaw Genetics integration failed! Send a bug report.");
                     return false;
                 }
             }

@@ -168,6 +168,9 @@
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
+        "casingXPosition": -0.075,
+        "casingYPosition": 0.0725,
+        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
     }
 
 }
