@@ -7,8 +7,8 @@ namespace GunMinigame
     {
         static void Postfix(PlayerCamera __instance)
         {
-            gunMenu.SetActive(value: false);
-            gunCrosshair.gameObject.SetActive(!component.safe);
+            __instance.gunMenu.SetActive(value: false);
+            //gunCrosshair.gameObject.SetActive(!component.safe);
         }
 
         static bool Prepare()

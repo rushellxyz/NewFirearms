@@ -55,7 +55,7 @@ namespace GunMinigame
             if (owner == null || !owner.active) { Destroy(gameObject); return; }
             float dt = Mathf.Min(Time.deltaTime, 0.1f);
             if (PauseHandler.main != null && PauseHandler.main.isPaused) return;
-            const float drag = 0.5f, gravity = 650f;
+            const float drag = 0.5f, gravity = 1300f;//650f;
             float decay = Mathf.Exp(-drag * dt), integral = (1f - decay) / drag;
             Vector3 terminal = new Vector3(0, -gravity / drag);
             transform.localPosition += terminal * dt + (inertia - terminal) * integral;
