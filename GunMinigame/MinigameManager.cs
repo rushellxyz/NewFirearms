@@ -67,6 +67,7 @@ namespace GunMinigame
         public float casingXPosition;
         public float casingYPosition;
         public Sprite[] casingsSprite;
+        public bool fitMainSprite;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -94,6 +95,7 @@ namespace GunMinigame
         public GameObject gunBase;
         public GameObject maskBase;
         public Image mainImage;
+        public RectTransform mainImageRect;
 
         public static Sprite backgroundSprite;
 
@@ -191,6 +193,8 @@ namespace GunMinigame
         private bool hoveringOverReciever;
 #endif
 
+        public static Vector3 fitSize;
+
         public static MinigameManager GetOrAddInstance()
         {
             if (null == instance)
@@ -253,6 +257,9 @@ namespace GunMinigame
                 info.casingYPosition *= Screen.height;
                 info.initialized = true;
             }
+            if (info.fitMainSprite)
+                mainImageRect.sizeDelta = fitSize;
+       else     mainImageRect.sizeDelta = size;
             mainImage.sprite = info.mainSprite;
             sliderFrontImage.sprite = info.sliderFrontSprite;
             sliderBackImage.sprite = info.sliderBackSprite;
@@ -302,6 +309,7 @@ namespace GunMinigame
             hideShowButton.gameObject.AddComponent<ImageHoverror>();
 
             size = new Vector3((670f/2560f)*Screen.width, (335f/1440f)*Screen.height);
+            fitSize = new Vector3(Screen.width, size.y);
 
             maskBase = new GameObject("MaskBase");
             maskBase.transform.SetParent(uiBase.transform);
@@ -335,7 +343,7 @@ namespace GunMinigame
             mainImage.transform.SetParent(gunBase.transform);
             mainImage.transform.localPosition = Vector3.zero;
             mainImage.transform.localScale = Vector3.one;
-            mainImage.GetComponent<RectTransform>().sizeDelta = size;
+            mainImageRect = mainImage.GetComponent<RectTransform>();
 
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);

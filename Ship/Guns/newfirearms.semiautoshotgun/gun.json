@@ -165,5 +165,6 @@
         "casingXPosition": -0.0525,
         "casingYPosition": 0.0725,
         "casingsPath": [ "uiCasingEmpty", "uiCasing12gauge", "uiCasing12gaugeslug", "uiCasing12gaugebird" ],
+        "fitMainSprite": true,
     }
 }
