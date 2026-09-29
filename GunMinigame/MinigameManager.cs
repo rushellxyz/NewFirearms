@@ -564,7 +564,8 @@ namespace GunMinigame
         public void Update()
         {
 #if DEBUG
-            hideShowButton.sprite = hoveringOverReciever ? debugGreen : debugRed;
+            if (null != hideShowButton)
+                hideShowButton.sprite = hoveringOverReciever ? debugGreen : debugRed;
 #endif
             if (!active)
             {
