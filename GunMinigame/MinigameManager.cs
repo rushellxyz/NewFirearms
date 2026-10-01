@@ -68,6 +68,7 @@ namespace GunMinigame
         public float casingYPosition;
         public Sprite[] casingsSprite;
         public bool fitMainSprite;
+        public bool resizeMagazine;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -771,9 +772,14 @@ namespace GunMinigame
                 return;
             insertedMagazine = new GameObject("InsertedMagazine").AddComponent<Image>();
             insertedMagazine.transform.SetParent(gunBase.transform);
-            insertedMagazine.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
-            insertedMagazine.transform.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition);
             insertedMagazine.sprite = info.magazineSprites[currentMag];
+            if (info.resizeMagazine)
+            {
+                insertedMagazine.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
+                insertedMagazine.GetComponent<RectTransform>().sizeDelta = new Vector2(insertedMagazine.sprite.rect.width, insertedMagazine.sprite.rect.height);
+            }
+        else    insertedMagazine.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
+            insertedMagazine.transform.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition);
             insertedMagazine.transform.SetAsFirstSibling();
             insertedMagazine.color = new Color(1f, 1f, 1f, windowAlpha);
         }
@@ -858,7 +864,12 @@ namespace GunMinigame
 
                     Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
                     transistor.transform.SetParent(fannyPack.transform);
-                    transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
+                    if (info.resizeMagazine)
+                    {
+                        transistor.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
+                        transistor.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
+                    }
+               else     transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
                     transistor.transform.localPosition = new Vector3(((85f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
                     transistor.sprite = sprite;
                     transistor.alphaHitTestMinimumThreshold = 0.1f;
@@ -877,6 +888,8 @@ namespace GunMinigame
                                 ammoFillup.transform.SetParent(transistor.transform);
                                 ammoFillup.transform.localScale = Vector3.one;
                                 ammoFillup.transform.localPosition = Vector3.zero;
+                                if (info.resizeMagazine)
+                                    ammoFillup.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
                                 ammoFillup.sprite = info.ammosInMagazine[it.id][index];
                                 ammoFillup.raycastTarget = false;
                             }

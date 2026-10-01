@@ -3,7 +3,7 @@
     "description": "TODO",
 
 
-    "weight": 1.75,
+    "weight": 2,
     "value": 50,
     "recognition": 10,
 
@@ -51,7 +51,7 @@
         },
     ],
     "desiredGasTime": 0.1,
-    "fireModes": [ 0, 3, ],
+    "fireModes": [ 0, 2, 3, ],
     "magazineType": [ "rifflemagazine", ],
     "barrelOffset": 0.8,
 
@@ -66,4 +66,39 @@
 
 
     "magazineTexturesPath": { "riflemagazine": "riflemag" },
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiSliderFront",
+        "sliderBackPath": "uiSliderBack",
+
+
+
+        "sliderMinimumPosition": -0.04,
+        "sliderMaximumPosition": -0.01,
+        "unrackedIdlePostion": -0.01,
+        "rackPoint": -0.025,
+        "rackedIdlePosition": -0.04,
+        "ammosInHandPaths": [ "", "", "" ],
+        "receiverPath": "",
+        "ammosInPtrPaths": [ "", "", "" ],
+        "sliderHandFollowOffset": -0.1,
+        "canUseFannyPack": true,
+        "magReleasePath": "uiMagReleaseTrigger",
+        "magazinePaths": { "riflemagazine": "uiRiflemagazine" },
+        "ammosInMagazinePaths": { "riflemagazine": [ "uiRiflemagazine556round" ] },
+        "magazineXPosition": -0.038,
+        "magazineYPosition": -0.02,
+        "magazineXSpeed": -0.0,
+        "magazineYSpeed": -0.525,
+        "magazineAnimationTime": 0.2,
+        "magazinesOffset": 0.04,
+        "maximumMagazines": 2,
+        "magazineDragPath": "uiDragTrigger",
+        "casingXPosition": -0.075,
+        "casingYPosition": 0.0725,
+        "fitMainSprite": true,
+        "resizeMagazine": true,
+    }
+
 }

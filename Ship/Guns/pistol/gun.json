@@ -150,8 +150,6 @@
         "unrackedIdlePostion": 0,
         "rackPoint": -0.025,
         "rackedIdlePosition": -0.02,
-        "casingPaths": [  ],
-        "casingDelay": 0.2,
         "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
