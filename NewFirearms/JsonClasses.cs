@@ -52,6 +52,7 @@ namespace NewFirearms
         */
         public List<string> magazineType;
         public float barrelOffset;
+        public bool hasLaser;
 
         public string normalTexturePath;
         public string rackedTexturePath;

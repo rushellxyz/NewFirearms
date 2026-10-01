@@ -693,6 +693,8 @@ namespace NewFirearms
                 {
                     RshGun rshGun = go.AddComponent<RshGun>();
                     rshGun.prop = prop;
+                    if (prop.hasLaser)
+                        go.AddComponent<LaserPointer>();
                 },
             });
         }
@@ -759,6 +761,8 @@ namespace NewFirearms
                 SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" },
                 CustomData = new Dictionary<string, object> { ["prop"] = prop }
             };
+            if (prop.hasLaser)
+                cuInfo.SpawnComponents.Add("NewFirearms.LaserPointer, NewFirearms.dll");
             cuInfo.SetTags();
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
             if (vanillaItems.Contains(id))

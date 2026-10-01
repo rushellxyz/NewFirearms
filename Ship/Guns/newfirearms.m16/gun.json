@@ -54,6 +54,7 @@
     "fireModes": [ 0, 2, 3, ],
     "magazineType": [ "rifflemagazine", ],
     "barrelOffset": 0.8,
+    "hasLaser": true,
 
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",

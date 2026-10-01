@@ -59,6 +59,8 @@
     "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full
     "magazineType": [ "string", ], // If it inresects with "magazineType" in at least one entry, mag is considered compataible
     "barrelOffset": 0.0, // Vertical offset of barrel from model
+    "hasLaser": false, // Laser
+
     // normalTexturePath and rackedTexturePath are the only one mandatory, all other have a fallback, also all Texture and Sprite must be provided in .png, and all Audio must be provided in .wav
     // The COPY__ is a work in progress
     "normalTexturePath": "string",
