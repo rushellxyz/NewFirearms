@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -44,6 +45,24 @@ namespace GunMinigame
         {
             await Task.Delay(100);
             MinigameManager.GetOrAddInstance().shouldUpdateMagazineCount = true;
+        }
+
+        public void Jump()
+        {
+            StartCoroutine(_Jump());
+        }
+
+        private IEnumerator _Jump()
+        {
+            float timer = 0.2f;
+            Vector3 ogPosition = transform.position;
+            while (0.0f < timer)
+            {
+                transform.position -= new Vector3(0f, (0.1f - timer) * 20f);
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+            transform.position = ogPosition;
         }
     }
 }

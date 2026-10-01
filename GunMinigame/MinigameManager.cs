@@ -178,6 +178,7 @@ namespace GunMinigame
         public string insertedMagazineType;
 
         public bool shouldUpdateMagazineCount;
+        public Item pendingJump;
 
         private List<Image> placedMagazines;
 
@@ -652,6 +653,7 @@ namespace GunMinigame
                                 mag.DragOnto(holding);
                                 SpinBandolied();
                                 shouldUpdateMagazineCount = true;
+                                pendingJump = MagazineScript.currentlyHovering.it;
                             }
                        else     UnityEngine.Debug.LogWarning("[GunMinigame] Target magazine doesnt implement IMinigameMag!");
                         }
@@ -873,7 +875,13 @@ namespace GunMinigame
                     transistor.transform.localPosition = new Vector3(((85f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
                     transistor.sprite = sprite;
                     transistor.alphaHitTestMinimumThreshold = 0.1f;
-                    transistor.gameObject.AddComponent<MagazineScript>().it = it;
+                    MagazineScript magazine = transistor.gameObject.AddComponent<MagazineScript>();
+                    magazine.it = it;
+                    if (it == pendingJump)
+                    {
+                        magazine.Jump();
+                        pendingJump = null;
+                    }
                     placedMagazines.Add(transistor);
 
                     if (null != info.ammosInMagazine)
