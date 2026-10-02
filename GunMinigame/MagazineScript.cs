@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
@@ -37,14 +36,8 @@ namespace GunMinigame
        else if (!FannyPackScript.isHovering && !Plugin.IsMarksman(PlayerCamera.main.body))
                 it.transform.parent.GetComponent<Container>().UnloadItem(it);
             mang.magazineDragTrigger.gameObject.SetActive(false);
-            var _ = ааа();
+            mang.DelayUpdateMagazineCount();
             UnityEngine.Object.Destroy(gameObject);
-        }
-
-        private async Task ааа()
-        {
-            await Task.Delay(100);
-            MinigameManager.GetOrAddInstance().shouldUpdateMagazineCount = true;
         }
 
         public void Jump()

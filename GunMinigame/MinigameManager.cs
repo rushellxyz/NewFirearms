@@ -23,6 +23,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections;
 using System;
@@ -1224,6 +1225,18 @@ namespace GunMinigame
                 yield return null;
             }
             ammoSelectCursor.transform.localPosition = finish;
+        }
+
+
+        public void DelayUpdateMagazineCount()
+        {
+            var _ = ааа();
+        }
+
+        private async Task ааа()
+        {
+            await Task.Delay(50);
+            shouldUpdateMagazineCount = true;
         }
     }
 

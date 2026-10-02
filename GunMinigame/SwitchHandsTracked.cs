@@ -10,6 +10,7 @@ namespace GunMinigame
         {
             var mm = MinigameManager.GetOrAddInstance();
             mm.shouldntRefreshBandolierCount = false;
+            mm.DelayUpdateMagazineCount();
 //            mm.handTransform.localScale = new Vector3(-mm.handTransform.localScale.x, mm.handTransform.localScale.y);
         }
     }
