@@ -18,6 +18,9 @@ namespace NewFirearms
 
         static bool Prefix(PlayerCamera __instance)
         {
+            if (__instance.body.HoldingItem(__instance.body.handSlot) && null != __instance.body.GetItem(__instance.body.handSlot).GetComponent<GunScript>())
+                return true;
+
             if (!GunMinigame.Plugin.useMinigame)
                 HandleLegacyGunUi(__instance);
        else {
