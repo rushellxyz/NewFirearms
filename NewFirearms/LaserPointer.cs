@@ -30,24 +30,33 @@ namespace NewFirearms
 
         public void Update()
         {
-            RaycastHit2D[] array = Physics2D.RaycastAll(transform.position, transform.right * 1f, LayerMask.GetMask("Ground", "Body", "Limb", "Descriptor"));
+            float dir = 1f;
+            // Предметы на земле всегда смотрят на право
+            // Теперь ты никогда это не развидишь
+            if (null != transform.parent && transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) && !slot.body.isRight)
+                dir = -1f;
+
+            RaycastHit2D[] array = Physics2D.RaycastAll(transform.position, transform.right * dir, 200f, LayerMask.GetMask("Ground", "Body", "Limb", "Descriptor"));
             RaycastHit2D[] array2 = array;
             for (int i = 0; i < array2.Length; i++)
             {
                 RaycastHit2D raycastHit2D = array2[i];
-                if (raycastHit2D.collider != coll &&
-                    !(raycastHit2D.collider.TryGetComponent<Body>(out Body body) && body.HoldingItem(it)) &&
-                    !(raycastHit2D.collider.TryGetComponent<Limb>(out Limb limb) && limb.body.HoldingItem(it))
-                    )
+                if ( raycastHit2D.collider != coll &&
+                   !(raycastHit2D.collider.TryGetComponent<Body>(out Body body) && body.HoldingItem(it)) &&
+                   !(raycastHit2D.collider.TryGetComponent<Limb>(out Limb limb) && limb.body.HoldingItem(it) &&
+                   (
+                    (raycastHit2D.collider.TryGetComponent<BuildingEntity>(out var component) && !component.cantHit) ||
+                    (raycastHit2D.collider.gameObject.layer == 6) ||
+                    ((bool)raycastHit2D.rigidbody)
+                   )))
                 {
-                    UnityEngine.Debug.Log(raycastHit2D.collider.gameObject.name);
                     lr.SetPosition(1, new Vector2(raycastHit2D.distance / (1f + (1f - 1f) * 0.45f), 0f));
                     break;
                 }
             }
             if (array.Length == 0)
             {
-                lr.SetPosition(1, new Vector2(999f, 0f));
+                lr.SetPosition(1, new Vector2(200f, 0f));
             }
         }
 
