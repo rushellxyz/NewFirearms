@@ -61,7 +61,7 @@
             "pellets": 8,
             "verticalSpread": 0.125,
             "loudness": 4,
-            "conditionLoss": 0.015,
+            "conditionLoss": 0.0022,
 
         },
         {
@@ -94,7 +94,7 @@
             "pellets": 32,
             "verticalSpread": 0.175,
             "loudness": 4,
-            "conditionLoss": 0.010,
+            "conditionLoss": 0.0022,
 
         },
         {
@@ -127,7 +127,7 @@
             "pellets": 1,
             "verticalSpread": 0,
             "loudness": 4,
-            "conditionLoss": 0.015,
+            "conditionLoss": 0.0022,
 
         },
     ],
