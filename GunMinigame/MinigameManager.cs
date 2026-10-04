@@ -71,6 +71,7 @@ namespace GunMinigame
         public bool fitMainSprite;
         public bool resizeMagazine;
         public Sprite laserToggleTrigger;
+        public Sprite laserImage;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -201,6 +202,7 @@ namespace GunMinigame
 
         public ILaser laser;
         public Image laserToggleTrigger;
+        public Image laserImage;
 
         public static MinigameManager GetOrAddInstance()
         {
@@ -274,6 +276,7 @@ namespace GunMinigame
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
             laserToggleTrigger.sprite = info.laserToggleTrigger;
+            laserImage.sprite = info.laserImage;
             if (info.rackByRotation)
                 sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
@@ -354,6 +357,13 @@ namespace GunMinigame
             mainImage.transform.localPosition = Vector3.zero;
             mainImage.transform.localScale = Vector3.one;
             mainImageRect = mainImage.GetComponent<RectTransform>();
+
+            laserImage = new GameObject("MinigameLaserImage").AddComponent<Image>();
+            laserImage.transform.SetParent(gunBase.transform);
+            laserImage.transform.localPosition = Vector3.zero;
+            laserImage.transform.localScale = Vector3.one;
+            laserImage.GetComponent<RectTransform>().sizeDelta = fitSize;
+            laserImage.gameObject.SetActive(false);
 
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
@@ -612,6 +622,7 @@ namespace GunMinigame
             }
             Item it = PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot);
             HandleInertia();
+            HandleLaser();
 
             Vector2 mousePos = GetMousePos();
 
@@ -773,6 +784,11 @@ namespace GunMinigame
             if (300f < gunBase.transform.eulerAngles.z)
                 gunBase.transform.rotation = Quaternion.identity;
             rotInertia = Mathf.Clamp(Mathf.MoveTowards(rotInertia, -gunBase.transform.eulerAngles.z, Time.deltaTime * 240f), -16f, +16f);
+        }
+
+        private void HandleLaser()
+        {
+            laserImage.gameObject.SetActive(null != laser && laser.IsEnabled());
         }
 
         private void HandleMag()

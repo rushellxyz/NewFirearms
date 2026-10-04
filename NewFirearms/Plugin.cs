@@ -362,6 +362,10 @@ namespace NewFirearms
                 if (!string.IsNullOrEmpty(prop.minigame.laserTogglePath))
                     prop.minigame.laserToggleTrigger = LoadSprite(folder, prop.minigame.laserTogglePath);
            else     prop.minigame.laserToggleTrigger = emptySprite;
+
+                if (!string.IsNullOrEmpty(prop.minigame.laserPath))
+                    prop.minigame.laserImage = LoadSprite(folder, prop.minigame.laserPath);
+           else     prop.minigame.laserImage = emptySprite;
             }
 
 

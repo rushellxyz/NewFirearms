@@ -101,6 +101,7 @@
         "fitMainSprite": true,
         "resizeMagazine": true,
         "laserTogglePath": "uiLaserTrigger",
+        "laserPath": "uiLaser",
     }
 
 }
