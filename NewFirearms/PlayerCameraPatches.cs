@@ -131,9 +131,14 @@ namespace NewFirearms
     {
         public static bool Prefix(PlayerCamera __instance)
         {
-            if (__instance.body.HoldingItem(__instance.body.handSlot) && __instance.body.GetItem(__instance.body.handSlot).TryGetComponent<RshGun>(out var component))
+            if (__instance.body.HoldingItem(__instance.body.handSlot))
             {
-                component.Rack(manual: true);
+                Item it = __instance.body.GetItem(__instance.body.handSlot);
+                if (it.TryGetComponent<RshGun>(out var rshGun))
+                    rshGun.Rack(manual: true);
+           else if (it.TryGetComponent<GunScript>(out var component))
+                    component.TryRack();
+           else     UnityEngine.Debug.LogError("[NewFirearms] Can not rack as item doesnt have any gun behaviour!");
             }
             return false;
         }
@@ -145,9 +150,14 @@ namespace NewFirearms
     {
         public static bool Prefix(PlayerCamera __instance)
         {
-            if (__instance.body.HoldingItem(__instance.body.handSlot) && __instance.body.GetItem(__instance.body.handSlot).TryGetComponent<RshGun>(out var component))
+            if (__instance.body.HoldingItem(__instance.body.handSlot))
             {
-                component.RemoveMag(null);
+                Item it = __instance.body.GetItem(__instance.body.handSlot);
+                if (it.TryGetComponent<RshGun>(out var rshGun))
+                    rshGun.RemoveMag(null);
+           else if (it.TryGetComponent<GunScript>(out var component))
+                    component.UnloadMag();
+           else     UnityEngine.Debug.LogError("[NewFirearms] Can not eject mag as item doesnt have any gun behaviour!");
             }
             return false;
         }
