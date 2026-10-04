@@ -77,7 +77,7 @@
 
         "sliderMinimumPosition": -0.04,
         "sliderMaximumPosition": -0.01,
-        "unrackedIdlePostion": -0.01,
+        "unrackedIdlePosition": -0.01,
         "rackPoint": -0.025,
         "rackedIdlePosition": -0.04,
         "ammosInHandPaths": [ "", "", "" ],

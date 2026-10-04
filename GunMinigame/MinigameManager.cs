@@ -39,7 +39,7 @@ namespace GunMinigame
         public Sprite unrackedOnlySprite;
         public float sliderMinimumPosition;
         public float sliderMaximumPosition;
-        public float unrackedIdlePostion;
+        public float unrackedIdlePosition;
         public float rackPoint;
         public float rackedIdlePosition;
         public bool rackByRotation;
@@ -249,7 +249,7 @@ namespace GunMinigame
                 {
                     info.sliderMaximumPosition *= Screen.width;
                     info.sliderMinimumPosition *= Screen.width;
-                    info.unrackedIdlePostion *= Screen.width;
+                    info.unrackedIdlePosition *= Screen.width;
                     info.rackedIdlePosition *= Screen.width;
                     info.rackPoint *= Screen.width;
                 }
@@ -743,7 +743,7 @@ namespace GunMinigame
        else {
                 if (gun.IsRacked())
                     xPos = info.rackedIdlePosition;
-           else     xPos = info.unrackedIdlePostion;
+           else     xPos = info.unrackedIdlePosition;
                 sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
                 sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             }
@@ -1354,8 +1354,8 @@ namespace GunMinigame
                 rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.rackedIdlePosition);
             }
        else {
-                lastPointerAngle = minigame.info.unrackedIdlePostion; // TODO fix typo
-                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.unrackedIdlePostion);
+                lastPointerAngle = minigame.info.unrackedIdlePosition;
+                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.unrackedIdlePosition);
             }
         }
 
