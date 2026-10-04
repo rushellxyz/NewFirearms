@@ -142,7 +142,6 @@ namespace GunMinigame
         public bool hiding;
         public bool hiden;
         public float windowAlpha;
-        public int ammoInBand;
 
         public bool shouldntRefreshBandolierCount;
 
@@ -187,7 +186,7 @@ namespace GunMinigame
         public Image magazineDragTrigger;
         public static Vector3 size;
 
-        bool spinningBandol;
+        public bool bandolierIsSpinning;
 
         public static Func<Item, string> bulletToShow;
 
@@ -837,7 +836,7 @@ namespace GunMinigame
             bandolierBase.gameObject.SetActive(true);
             if (!shouldntRefreshBandolierCount)
             {
-                ammoInBand = CountAllSpecificIdInContainerWithOffsetOfOne(bandolier.transform, info.ammos[info.dCurrentAmmo]);
+                int ammoInBand = CountAllSpecificIdInContainerWithOffsetOfOne(bandolier.transform, info.ammos[info.dCurrentAmmo]);
                 shouldntRefreshBandolierCount = true;
                 for (int i = 1; i < 23; i ++)
                 {
@@ -948,15 +947,14 @@ namespace GunMinigame
 
         public void SpinBandolied()
         {
-            if (spinningBandol)
+            if (bandolierIsSpinning)
                 return;
             StartCoroutine(_SpinBandolied());
-            spinningBandol= true;
+            bandolierIsSpinning = true;
         }
 
         private IEnumerator _SpinBandolied()
         {
-            ammoInBand -= 1; // TODO Dead field?
             float timer = 0f;
             ptrBase.transform.localPosition = Vector3.zero;
             while (0.2f > timer)
@@ -965,14 +963,9 @@ namespace GunMinigame
                 timer += Time.deltaTime;
                 yield return null;
             }
-            /*            if (0 < ammoInBand)
-             *            {
-             *                ptrs[1].sprite = info.ammosInPtr[info.dCurrentAmmo];
-             *                ptrs[ammoInBand].sprite = ptrBlank;
-        }*/
             shouldntRefreshBandolierCount = false;
             ptrBase.transform.localPosition = Vector3.zero;
-            spinningBandol = false;
+            bandolierIsSpinning = false;
             Update();
         }
 
