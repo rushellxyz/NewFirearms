@@ -70,6 +70,7 @@ namespace GunMinigame
         public Sprite[] casingsSprite;
         public bool fitMainSprite;
         public bool resizeMagazine;
+        public Sprite laserToggleTrigger;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -198,6 +199,10 @@ namespace GunMinigame
 
         public static Vector3 fitSize;
 
+
+        public ILaser laser;
+        public Image laserToggleTrigger;
+
         public static MinigameManager GetOrAddInstance()
         {
             if (null == instance)
@@ -232,7 +237,7 @@ namespace GunMinigame
                 uiBase.SetActive(false);
         }
 
-        public void Show(MinigameInfo newInfo, IMinigameGun newGgun)
+        public void Show(MinigameInfo newInfo, IMinigameGun newGun, ILaser newLaser=null)
         {
             if (null == uiBase)
                 PrepareGunUi();
@@ -269,6 +274,7 @@ namespace GunMinigame
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
+            laserToggleTrigger.sprite = info.laserToggleTrigger;
             if (info.rackByRotation)
                 sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
@@ -288,8 +294,10 @@ namespace GunMinigame
                 else    ammoSelectAmmo[i].enabled = false;
             }
             active = true;
-            gun = newGgun;
+            gun = newGun;
+            laser = newLaser;
 
+            laserToggleTrigger.enabled = null != laser;
             uiBase.SetActive(true);
         }
 
@@ -361,6 +369,30 @@ namespace GunMinigame
             sliderDownEntry.callback.AddListener((data) => { SliderClickDown(); });
             sliderTrigger.triggers.Add(sliderDownEntry);
 
+            magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
+            magReleaseTrigger.transform.SetParent(gunBase.transform);
+            magReleaseTrigger.transform.localPosition = Vector3.zero;
+            magReleaseTrigger.transform.localScale = Vector3.one;
+            magReleaseTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            magReleaseTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
+            magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
+
+            laserToggleTrigger = new GameObject("LaserToggleTrigger").AddComponent<Image>();
+            laserToggleTrigger.transform.SetParent(gunBase.transform);
+            laserToggleTrigger.transform.localPosition = Vector3.zero;
+            laserToggleTrigger.transform.localScale = Vector3.one;
+            laserToggleTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            laserToggleTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            laserToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            laserToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
+            laserToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
+                laser.Toggle();
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
+                EventSystem.current.SetSelectedGameObject(null);
+            });
+
             receiverTrigger = new GameObject("MinigameReceiverTrigger").AddComponent<Image>();
             receiverTrigger.transform.SetParent(gunBase.transform);
             receiverTrigger.transform.localPosition = Vector3.zero;
@@ -382,16 +414,6 @@ namespace GunMinigame
             receiverTriggerTrigger.triggers.Add(a);
             receiverTriggerTrigger.triggers.Add(b);
 #endif
-
-            magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
-            magReleaseTrigger.transform.SetParent(gunBase.transform);
-            magReleaseTrigger.transform.localPosition = Vector3.zero;
-            magReleaseTrigger.transform.localScale = Vector3.one;
-            magReleaseTrigger.alphaHitTestMinimumThreshold = 0.1f;
-            magReleaseTrigger.GetComponent<RectTransform>().sizeDelta = size;
-            magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
-            magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
-            magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
 
             magazineDragTrigger = new GameObject("MinigameMagazineDragTrigger").AddComponent<Image>();
             magazineDragTrigger.transform.SetParent(gunBase.transform);

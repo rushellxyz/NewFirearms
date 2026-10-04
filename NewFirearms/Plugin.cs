@@ -359,12 +359,9 @@ namespace NewFirearms
                         pair => LoadSpriteArray(folder, pair.Value)
                     );
 
-                if (null != prop.minigame.casingsPath && 0 != prop.minigame.casingsPath.Length)
-                {
-                    prop.minigame.casingsSprite = new Sprite[prop.minigame.casingsPath.Length];
-                    for (int i = 0; i < prop.minigame.casingsPath.Length; i++)
-                        prop.minigame.casingsSprite[i] = LoadSprite(folder, prop.minigame.casingsPath[i]);
-                }
+                if (!string.IsNullOrEmpty(prop.minigame.laserTogglePath))
+                    prop.minigame.laserToggleTrigger = LoadSprite(folder, prop.minigame.laserTogglePath);
+           else     prop.minigame.laserToggleTrigger = emptySprite;
             }
 
 

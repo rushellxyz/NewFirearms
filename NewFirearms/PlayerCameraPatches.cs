@@ -39,7 +39,7 @@ namespace NewFirearms
                 RshGun rshGun = it.GetComponent<RshGun>();
                 if (null != rshGun.prop.minigame)
                 {
-                    GunMinigame.MinigameManager.GetOrAddInstance().Show(rshGun.prop.minigame, rshGun);
+                    GunMinigame.MinigameManager.GetOrAddInstance().Show(rshGun.prop.minigame, rshGun, rshGun.GetComponent<LaserPointer>());
 
                     if (it.Stats.rec.recognizable && rshGun.IsReady())
                     {

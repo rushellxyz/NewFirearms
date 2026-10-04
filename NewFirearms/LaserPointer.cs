@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace NewFirearms
 {
-    public class LaserPointer : MonoBehaviour
+    public class LaserPointer : MonoBehaviour, GunMinigame.ILaser
     {
         public Item it;
         public LineRenderer lr;
@@ -59,6 +59,12 @@ namespace NewFirearms
                 lr.SetPosition(1, new Vector2(200f, 0f));
             }
         }
+
+        public void Toggle()
+         => this.enabled = !this.enabled;
+
+        public bool IsEnabled()
+         => this.enabled;
 
         public void OnDisable()
          => lr.enabled = false;
