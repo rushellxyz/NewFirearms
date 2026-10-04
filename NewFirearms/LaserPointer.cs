@@ -43,12 +43,11 @@ namespace NewFirearms
                 RaycastHit2D raycastHit2D = array2[i];
                 if ( raycastHit2D.collider != coll &&
                    !(raycastHit2D.collider.TryGetComponent<Body>(out Body body) && body.HoldingItem(it)) &&
-                   !(raycastHit2D.collider.TryGetComponent<Limb>(out Limb limb) && limb.body.HoldingItem(it) &&
+                   !(raycastHit2D.collider.TryGetComponent<Limb>(out Limb limb) && limb.body.HoldingItem(it)) &&
                    (
                     (raycastHit2D.collider.TryGetComponent<BuildingEntity>(out var component) && !component.cantHit) ||
-                    (raycastHit2D.collider.gameObject.layer == 6) ||
-                    ((bool)raycastHit2D.rigidbody)
-                   )))
+                    (raycastHit2D.collider.gameObject.layer == 6)
+                   ))
                 {
                     lr.SetPosition(1, new Vector2(raycastHit2D.distance / (1f + (1f - 1f) * 0.45f), 0f));
                     break;

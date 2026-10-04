@@ -1139,6 +1139,7 @@ namespace GunMinigame
             fannyPackImage.color = colo;
             fannyPackZip.color = colo;
             traumarigBackground.color = colo;
+            laserImage.color = colo;
             foreach (Image i in ptrs)
                 i.color = colo;
             foreach (Image i in placedMagazines)
