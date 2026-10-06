@@ -154,7 +154,7 @@
         "unrackedOnlyPath": "uiUnrackedOnly",
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
-        "unrackedIdlePostion": 0,
+        "unrackedIdlePosition": 0,
         "rackPoint": -0.0125,
         "rackedIdlePosition": -0.025,
         "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],

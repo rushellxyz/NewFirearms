@@ -164,7 +164,7 @@
 
         "sliderMinimumPosition": -80,
         "sliderMaximumPosition": 0,
-        "unrackedIdlePostion": 0,
+        "unrackedIdlePosition": 0,
         "rackRotationCenterXPosition": -0.02,
         "rackRotationCenterYPosition": 0.007,
         "rackPoint": -40,

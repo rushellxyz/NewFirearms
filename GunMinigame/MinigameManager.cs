@@ -39,7 +39,7 @@ namespace GunMinigame
         public Sprite unrackedOnlySprite;
         public float sliderMinimumPosition;
         public float sliderMaximumPosition;
-        public float unrackedIdlePostion;
+        public float unrackedIdlePosition;
         public float rackPoint;
         public float rackedIdlePosition;
         public bool rackByRotation;
@@ -70,6 +70,12 @@ namespace GunMinigame
         public Sprite[] casingsSprite;
         public bool fitMainSprite;
         public bool resizeMagazine;
+        public Sprite laserToggleTrigger;
+        public Sprite laserImage;
+        public Sprite[] coverAnimation;
+        public float coverSpeed;
+        public float coverXPosition;
+        public float coverYPosition;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -141,7 +147,6 @@ namespace GunMinigame
         public bool hiding;
         public bool hiden;
         public float windowAlpha;
-        public int ammoInBand;
 
         public bool shouldntRefreshBandolierCount;
 
@@ -186,7 +191,7 @@ namespace GunMinigame
         public Image magazineDragTrigger;
         public static Vector3 size;
 
-        bool spinningBandol;
+        public bool bandolierIsSpinning;
 
         public static Func<Item, string> bulletToShow;
 
@@ -197,6 +202,13 @@ namespace GunMinigame
 #endif
 
         public static Vector3 fitSize;
+
+
+        public ILaser laser;
+        public Image laserToggleTrigger;
+        public Image laserImage;
+
+        public Image coverImage;
 
         public static MinigameManager GetOrAddInstance()
         {
@@ -232,7 +244,7 @@ namespace GunMinigame
                 uiBase.SetActive(false);
         }
 
-        public void Show(MinigameInfo newInfo, IMinigameGun newGgun)
+        public void Show(MinigameInfo newInfo, IMinigameGun newGun, ILaser newLaser=null)
         {
             if (null == uiBase)
                 PrepareGunUi();
@@ -244,7 +256,7 @@ namespace GunMinigame
                 {
                     info.sliderMaximumPosition *= Screen.width;
                     info.sliderMinimumPosition *= Screen.width;
-                    info.unrackedIdlePostion *= Screen.width;
+                    info.unrackedIdlePosition *= Screen.width;
                     info.rackedIdlePosition *= Screen.width;
                     info.rackPoint *= Screen.width;
                 }
@@ -259,6 +271,8 @@ namespace GunMinigame
                 info.casingXPosition *= Screen.width;
                 info.casingYPosition *= Screen.height;
                 info.initialized = true;
+                info.coverXPosition *= Screen.width;
+                info.coverYPosition *= Screen.height;
             }
             if (info.fitMainSprite)
                 mainImageRect.sizeDelta = fitSize;
@@ -269,6 +283,15 @@ namespace GunMinigame
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
+            laserToggleTrigger.sprite = info.laserToggleTrigger;
+            laserImage.sprite = info.laserImage;
+            if (null == info.coverAnimation)
+                coverImage.enabled = false;
+       else {
+                coverImage.enabled = true;
+                coverImage.sprite = info.coverAnimation[0];
+                coverImage.transform.localPosition = new Vector3(info.coverXPosition, info.coverYPosition);
+            }
             if (info.rackByRotation)
                 sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
@@ -288,8 +311,10 @@ namespace GunMinigame
                 else    ammoSelectAmmo[i].enabled = false;
             }
             active = true;
-            gun = newGgun;
+            gun = newGun;
+            laser = newLaser;
 
+            laserToggleTrigger.enabled = null != laser;
             uiBase.SetActive(true);
         }
 
@@ -348,6 +373,19 @@ namespace GunMinigame
             mainImage.transform.localScale = Vector3.one;
             mainImageRect = mainImage.GetComponent<RectTransform>();
 
+            laserImage = new GameObject("MinigameLaserImage").AddComponent<Image>();
+            laserImage.transform.SetParent(gunBase.transform);
+            laserImage.transform.localPosition = Vector3.zero;
+            laserImage.transform.localScale = Vector3.one;
+            laserImage.GetComponent<RectTransform>().sizeDelta = fitSize;
+            laserImage.gameObject.SetActive(false);
+
+            coverImage = new GameObject("CoverImage").AddComponent<Image>();
+            coverImage.transform.SetParent(gunBase.transform);
+            coverImage.transform.localPosition = Vector3.zero;
+            coverImage.transform.localScale = new Vector3(0.15f, 0.15f);
+            coverImage.GetComponent<RectTransform>().sizeDelta = size;
+
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
             sliderFrontImage.transform.localPosition = Vector3.zero;
@@ -360,6 +398,30 @@ namespace GunMinigame
             EventTrigger.Entry sliderDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
             sliderDownEntry.callback.AddListener((data) => { SliderClickDown(); });
             sliderTrigger.triggers.Add(sliderDownEntry);
+
+            magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
+            magReleaseTrigger.transform.SetParent(gunBase.transform);
+            magReleaseTrigger.transform.localPosition = Vector3.zero;
+            magReleaseTrigger.transform.localScale = Vector3.one;
+            magReleaseTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            magReleaseTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
+            magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
+
+            laserToggleTrigger = new GameObject("LaserToggleTrigger").AddComponent<Image>();
+            laserToggleTrigger.transform.SetParent(gunBase.transform);
+            laserToggleTrigger.transform.localPosition = Vector3.zero;
+            laserToggleTrigger.transform.localScale = Vector3.one;
+            laserToggleTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            laserToggleTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            laserToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            laserToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
+            laserToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
+                laser.Toggle();
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
+                EventSystem.current.SetSelectedGameObject(null);
+            });
 
             receiverTrigger = new GameObject("MinigameReceiverTrigger").AddComponent<Image>();
             receiverTrigger.transform.SetParent(gunBase.transform);
@@ -382,16 +444,6 @@ namespace GunMinigame
             receiverTriggerTrigger.triggers.Add(a);
             receiverTriggerTrigger.triggers.Add(b);
 #endif
-
-            magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
-            magReleaseTrigger.transform.SetParent(gunBase.transform);
-            magReleaseTrigger.transform.localPosition = Vector3.zero;
-            magReleaseTrigger.transform.localScale = Vector3.one;
-            magReleaseTrigger.alphaHitTestMinimumThreshold = 0.1f;
-            magReleaseTrigger.GetComponent<RectTransform>().sizeDelta = size;
-            magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
-            magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
-            magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
 
             magazineDragTrigger = new GameObject("MinigameMagazineDragTrigger").AddComponent<Image>();
             magazineDragTrigger.transform.SetParent(gunBase.transform);
@@ -591,6 +643,7 @@ namespace GunMinigame
             }
             Item it = PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot);
             HandleInertia();
+            HandleLaser();
 
             Vector2 mousePos = GetMousePos();
 
@@ -721,7 +774,7 @@ namespace GunMinigame
        else {
                 if (gun.IsRacked())
                     xPos = info.rackedIdlePosition;
-           else     xPos = info.unrackedIdlePostion;
+           else     xPos = info.unrackedIdlePosition;
                 sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
                 sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             }
@@ -752,6 +805,11 @@ namespace GunMinigame
             if (300f < gunBase.transform.eulerAngles.z)
                 gunBase.transform.rotation = Quaternion.identity;
             rotInertia = Mathf.Clamp(Mathf.MoveTowards(rotInertia, -gunBase.transform.eulerAngles.z, Time.deltaTime * 240f), -16f, +16f);
+        }
+
+        private void HandleLaser()
+        {
+            laserImage.gameObject.SetActive(null != laser && laser.IsEnabled());
         }
 
         private void HandleMag()
@@ -815,7 +873,7 @@ namespace GunMinigame
             bandolierBase.gameObject.SetActive(true);
             if (!shouldntRefreshBandolierCount)
             {
-                ammoInBand = CountAllSpecificIdInContainerWithOffsetOfOne(bandolier.transform, info.ammos[info.dCurrentAmmo]);
+                int ammoInBand = CountAllSpecificIdInContainerWithOffsetOfOne(bandolier.transform, info.ammos[info.dCurrentAmmo]);
                 shouldntRefreshBandolierCount = true;
                 for (int i = 1; i < 23; i ++)
                 {
@@ -926,15 +984,14 @@ namespace GunMinigame
 
         public void SpinBandolied()
         {
-            if (spinningBandol)
+            if (bandolierIsSpinning)
                 return;
             StartCoroutine(_SpinBandolied());
-            spinningBandol= true;
+            bandolierIsSpinning = true;
         }
 
         private IEnumerator _SpinBandolied()
         {
-            ammoInBand -= 1; // TODO Dead field?
             float timer = 0f;
             ptrBase.transform.localPosition = Vector3.zero;
             while (0.2f > timer)
@@ -943,14 +1000,9 @@ namespace GunMinigame
                 timer += Time.deltaTime;
                 yield return null;
             }
-            /*            if (0 < ammoInBand)
-             *            {
-             *                ptrs[1].sprite = info.ammosInPtr[info.dCurrentAmmo];
-             *                ptrs[ammoInBand].sprite = ptrBlank;
-        }*/
             shouldntRefreshBandolierCount = false;
             ptrBase.transform.localPosition = Vector3.zero;
-            spinningBandol = false;
+            bandolierIsSpinning = false;
             Update();
         }
 
@@ -1108,6 +1160,8 @@ namespace GunMinigame
             fannyPackImage.color = colo;
             fannyPackZip.color = colo;
             traumarigBackground.color = colo;
+            laserImage.color = colo;
+            coverImage.color = colo;
             foreach (Image i in ptrs)
                 i.color = colo;
             foreach (Image i in placedMagazines)
@@ -1332,8 +1386,8 @@ namespace GunMinigame
                 rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.rackedIdlePosition);
             }
        else {
-                lastPointerAngle = minigame.info.unrackedIdlePostion; // TODO fix typo
-                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.unrackedIdlePostion);
+                lastPointerAngle = minigame.info.unrackedIdlePosition;
+                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.unrackedIdlePosition);
             }
         }
 

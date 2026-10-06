@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 
 namespace NewFirearms
 {
-    [BepInPlugin("com.rushellxyz.newfirearms", "New Firearms", "1.6.4")]
+    [BepInPlugin("com.rushellxyz.newfirearms", "New Firearms", "1.6.5")]
     [BepInDependency("com.rushellxyz.gunminigame", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rushellxyz.rshlib", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.SoftDependency)]
@@ -88,6 +88,19 @@ namespace NewFirearms
 
             if (togetherMpEnabled)
                 MpOperations(harmony);
+        }
+
+        // """Fix""" cant load magazines into Thorn slinger
+        void Start()
+        {
+            if (useCuCore)
+                Start2();
+        }
+
+        void Start2()
+        {
+            if (CUCoreLib.Registries.ItemRegistry.RegisteredItems.ContainsKey("thornslinger"))
+                CUCoreLib.Registries.ItemRegistry.RegisteredItems["thornslinger"].description = "A firearms made out from combined flesh and metal. Accepts 12gauge shells";
         }
 
         void PatchPostfix(Harmony harmony, string targetClass, string targetMethod, string postfixClass)
@@ -361,11 +374,19 @@ namespace NewFirearms
                         pair => LoadSpriteArray(folder, pair.Value)
                     );
 
-                if (null != prop.minigame.casingsPath && 0 != prop.minigame.casingsPath.Length)
+                if (!string.IsNullOrEmpty(prop.minigame.laserTogglePath))
+                    prop.minigame.laserToggleTrigger = LoadSprite(folder, prop.minigame.laserTogglePath);
+           else     prop.minigame.laserToggleTrigger = emptySprite;
+
+                if (!string.IsNullOrEmpty(prop.minigame.laserPath))
+                    prop.minigame.laserImage = LoadSprite(folder, prop.minigame.laserPath);
+           else     prop.minigame.laserImage = emptySprite;
+
+                if (null != prop.minigame.coverAnimationPaths && 0 != prop.minigame.coverAnimationPaths.Length)
                 {
-                    prop.minigame.casingsSprite = new Sprite[prop.minigame.casingsPath.Length];
-                    for (int i = 0; i < prop.minigame.casingsPath.Length; i++)
-                        prop.minigame.casingsSprite[i] = LoadSprite(folder, prop.minigame.casingsPath[i]);
+                    prop.minigame.coverAnimation = new Sprite[prop.minigame.coverAnimationPaths.Length];
+                    for (int i = 0; i < prop.minigame.coverAnimationPaths.Length; i++)
+                        prop.minigame.coverAnimation[i] = LoadSprite(folder, prop.minigame.coverAnimationPaths[i]);
                 }
             }
 

@@ -13,4 +13,10 @@ namespace GunMinigame
     {
         public void DragOnto(Item item);
     }
+
+    public interface ILaser
+    {
+        public void Toggle();
+        public bool IsEnabled();
+    }
 }

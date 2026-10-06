@@ -5,7 +5,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AddImplicitlyTypedReferences>false</AddImplicitlyTypedReferences>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-    <Version>1.6.4</Version>
+    <Version>1.6.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -70,7 +70,7 @@
     <Reference Include="CasualtiesMP" Publicize="true">
       <HintPath>$(GameDirectory)/BepInEx/plugins/Together/CasualtiesMP.dll</HintPath>
     </Reference>
-    <Reference Include="CUCoreLib">
+    <Reference Include="CUCoreLib" Publicize="true">
       <HintPath>$(GameDirectory)/BepInEx/plugins/CUCoreLib.dll</HintPath>
     </Reference>
     <Reference Include="LiteEntitySystem">

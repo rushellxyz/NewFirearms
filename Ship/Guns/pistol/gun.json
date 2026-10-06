@@ -147,7 +147,7 @@
 
         "sliderMinimumPosition": -0.03,
         "sliderMaximumPosition": 0,
-        "unrackedIdlePostion": 0,
+        "unrackedIdlePosition": 0,
         "rackPoint": -0.025,
         "rackedIdlePosition": -0.02,
         "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
