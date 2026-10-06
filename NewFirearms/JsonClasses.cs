@@ -111,6 +111,7 @@ namespace NewFirearms
         public string magazineDragPath;
         public string laserTogglePath;
         public string laserPath;
+        public string[] coverAnimationPaths;
     }
 
     // params of ammo shoot

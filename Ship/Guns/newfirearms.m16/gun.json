@@ -102,6 +102,9 @@
         "resizeMagazine": true,
         "laserTogglePath": "uiLaserTrigger",
         "laserPath": "uiLaser",
+        "coverAnimationPaths": [ "uiCoverClose" ],
+        "coverXPosition": -0.03975,
+        "coverYPosition": 0.045,
     }
 
 }

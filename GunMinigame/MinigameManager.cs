@@ -72,6 +72,10 @@ namespace GunMinigame
         public bool resizeMagazine;
         public Sprite laserToggleTrigger;
         public Sprite laserImage;
+        public Sprite[] coverAnimation;
+        public float coverSpeed;
+        public float coverXPosition;
+        public float coverYPosition;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -204,6 +208,8 @@ namespace GunMinigame
         public Image laserToggleTrigger;
         public Image laserImage;
 
+        public Image coverImage;
+
         public static MinigameManager GetOrAddInstance()
         {
             if (null == instance)
@@ -265,6 +271,8 @@ namespace GunMinigame
                 info.casingXPosition *= Screen.width;
                 info.casingYPosition *= Screen.height;
                 info.initialized = true;
+                info.coverXPosition *= Screen.width;
+                info.coverYPosition *= Screen.height;
             }
             if (info.fitMainSprite)
                 mainImageRect.sizeDelta = fitSize;
@@ -277,6 +285,13 @@ namespace GunMinigame
             magazineDragTrigger.sprite = info.magazineDragTrigger;
             laserToggleTrigger.sprite = info.laserToggleTrigger;
             laserImage.sprite = info.laserImage;
+            if (null == info.coverAnimation)
+                coverImage.enabled = false;
+       else {
+                coverImage.enabled = true;
+                coverImage.sprite = info.coverAnimation[0];
+                coverImage.transform.localPosition = new Vector3(info.coverXPosition, info.coverYPosition);
+            }
             if (info.rackByRotation)
                 sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
@@ -364,6 +379,12 @@ namespace GunMinigame
             laserImage.transform.localScale = Vector3.one;
             laserImage.GetComponent<RectTransform>().sizeDelta = fitSize;
             laserImage.gameObject.SetActive(false);
+
+            coverImage = new GameObject("CoverImage").AddComponent<Image>();
+            coverImage.transform.SetParent(gunBase.transform);
+            coverImage.transform.localPosition = Vector3.zero;
+            coverImage.transform.localScale = new Vector3(0.15f, 0.15f);
+            coverImage.GetComponent<RectTransform>().sizeDelta = size;
 
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
@@ -1140,6 +1161,7 @@ namespace GunMinigame
             fannyPackZip.color = colo;
             traumarigBackground.color = colo;
             laserImage.color = colo;
+            coverImage.color = colo;
             foreach (Image i in ptrs)
                 i.color = colo;
             foreach (Image i in placedMagazines)
