@@ -70,7 +70,7 @@
     <Reference Include="KrokoshaCasualtiesMP" Publicize="true">
       <HintPath>$(GameDirectory)/BepInEx/plugins/KrokMP/KrokoshaCasualtiesMP.dll</HintPath>
     </Reference>
-    <Reference Include="CUCoreLib">
+    <Reference Include="CUCoreLib" Publicize="true">
       <HintPath>$(GameDirectory)/BepInEx/plugins/CUCoreLib.dll</HintPath>
     </Reference>
     <Reference Include="GunMinigame">

@@ -88,6 +88,19 @@ namespace NewFirearms
                 MpOperations(harmony);
         }
 
+        // """Fix""" cant load magazines into Thorn slinger
+        void Start()
+        {
+            if (useCuCore)
+                Start2();
+        }
+
+        void Start2()
+        {
+            if (CUCoreLib.Registries.ItemRegistry.RegisteredItems.ContainsKey("thornslinger"))
+                CUCoreLib.Registries.ItemRegistry.RegisteredItems["thornslinger"].description = "A firearms made out from combined flesh and metal. Accepts 12gauge shells";
+        }
+
         void PatchPostfix(Harmony harmony, string targetClass, string targetMethod, string postfixClass)
         {
             var target = AccessTools.Method(AccessTools.TypeByName(targetClass), targetMethod);
