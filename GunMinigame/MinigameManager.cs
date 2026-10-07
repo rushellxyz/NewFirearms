@@ -209,6 +209,9 @@ namespace GunMinigame
         public Image laserImage;
 
         public Image coverImage;
+        public float coverTimer;
+        public int coverIndex;
+        public int coverChange;
 
         public static MinigameManager GetOrAddInstance()
         {
@@ -287,9 +290,13 @@ namespace GunMinigame
             laserImage.sprite = info.laserImage;
             if (null == info.coverAnimation)
                 coverImage.enabled = false;
-       else {
+       else if (newGun != gun)
+            {
                 coverImage.enabled = true;
                 coverImage.sprite = info.coverAnimation[0];
+                coverIndex = 0;
+                coverTimer = 0f;
+                coverChange = 0;
                 coverImage.transform.localPosition = new Vector3(info.coverXPosition, info.coverYPosition);
             }
             if (info.rackByRotation)
@@ -668,6 +675,7 @@ namespace GunMinigame
             HandleBandolier();
             HandleWindowAlpha();
             HandleFannyPack();
+            HandleCover();
 
             if (handFaded)
             { // idk why that weird looking number for alpha, i stole it from decompiled code
@@ -1291,6 +1299,35 @@ namespace GunMinigame
         {
             await Task.Delay(50);
             shouldUpdateMagazineCount = true;
+        }
+
+        public void OpenCover()
+        {
+            coverChange = 1;
+        }
+
+        public void CloseCover()
+        {
+            coverChange = -1;
+        }
+
+        private void HandleCover()
+        {
+            if (0 == coverChange || null == info.coverAnimation)
+                return;
+
+            if (coverTimer < info.coverSpeed)
+            {
+                coverTimer += Time.deltaTime;
+                return;
+            }
+
+            coverTimer = 0f;
+            coverIndex += coverChange;
+
+            if ((-1 == coverChange && 0 >= coverIndex) || (1 == coverChange && info.coverAnimation.Length <= coverIndex))
+                coverChange = 0;
+       else     coverImage.sprite = info.coverAnimation[coverIndex];
         }
     }
 
