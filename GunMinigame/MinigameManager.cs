@@ -771,6 +771,7 @@ namespace GunMinigame
                     xPos = info.sliderMaximumPosition;
                 if ((!racked && xPos < info.rackPoint) || (racked && xPos > info.rackPoint))
                 {
+                    CloseCover();
                     gun.Rack();
                     if (info.removeMagazineOnRack)
                         gun.RemoveMag();
@@ -1016,6 +1017,7 @@ namespace GunMinigame
 
         public void CreateCasing(int index)
         {
+            OpenCover();
             if (null == info || null == info.casingsSprite)
                 return;
             Casing.Create(info.casingsSprite[index+1], new Vector3(info.casingXPosition, info.casingYPosition));
@@ -1303,11 +1305,17 @@ namespace GunMinigame
 
         public void OpenCover()
         {
+#if DEBUG
+            UnityEngine.Debug.Log("Open cover");
+#endif
             coverChange = 1;
         }
 
         public void CloseCover()
         {
+#if DEBUG
+            UnityEngine.Debug.Log("Close cover");
+#endif
             coverChange = -1;
         }
 
@@ -1325,7 +1333,9 @@ namespace GunMinigame
             coverTimer = 0f;
             coverIndex += coverChange;
 
-            if ((-1 == coverChange && 0 >= coverIndex) || (1 == coverChange && info.coverAnimation.Length <= coverIndex))
+            if (1 == coverChange && info.coverAnimation.Length <= coverIndex)
+                coverChange = -1;
+       else if ((-1 == coverChange && 0 >= coverIndex))
                 coverChange = 0;
        else     coverImage.sprite = info.coverAnimation[coverIndex];
         }

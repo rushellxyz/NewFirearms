@@ -103,7 +103,7 @@
         "laserTogglePath": "uiLaserTrigger",
         "laserPath": "uiLaser",
         "coverAnimationPaths": [ "uiCover0", "uiCover1", "uiCover2", "uiCover3", "uiCover4", "uiCover5", "uiCover6", "uiCover7", "uiCover8", "uiCover9", "uiCoverA", "uiCoverB" ],
-        "coverSpeed": 0.05,
+        "coverSpeed": 0.01,
         "coverXPosition": -0.03975,
         "coverYPosition": 0.045,
     }
