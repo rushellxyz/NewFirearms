@@ -1,6 +1,6 @@
 {
     "fullName": "Glock 18",
-    "description": "A select-fire 9mm handgun. Functionaly it's exaclty like glock 17 but with option for full-auto. Can only fit small magazines",
+    "description": "A select-fire 9mm handgun. Functionaly it's exaclty like glock 17 but with option for full-auto and a laser attachment. Can only fit small magazines",
 
 
     "weight": 0.8,
@@ -126,6 +126,7 @@
     "fireModes": [ 0, 2, 3, ],
     "magazineType": [ "glock17", ],
     "barrelOffset": 0.9,
+    "hasLaser": true,
 
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
