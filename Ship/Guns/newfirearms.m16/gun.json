@@ -106,6 +106,7 @@
         "coverSpeed": 0.01,
         "coverXPosition": -0.03975,
         "coverYPosition": 0.045,
+        "chargingHandle": true,
     }
 
 }

@@ -76,6 +76,7 @@ namespace GunMinigame
         public float coverSpeed;
         public float coverXPosition;
         public float coverYPosition;
+        public bool chargingHandle;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -771,22 +772,29 @@ namespace GunMinigame
                     xPos = info.sliderMaximumPosition;
                 if ((!racked && xPos < info.rackPoint) || (racked && xPos > info.rackPoint))
                 {
-                    CloseCover();
                     gun.Rack();
                     if (info.removeMagazineOnRack)
                         gun.RemoveMag();
                 }
-                sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
-                sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
                 xInertia += (xPos - sliderLastXPos) * 0.5f;
             }
-       else {
-                if (gun.IsRacked())
+       else if (!info.chargingHandle)
+            {
+                if (racked)
                     xPos = info.rackedIdlePosition;
            else     xPos = info.unrackedIdlePosition;
-                sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
-                sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             }
+       else {
+                xPos = Mathf.MoveTowards(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime * Screen.width);
+                if (racked && xPos > info.rackPoint && xPos != info.unrackedIdlePosition)
+                { // case rack from shoot
+                    gun.Rack();
+                    if (info.removeMagazineOnRack)
+                        gun.RemoveMag();
+                }
+            }
+            sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
+            sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderLastXPos = xPos;
         }
 
@@ -1017,7 +1025,7 @@ namespace GunMinigame
 
         public void CreateCasing(int index)
         {
-            OpenCover();
+            coverChange = 1;
             if (null == info || null == info.casingsSprite)
                 return;
             Casing.Create(info.casingsSprite[index+1], new Vector3(info.casingXPosition, info.casingYPosition));
@@ -1303,25 +1311,9 @@ namespace GunMinigame
             shouldUpdateMagazineCount = true;
         }
 
-        public void OpenCover()
-        {
-#if DEBUG
-            UnityEngine.Debug.Log("Open cover");
-#endif
-            coverChange = 1;
-        }
-
-        public void CloseCover()
-        {
-#if DEBUG
-            UnityEngine.Debug.Log("Close cover");
-#endif
-            coverChange = -1;
-        }
-
         private void HandleCover()
         {
-            if (0 == coverChange || null == info.coverAnimation)
+            if (null == info.coverAnimation || 0 == coverChange)
                 return;
 
             if (coverTimer < info.coverSpeed)
@@ -1333,9 +1325,7 @@ namespace GunMinigame
             coverTimer = 0f;
             coverIndex += coverChange;
 
-            if (1 == coverChange && info.coverAnimation.Length <= coverIndex)
-                coverChange = -1;
-       else if ((-1 == coverChange && 0 >= coverIndex))
+            if ((1 == coverChange && info.coverAnimation.Length <= coverIndex) || (-1 == coverChange && 0 >= coverIndex))
                 coverChange = 0;
        else     coverImage.sprite = info.coverAnimation[coverIndex];
         }
