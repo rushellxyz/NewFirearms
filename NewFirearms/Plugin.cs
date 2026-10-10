@@ -1,3 +1,5 @@
+// TODO Fix magazine count desync
+
 using BepInEx;
 using HarmonyLib;
 using System;
@@ -45,15 +47,15 @@ namespace NewFirearms
 
         public static bool useRshLib;
         public static bool useCuCore;
-        public static bool krokMpEnabled;
+        public static bool togetherMpEnabled;
         public static bool catPatchActive;
 
         void Awake()
         {
-            krokMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("KrokoshaCasualtiesMP") && 0 == PlayerPrefs.GetInt("KrokoshaCasualtiesMP_FORCE_DISABLE_MP_MOD");
+            togetherMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
             useRshLib = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rushellxyz.rshlib");
             useCuCore = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("net.cucorelib");
-            catPatchActive = krokMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
+            catPatchActive = togetherMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
             if (useRshLib && useCuCore)
             {
                 Logger.LogFatal("RshLib and CuCoreLib both are installed. They conflict! Choose one.");
@@ -84,7 +86,7 @@ namespace NewFirearms
             RegisterCourse();
             ClearResourcesDict();
 
-            if (krokMpEnabled)
+            if (togetherMpEnabled)
                 MpOperations(harmony);
         }
 
@@ -832,9 +834,14 @@ namespace NewFirearms
 
         void MpOperations(Harmony harmony)
         {
-                PatchPostfix(harmony, "KrokoshaCasualtiesMP.Net", "ShutdownReset", "NewFirearms.NetworkMsgRegister"); // << this mf
-                //PatchPrefix(harmony, "KrokoshaCasualtiesMP.YOU_SHOULD_KILL_YOURSELF_NOOOW", "Client_SelfHarmMinigameMinigameEnd", "YOU_SHOULD_KILL_YOURSELF_NOOOWPatch");
-                NetworkMsgRegister.Postfix();
+            if (!catPatchActive)
+                PatchPrefix(harmony, "Together.YOU_SHOULD_KILL_YOURSELF_NOOOW", "Client_SelfHarmMinigameMinigameEnd", "NewFirearms.YOU_SHOULD_KILL_YOURSELF_NOOOWPatch");
+            Together.Multiplayer.RegisterCustomServerReceiver(SelfHarmerPatch.MSGID_SUICIDE_REQUEST, YOU_SHOULD_KILL_YOURSELF_NOOOWPatch.ReciveGunSuicideRequest);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SYNC, RshGun.ClientSync);
+            Together.Multiplayer.RegisterCustomServerReceiver(RshGun.MSGID_ACTION, RshGun.ServerReceiver);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SHOOT_VISUALS, RshGun.ReceiveShoot);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshMag.MSGID_SYNC, RshMag.ClientSync);
+            Together.Multiplayer.RegisterCustomServerReceiver(RshMag.MSGID_ACTION, RshMag.ServerReceiver);
         }
 
         void SetupGunminigame()
@@ -1027,12 +1034,12 @@ namespace NewFirearms
 
         public static bool IsHost()
         {
-            return KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server;
+            return Together.Net.IsServer;
         }
 
         public static bool IsDedicated()
         {
-            return KrokoshaCasualtiesMP.KrokoshaScavMultiplayer.is_server && KrokoshaCasualtiesMP.Net.is_dedicated_server;
+            return Together.Net.IsServer && Together.Net.IsDedicatedServer;
         }
     }
 
@@ -1091,7 +1098,7 @@ namespace NewFirearms
             Locale.currentLang.other.Add("runsetnewfirearms.gunjamming", "Gun jaminng");
             Locale.currentLang.other.Add("runsetnewfirearms.gunjammingdsc", "Do guns jam?");
             Locale.currentLang.other.Add("runsetnewfirearms.gundmgmult", "Gun damage multiplier");
-            if (Plugin.krokMpEnabled)
+            if (Plugin.togetherMpEnabled)
                 Locale.currentLang.other.Add("runsetnewfirearms.gundmgmultdsc", "How much damage guns deal to tiles, enemies and other players? Gets futrher multiplier by PVPDamageMultiplier rule when hitting another player");
        else     Locale.currentLang.other.Add("runsetnewfirearms.gundmgmultdsc", "How much damage guns deal to tiles and enemies?");
             Locale.currentLang.other.Add("runsetnewfirearms.gunejectcasing", "Gun eject casings");
@@ -1123,7 +1130,7 @@ namespace NewFirearms
                     UnityEngine.Debug.Log("Gun is not ready. Try remove safety?");
                     return;
                 }
-                if (!Plugin.krokMpEnabled || Plugin.IsHost())
+                if (!Plugin.togetherMpEnabled || Plugin.IsHost())
                 {
                     float oldHappiness = PlayerCamera.main.body.happiness;
                     PlayerCamera.main.body.happiness = -100000f;

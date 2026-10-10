@@ -11,7 +11,7 @@ namespace NewFirearms
         static void Postfix(SpiderHandler __instance)
         {
             // host does actual logic, so client can not add collider for performence
-            if (Plugin.krokMpEnabled && !Plugin.IsHost())
+            if (Plugin.togetherMpEnabled && !Plugin.IsHost())
                 return;
 
             if (!__instance.gameObject.TryGetComponent<CircleCollider2D>(out var origCol))

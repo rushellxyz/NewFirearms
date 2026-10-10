@@ -1,10 +1,3 @@
-A source code for mod of mine [New Firearms](https://www.nexusmods.com/scavprototype/mods/122)
+This branch contains MP 5 playtest sync
+RshLib 3.2.0 is required for MP 5 sync to work
 
-It is splitted into 3 pieces:
- - NewFirearms - the main .dll json loader
- - GunMinigame - the plugin responsable for minigame, it is planned to later made a standalone mod from it
- - Ship - .json and .pngs of builtin guns for json loader
- 
-TODO List:
- - On CU release: update ShootManager logic to respect new legs rule, and rename all prefixes into nfa.
- 
