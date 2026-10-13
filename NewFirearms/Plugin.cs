@@ -31,6 +31,12 @@ namespace NewFirearms
 
         void Awake()
         {
+            if (!File.Exists("BepInEx/plugins/NewFirearms/Resources/bulletEmpty.png"))
+            {
+                Logger.LogFatal("NewFirearms/ is missing! Did you unpacked too deep?");
+                return;
+            }
+
             togetherMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
             catPatchActive = togetherMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
 
