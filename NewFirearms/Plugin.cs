@@ -354,6 +354,14 @@ namespace NewFirearms
                     prop.minigame.magazineDragTrigger = LoadSprite(folder, prop.minigame.magazineDragPath);
            else     prop.minigame.magazineDragTrigger = emptySprite;
 
+                if (null != prop.minigame.casingsPath && 0 != prop.minigame.casingsPath.Length)
+                {
+                    prop.minigame.casingsSprite = new Sprite[prop.minigame.casingsPath.Length];
+                    for (int i = 0; i < prop.minigame.casingsPath.Length; i++)
+                        if (!string.IsNullOrEmpty(prop.minigame.casingsPath[i]))
+                            prop.minigame.casingsSprite[i] = LoadSprite(folder, prop.minigame.casingsPath[i]);
+                }
+
                 if (null != prop.minigame.ammosInMagazinePaths)
                     prop.minigame.ammosInMagazine = prop.minigame.ammosInMagazinePaths.ToDictionary(
                         pair => pair.Key,
