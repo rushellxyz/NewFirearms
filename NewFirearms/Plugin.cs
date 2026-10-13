@@ -26,25 +26,6 @@ namespace NewFirearms
         public static List<Recipe> recipes;
         public static List<string> milkyGuns;
         public static List<string> milkyMags;
-        public AudioClip shootAudioFallback;
-        public AudioClip unshootAudioFallback;
-        public AudioClip jamAudioFallback;
-        public AudioClip rackAudioFallback;
-        public AudioClip unrackAudioFallback;
-        public AudioClip loadRoundAudioFallback;
-        public AudioClip loadMagAudioFallback;
-        public AudioClip removeMagAudioFallback;
-        public AudioClip toggleFireModeAudioFallback;
-        public AudioClip unloadRoundAudioFallback;
-        public Sprite rackSpriteFallback;
-        public Sprite unrackSpriteFallback;
-        public Sprite removeMagSpriteFallback;
-        public static List<Sprite> fireModesFallback;
-        public static Sprite[] bulletsSpritesFallback;
-        public static PlayerDamage playerDamageFallback;
-        public static Sprite emptySprite;
-
-        public static bool useCuCore = true;
         public static bool togetherMpEnabled;
         public static bool catPatchActive;
 
@@ -61,16 +42,16 @@ namespace NewFirearms
 
             recipes = new List<Recipe>();
 
-            SetupResourcesDict();
+            ItemLoader.SetupResourcesDict();
             SetupGunminigame();
             LoadSettings();
-            LoadFallbackResources();
-            LoadGuns();
-            LoadMags();
-            LoadRounds();
+            ItemLoader.LoadFallbackResources();
+            ItemLoader.LoadGuns();
+            ItemLoader.LoadMags();
+            ItemLoader.LoadRounds();
             RegisterRunSettings();
             RegisterCourse();
-            ClearResourcesDict();
+            ItemLoader.ClearResourcesDict();
 
             if (togetherMpEnabled)
                 MpOperations(harmony);
@@ -78,12 +59,6 @@ namespace NewFirearms
 
         // """Fix""" cant load magazines into Thorn slinger
         void Start()
-        {
-            if (useCuCore)
-                Start2();
-        }
-
-        void Start2()
         {
             if (CUCoreLib.Registries.ItemRegistry.RegisteredItems.ContainsKey("thornslinger"))
                 CUCoreLib.Registries.ItemRegistry.RegisteredItems["thornslinger"].description = "A firearms made out from combined flesh and metal. Accepts 12gauge shells";
@@ -116,541 +91,6 @@ namespace NewFirearms
             }
         }
 
-        void LoadFallbackResources()
-        {
-            emptySprite = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/bulletEmpty");
-            shootAudioFallback = Resources.Load<AudioClip>("sounds/gunrifleshot");
-            unshootAudioFallback = Resources.Load<AudioClip>("sounds/guntrigger");
-            jamAudioFallback = Resources.Load<AudioClip>("sounds/gunjam");
-            rackAudioFallback = Resources.Load<AudioClip>("sounds/gunrack");
-            unrackAudioFallback = Resources.Load<AudioClip>("sounds/gununrack");
-            loadRoundAudioFallback = Resources.Load<AudioClip>("sounds/gunloadshell");
-            loadMagAudioFallback = Resources.Load<AudioClip>("sounds/gunloadmag");
-            removeMagAudioFallback = Resources.Load<AudioClip>("sounds/gununloadmag");
-            toggleFireModeAudioFallback = Resources.Load<AudioClip>("sounds/gunsafety");
-            unloadRoundAudioFallback = Resources.Load<AudioClip>("sounds/gunloadshell");
-            rackSpriteFallback = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/rack");
-            unrackSpriteFallback = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/unrack");
-            removeMagSpriteFallback = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/removeMag");
-            fireModesFallback = new List<Sprite>
-            { // why is new List<Sprite>(4) doesnt work?
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/fireSafe"),
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/firePump"),
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/fireSemi"),
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/fireFull"),
-            };
-            bulletsSpritesFallback = new Sprite[]
-            {
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/bulletEmpty"),
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/bulletCasing"),
-                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/bulletRound"),
-            };
-            playerDamageFallback = new PlayerDamage
-            {
-                traumaAmount = 4f,
-                pain = 100f,
-                adrenaline = 100f,
-                skinDamage = 85f,
-                muscleDamage = 85f,
-                bleedAmount = 35f,
-                wearableDamage = 1f,
-                shrapnelChance = 1f,
-                fractureChance = 0.3f,
-                internalBleed = 20f,
-                brainDamage = 45f,
-                disfigureChance = 1f,
-            };
-        }
-
-        static Dictionary<string, Sprite> sprites;
-        void SetupResourcesDict()
-        {
-            sprites = new Dictionary<string, Sprite>();
-        }
-
-        void ClearResourcesDict()
-        {
-            sprites = null;
-        }
-
-        void LoadGuns()
-        {
-            milkyGuns = new List<string>();
-
-            // On my linux btrfs Directory.GetDirectories gives out folder in alphabetic order
-            // but as c# documentation states it is not guarnteed to happend on other filesystems
-            string[] a = Directory.GetDirectories("BepInEx/plugins/NewFirearms/Guns/");
-            Array.Sort(a);
-            foreach (string folder in a)
-            {
-                string itemId = Path.GetFileName(folder);
-                string jsonPath = Path.Combine(folder, "gun.json");
-                if (!File.Exists(jsonPath))
-                {
-                    UnityEngine.Debug.Log($"{folder} exists but doesnt contain gun.json");
-                    continue;
-                }
-
-                GunJson prop = null;
-                try
-                {
-                    prop = JsonConvert.DeserializeObject<GunJson>(File.ReadAllText(jsonPath));
-                }
-                catch (JsonReaderException ex)
-                {
-                    UnityEngine.Debug.LogError($"[NewFirearms] Error parsing {jsonPath}: {ex.Message}");
-                    continue;
-                }
-
-                try
-                {
-                    LoadGun(itemId, folder, prop);
-                }
-                catch (Exception ex)
-                {
-                    UnityEngine.Debug.LogError($"[NewFirearms] Error loading {jsonPath}: {ex.Message}");
-                    continue;
-                }
-            }
-        }
-
-        void LoadGun(string itemId, string folder, GunJson prop)
-        {
-            prop.normalTexture = LoadTexture(Path.Combine(folder, prop.normalTexturePath));
-            prop.rackedTexture = LoadTexture(Path.Combine(folder, prop.rackedTexturePath));
-
-            if (null != prop.bulletsSpritesPath && 0 < prop.bulletsSpritesPath.Count())
-            {
-                prop.bulletsSprites = new Sprite[prop.bulletsSpritesPath.Count];
-                for (int i = 0; i < prop.bulletsSpritesPath.Count; i++)
-                {
-                    if (!string.IsNullOrEmpty(prop.bulletsSpritesPath[i]))
-                        prop.bulletsSprites[i] = LoadSprite(folder, prop.bulletsSpritesPath[i]);
-                }
-            }
-       else     prop.bulletsSprites = bulletsSpritesFallback;
-            prop.magazineTextures = new Dictionary<string, Texture2D>();
-            if (null != prop.magazineTexturesPath && 0 < prop.magazineTexturesPath.Count())
-            {
-                foreach (KeyValuePair<string, string> kvp in prop.magazineTexturesPath)
-                    if (!string.IsNullOrEmpty(kvp.Value))
-                        prop.magazineTextures.Add(kvp.Key, LoadTexture(Path.Combine(folder, kvp.Value)));
-            }
-            if (null != prop.fireModesSpritePath && 0 < prop.fireModesSpritePath.Count())
-            {
-                prop.fireModesSprite = new List<Sprite>();
-                foreach (string spritePath in prop.fireModesSpritePath)
-                    if (!string.IsNullOrEmpty(spritePath))
-                        prop.fireModesSprite.Add(LoadSprite(folder, spritePath));
-               else     prop.fireModesSprite.Add(null);
-            }
-       else     prop.fireModesSprite = fireModesFallback;
-            if (!string.IsNullOrEmpty(prop.rackSpritePath))
-                prop.rackSprite = LoadSprite(folder, prop.rackSpritePath);
-       else     prop.rackSprite = rackSpriteFallback;
-            if (!string.IsNullOrEmpty(prop.unrackSpritePath))
-                prop.unrackSprite = LoadSprite(folder, prop.unrackSpritePath);
-       else     prop.unrackSprite = unrackSpriteFallback;
-            if (!string.IsNullOrEmpty(prop.removeMagSpritePath))
-                prop.removeMagSprite = LoadSprite(folder, prop.removeMagSpritePath);
-       else     prop.removeMagSprite = removeMagSpriteFallback;
-            if (!string.IsNullOrEmpty(prop.shootAudioPath))
-                prop.shootAudio = LoadWav(Path.Combine(folder, prop.shootAudioPath));
-       else     prop.shootAudio = shootAudioFallback;
-            if (!string.IsNullOrEmpty(prop.unshootAudioPath))
-                prop.unshootAudio = LoadWav(Path.Combine(folder, prop.unshootAudioPath));
-       else     prop.unshootAudio = unshootAudioFallback;
-            if (!string.IsNullOrEmpty(prop.jamAudioPath))
-                prop.jamAudio = LoadWav(Path.Combine(folder, prop.jamAudioPath));
-       else     prop.jamAudio = jamAudioFallback;
-            if (!string.IsNullOrEmpty(prop.rackAudioPath))
-                prop.rackAudio = LoadWav(Path.Combine(folder, prop.rackAudioPath));
-       else     prop.rackAudio = rackAudioFallback;
-            if (!string.IsNullOrEmpty(prop.unrackAudioPath))
-                prop.unrackAudio = LoadWav(Path.Combine(folder, prop.unrackAudioPath));
-       else     prop.unrackAudio = unrackAudioFallback;
-            if (!string.IsNullOrEmpty(prop.loadRoundAudioPath))
-                prop.loadRoundAudio = LoadWav(Path.Combine(folder, prop.loadRoundAudioPath));
-       else     prop.loadRoundAudio = loadRoundAudioFallback;
-            if (!string.IsNullOrEmpty(prop.loadMagAudioPath))
-                prop.loadMagAudio = LoadWav(Path.Combine(folder, prop.loadMagAudioPath));
-       else     prop.loadMagAudio = loadMagAudioFallback;
-            if (!string.IsNullOrEmpty(prop.removeMagAudioPath))
-                prop.removeMagAudio = LoadWav(Path.Combine(folder, prop.removeMagAudioPath));
-       else     prop.removeMagAudio = removeMagAudioFallback;
-            if (!string.IsNullOrEmpty(prop.toggleFireModeAudioPath))
-                prop.toggleFireModeAudio = LoadWav(Path.Combine(folder, prop.toggleFireModeAudioPath));
-       else     prop.toggleFireModeAudio = toggleFireModeAudioFallback;
-
-            if (null != prop.minigame)
-            {
-                if (!string.IsNullOrEmpty(prop.minigame.mainPath))
-                    prop.minigame.mainSprite = LoadSprite(folder, prop.minigame.mainPath);
-           else     UnityEngine.Debug.LogWarning($"[NewFirearms] {folder} is decalared that its minigame compatabile, but missing mandatory mainPath field!");
-
-                if (!string.IsNullOrEmpty(prop.minigame.sliderFrontPath))
-                    prop.minigame.sliderFrontSprite = LoadSprite(folder, prop.minigame.sliderFrontPath);
-           else     prop.minigame.sliderFrontSprite = emptySprite;
-
-                if (!string.IsNullOrEmpty(prop.minigame.sliderBackPath))
-                    prop.minigame.sliderBackSprite = LoadSprite(folder, prop.minigame.sliderBackPath);
-           else     prop.minigame.sliderBackSprite = emptySprite;
-
-                if (!string.IsNullOrEmpty(prop.minigame.rackedOnlyPath))
-                    prop.minigame.rackedOnlySprite = LoadSprite(folder, prop.minigame.rackedOnlyPath);
-           else     prop.minigame.rackedOnlySprite = emptySprite;
-
-                if (!string.IsNullOrEmpty(prop.minigame.unrackedOnlyPath))
-                    prop.minigame.unrackedOnlySprite = LoadSprite(folder, prop.minigame.unrackedOnlyPath);
-           else     prop.minigame.unrackedOnlySprite = emptySprite;
-
-                if (null == prop.minigame.ammos)
-                    prop.minigame.ammos = new string[prop.ammoTypes.Count];
-
-                if (null != prop.minigame.ammosInHandPaths && 0 != prop.minigame.ammosInHandPaths.Length)
-                {
-                    prop.minigame.ammosInHand = new Sprite[prop.minigame.ammosInHandPaths.Length];
-                    for (int i = 0; i < prop.minigame.ammosInHandPaths.Length; i++)
-                        prop.minigame.ammosInHand[i] = LoadSprite(folder, prop.minigame.ammosInHandPaths[i]);
-                }
-
-                if (null != prop.minigame.ammosInPtrPaths && 0 != prop.minigame.ammosInPtrPaths.Length)
-                {
-                    prop.minigame.ammosInPtr = new Sprite[prop.minigame.ammosInPtrPaths.Length];
-                    for (int i = 0; i < prop.minigame.ammosInPtrPaths.Length; i++)
-                        prop.minigame.ammosInPtr[i] = LoadSprite(folder, prop.minigame.ammosInPtrPaths[i]);
-                }
-
-                if (!string.IsNullOrEmpty(prop.minigame.receiverPath))
-                    prop.minigame.receiverTrigger = LoadSprite(folder, prop.minigame.receiverPath);
-           else     prop.minigame.receiverTrigger = emptySprite;
-
-                for (int i = 0; i < prop.ammoTypes.Count; i++)
-                {
-                    if (null == prop.ammoTypes[i].playerDamage)
-                        prop.ammoTypes[i].playerDamage = playerDamageFallback;
-                    if (null != prop.minigame)
-                        prop.minigame.ammos[i] = prop.ammoTypes[i].round;
-                }
-
-                prop.minigame.ammosIcons =  new Sprite[prop.ammoTypes.Count()];
-                for (int i = 0; i < prop.ammoTypes.Count(); i++)
-                    prop.minigame.ammosIcons[i] = prop.bulletsSprites[i+2];
-
-                if (!string.IsNullOrEmpty(prop.minigame.magReleasePath))
-                    prop.minigame.magReleaseTrigger = LoadSprite(folder, prop.minigame.magReleasePath);
-           else     prop.minigame.magReleaseTrigger = emptySprite;
-
-                if (null != prop.minigame.magazinePaths)
-                {
-                    prop.minigame.magazineSprites = prop.minigame.magazinePaths.ToDictionary(
-                        pair => pair.Key,
-                        pair => LoadSprite(folder, pair.Value)
-                    );
-                    prop.minigame.magazines = prop.minigame.magazineSprites.Keys.ToArray();
-                }
-
-                if (!string.IsNullOrEmpty(prop.minigame.magazineDragPath))
-                    prop.minigame.magazineDragTrigger = LoadSprite(folder, prop.minigame.magazineDragPath);
-           else     prop.minigame.magazineDragTrigger = emptySprite;
-
-                if (null != prop.minigame.casingsPath && 0 != prop.minigame.casingsPath.Length)
-                {
-                    prop.minigame.casingsSprite = new Sprite[prop.minigame.casingsPath.Length];
-                    for (int i = 0; i < prop.minigame.casingsPath.Length; i++)
-                        if (!string.IsNullOrEmpty(prop.minigame.casingsPath[i]))
-                            prop.minigame.casingsSprite[i] = LoadSprite(folder, prop.minigame.casingsPath[i]);
-                }
-
-                if (null != prop.minigame.ammosInMagazinePaths)
-                    prop.minigame.ammosInMagazine = prop.minigame.ammosInMagazinePaths.ToDictionary(
-                        pair => pair.Key,
-                        pair => LoadSpriteArray(folder, pair.Value)
-                    );
-
-                if (!string.IsNullOrEmpty(prop.minigame.laserTogglePath))
-                    prop.minigame.laserToggleTrigger = LoadSprite(folder, prop.minigame.laserTogglePath);
-           else     prop.minigame.laserToggleTrigger = emptySprite;
-
-                if (!string.IsNullOrEmpty(prop.minigame.laserPath))
-                    prop.minigame.laserImage = LoadSprite(folder, prop.minigame.laserPath);
-           else     prop.minigame.laserImage = emptySprite;
-
-                if (null != prop.minigame.coverAnimationPaths && 0 != prop.minigame.coverAnimationPaths.Length)
-                {
-                    prop.minigame.coverAnimation = new Sprite[prop.minigame.coverAnimationPaths.Length];
-                    for (int i = 0; i < prop.minigame.coverAnimationPaths.Length; i++)
-                        prop.minigame.coverAnimation[i] = LoadSprite(folder, prop.minigame.coverAnimationPaths[i]);
-                }
-            }
-
-
-            ItemInfo info = new ItemInfo
-            {
-                category = prop.category,
-                slotRotation = prop.slotRotation,
-                usable = true,
-                usableOnLimb = false,
-                destroyAtZeroCondition = false,
-                combineable = false,
-                weight = prop.weight,
-                useAction = delegate(Body body, Item item)
-                {
-                    item.GetComponent<RshGun>().OnInventoryUse();
-                },
-                value = prop.value,
-                rec = new Recognition(prop.recognition),
-                tags = "cangetwet,gun",
-                fullName = prop.fullName,
-                description = prop.description,
-                onlyHoldInHands = prop.onlyHoldInHands
-            };
-            info.SetTags();
-
-            RegisterGunCuCore(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
-
-            if (prop.milkyCanSell)
-                milkyGuns.Add(itemId);
-
-            if (!prop.craftable)
-                return;
-            Recipe recipe = new Recipe
-            {
-                INT = prop.craftInt,
-                result = new RecipeResult
-                {
-                    id = itemId,
-                },
-                items = new List<RecipeItem> { },
-                isRepair = false,
-                category = Recipes.RecipeCategory.Utilities,
-            };
-            foreach (string i in prop.recipe)
-            {
-                recipe.items.Add(new RecipeItem(0f)
-                {
-                    specificId = i,
-                    specific = true,
-                });
-            }
-            if (0f < prop.craftBiochem)
-            {
-                recipe.items.Add(new RecipeItem(prop.craftBiochem)
-                {
-                    isLiquid = true,
-                    specificId = "biochem",
-                    specific = true,
-                    minimumCondition = prop.craftBiochem,
-                });
-            }
-            if (0f < prop.craftHammering)
-            {
-                recipe.items.Add(new RecipeItem(0f)
-                {
-                    quality = new CraftingQuality("hammering", prop.craftHammering),
-                                 destroyItem = false,
-                });
-            }
-            if (0f < prop.craftCutting)
-            {
-                recipe.items.Add(new RecipeItem(0f)
-                {
-                    quality = new CraftingQuality("cutting", prop.craftCutting),
-                                 destroyItem = false,
-                });
-            }
-            recipes.Add(recipe);
-        }
-
-        void LoadMags()
-        {
-            milkyMags = new List<string>();
-
-            foreach (string folder in Directory.GetDirectories("BepInEx/plugins/NewFirearms/Mags/"))
-            {
-                string itemId = Path.GetFileName(folder);
-                string jsonPath = Path.Combine(folder, "mag.json");
-                if (!File.Exists(jsonPath))
-                {
-                    UnityEngine.Debug.Log($"{folder} exists but doesn't contain mag.json");
-                    continue;
-                }
-
-                MagJson prop = null;
-                try
-                {
-                    prop = JsonConvert.DeserializeObject<MagJson>(File.ReadAllText(jsonPath));
-                }
-                catch (JsonReaderException ex)
-                {
-                    UnityEngine.Debug.LogError($"Error parsing {jsonPath}: {ex.Message}");
-                    continue;
-                }
-
-                prop.loadRoundAudio = loadRoundAudioFallback;
-                prop.unloadRoundAudio = unloadRoundAudioFallback;
-
-                ItemInfo info = new ItemInfo
-                {
-                    category = prop.category,
-                    slotRotation = prop.slotRotation,
-                    usable = true,
-                    usableOnLimb = false,
-                    destroyAtZeroCondition = false,
-                    combineable = false,
-                    weight = prop.weight,
-                    scaleWeightWithCondition = true,
-                    useAction = delegate(Body body, Item item)
-                    {
-                        item.GetComponent<RshMag>().RemoveRound(body);
-                    },
-                    value = prop.value,
-                    rec = new Recognition(prop.recognition),
-                    tags = "belttool",
-                    fullName = prop.fullName,
-                    description = prop.description,
-                };
-                info.SetTags();
-
-                RegisterMagCuCore(itemId, info, LoadSprite("BepInEx/plugins/NewFirearms/", $"Mags/{itemId}/item"), prop);
-
-                if (prop.milkyCanSell)
-                    milkyMags.Add(itemId);
-
-                if (!prop.craftable)
-                    continue;
-                Recipe recipe = new Recipe
-                {
-                    INT = prop.craftInt,
-                    result = new RecipeResult
-                    {
-                        id = itemId,
-                        resultCondition = 0f,
-                    },
-                    items = new List<RecipeItem> { },
-                    isRepair = false,
-                    category = Recipes.RecipeCategory.Utilities,
-                };
-                foreach (string i in prop.recipe)
-                {
-                    recipe.items.Add(new RecipeItem(0f)
-                    {
-                        specificId = i,
-                        specific = true,
-                    });
-                }
-                if (0f < prop.craftBiochem)
-                {
-                    recipe.items.Add(new RecipeItem(prop.craftBiochem)
-                    {
-                        isLiquid = true,
-                        specificId = "biochem",
-                        specific = true,
-                        minimumCondition = prop.craftBiochem,
-                    });
-                }
-                if (0f < prop.craftHammering)
-                {
-                    recipe.items.Add(new RecipeItem(0f)
-                    {
-                        quality = new CraftingQuality("hammering", prop.craftHammering),
-                        destroyItem = false,
-                    });
-                }
-                if (0f < prop.craftCutting)
-                {
-                    recipe.items.Add(new RecipeItem(0f)
-                    {
-                        quality = new CraftingQuality("cutting", prop.craftCutting),
-                        destroyItem = false,
-                    });
-                }
-                recipes.Add(recipe);
-            }
-        }
-
-        void LoadRounds()
-        {
-            foreach (string folder in Directory.GetDirectories("BepInEx/plugins/NewFirearms/Rounds/"))
-            {
-                string itemId = Path.GetFileName(folder);
-                string jsonPath = Path.Combine(folder, "round.json");
-                if (!File.Exists(jsonPath))
-                {
-                    UnityEngine.Debug.Log($"{folder} exists but doesn't contain round.json");
-                    continue;
-                }
-
-                RoundJson prop = null;
-                try
-                {
-                    prop = JsonConvert.DeserializeObject<RoundJson>(File.ReadAllText(jsonPath));
-                }
-                catch (JsonReaderException ex)
-                {
-                    UnityEngine.Debug.LogError($"Error parsing {jsonPath}: {ex.Message}");
-                    continue;
-                }
-
-                ItemInfo info = new ItemInfo
-                {
-                    category = prop.category,
-                    slotRotation = prop.slotRotation,
-                    usable = false,
-                    usableOnLimb = false,
-                    destroyAtZeroCondition = true,
-                    weight = prop.weight,
-                    value = prop.value,
-                    tags = "bullet",
-                    rec = new Recognition(prop.recognition),
-                    fullName = prop.fullName,
-                    description = prop.description,
-                };
-                info.SetTags();
-
-                RegisterRoundCuCore(itemId, info, LoadSprite(folder, "item"));
-
-                if (!prop.craftable)
-                    continue;
-                Recipe recipe = new Recipe
-                {
-                    INT = prop.craftInt,
-                    result = new RecipeResult
-                    {
-                        id = itemId,
-                        amount = prop.craftAmount
-                    },
-                    items = new List<RecipeItem> { },
-                    isRepair = false,
-                    category = Recipes.RecipeCategory.Utilities,
-                };
-                foreach (string i in prop.recipe)
-                {
-                    recipe.items.Add(new RecipeItem(0f)
-                    {
-                        specificId = i,
-                        specific = true,
-                    });
-                }
-                if (0 < prop.craftHammering)
-                {
-                    recipe.items.Add(new RecipeItem(0f)
-                    {
-                        quality = new CraftingQuality("hammering", prop.craftHammering),
-                        destroyItem = false,
-                    });
-                }
-                if (0 < prop.craftCutting)
-                {
-                    recipe.items.Add(new RecipeItem(0f)
-                    {
-                        quality = new CraftingQuality("cutting", prop.craftCutting),
-                        destroyItem = false,
-                    });
-                }
-                recipes.Add(recipe);
-            }
-        }
 
         void RegisterRunSettings()
         {
@@ -695,7 +135,7 @@ namespace NewFirearms
         }
 
         private static readonly HashSet<string> vanillaItems = new HashSet<string> { "boxof12gauge", "riflemagazine", "smallmagazine", "pistol", "shotgun", "rifle", "makeshiftrifle" };
-        void RegisterGunCuCore(string id, ItemInfo info, Sprite sprite, GunJson prop)
+        public static void RegisterGunCuCore(string id, ItemInfo info, Sprite sprite, GunJson prop)
         {
             CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
             {
@@ -726,7 +166,7 @@ namespace NewFirearms
                 CCLWorkaround.itemsToDesc.Add(id, (info.description, info.fullName));
         }
 
-        void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)
+        public static void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)
         {
             CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
             {
@@ -753,7 +193,7 @@ namespace NewFirearms
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
         }
 
-        void RegisterRoundCuCore(string id, ItemInfo info, Sprite sprite)
+        public static void RegisterRoundCuCore(string id, ItemInfo info, Sprite sprite)
         {
             CUCoreLib.Registries.ItemRegistry.Register(id, info, sprite);
         }
@@ -791,53 +231,6 @@ namespace NewFirearms
                     return null;
                 return mag.prop.ammoTypes[mag.rounds[0]];
             };
-        }
-
-        public static Sprite[] LoadSpriteArray(string baseFolder, string[] paths)
-        {
-            Sprite[] result = new Sprite[paths.Length];
-            for (int i = 0; i < paths.Length; i++)
-                result[i] = LoadSprite(baseFolder, paths[i]);
-            return result;
-        }
-
-        public static Sprite LoadSprite(string baseFolder, string path, float ppu=8.0f)
-        {
-            if (string.IsNullOrEmpty(path))
-                return null;
-            if (path.StartsWith("COPY__"))
-            {
-                if (sprites.TryGetValue(path, out Sprite sprite))
-                    return sprite;
-           else     throw new Exception($"[NewFirearms] {path} refer to non-existing asset! Did you got the loading order wrong?");
-            }
-            path = Path.Combine(baseFolder, path);
-            Sprite result = TextureToSprite(LoadTexture(path), ppu);
-            path = "COPY__" + path.Substring(28).Replace("\\", "/");//Replace("BepInEx/plugin/NewFirearms/", "");
-            sprites[path] = result;// backslash sucks
-            return result;
-        }
-
-        public static Texture2D LoadTexture(string path)
-        {
-            path += ".png";
-            if (!File.Exists(path))
-            {
-                UnityEngine.Debug.LogError($"[NewFirearms] {path} is expected, but doesn't exist!");
-                return null;
-            }
-            byte[] fileData = File.ReadAllBytes(path);
-            Texture2D texture = new Texture2D(8, 8);
-            texture.LoadImage(fileData);
-            texture.filterMode = FilterMode.Point;
-            return texture;
-        }
-
-        public static Sprite TextureToSprite(Texture2D texture, float ppu=8.0f)
-        {
-            if (null == texture)
-                return null;
-            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), ppu);
         }
 
         //  BEGIN CODE BY ARTIFICAL INTELIGENCE
@@ -895,49 +288,6 @@ namespace NewFirearms
             return resultTexture;
         }
 
-        public static AudioClip LoadWav(string absolutePath)
-        {
-            absolutePath += ".wav";
-            if (!File.Exists(absolutePath))
-            {
-                UnityEngine.Debug.LogError($"{absolutePath} is expected, but doesn't exist!");
-                return null;
-            }
-
-            byte[] fileBytes = File.ReadAllBytes(absolutePath);
-
-            // WAV Header parsing constants
-            int channels = BitConverter.ToInt16(fileBytes, 22);
-            int frequency = BitConverter.ToInt32(fileBytes, 24);
-            int pos = 12;
-
-            // Locate data chunk
-            while (pos < fileBytes.Length - 4)
-            {
-                if (fileBytes[pos] == 'd' && fileBytes[pos + 1] == 'a' && fileBytes[pos + 2] == 't' && fileBytes[pos + 3] == 'a')
-                {
-                    pos += 4;
-                    break;
-                }
-                pos++;
-            }
-
-            int subChunk2Size = BitConverter.ToInt32(fileBytes, pos);
-            pos += 4;
-
-            // Convert 16-bit bytes to float samples
-            int sampleCount = subChunk2Size / 2;
-            float[] samples = new float[sampleCount];
-            for (int i = 0; i < sampleCount; i++)
-            {
-                samples[i] = BitConverter.ToInt16(fileBytes, pos + i * 2) / 32768f;
-            }
-
-            // Create the clip instantly
-            AudioClip clip = AudioClip.Create(Path.GetFileNameWithoutExtension(absolutePath), sampleCount / channels, channels, frequency, false);
-            clip.SetData(samples, 0);
-            return clip;
-        }
         //   END  CODE BY ARTIFICAL INTELIGENCE
 
         // [1,2,3,4] > [2,3,4,1]

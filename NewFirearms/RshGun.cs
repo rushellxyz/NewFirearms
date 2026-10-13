@@ -469,27 +469,7 @@ namespace NewFirearms
                     body = PlayerCamera.main.body;
                 GameObject go = Utils.Create(mag, transform.position, 0f);
                 // CUCoreLib installs custom components as the item starts up.
-                if (Plugin.useCuCore)
-                {
-                    var _ = RemoveMagPart2WhenCuCore(body, go);
-                }
-           else {
-                    RshMag rshMag = go.GetComponent<RshMag>();
-                    sbyte chamber = rounds[0];
-                    rounds.RemoveAt(0);
-                    rshMag.rounds = rounds;
-                    rshMag.existed = true;
-                    rounds = new List<sbyte> { chamber };
-                    mag = "";
-                    Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                    body.AutoPickUpItem(go.GetComponent<Item>());
-                    UpdateSprite();
-                    if (Plugin.togetherMpEnabled)
-                    {
-                        rshMag.SyncIfHost();
-                        SyncIfHost();
-                    }
-                }
+                var _ = RemoveMagPart2WhenCuCore(body, go);
             }
         }
 
@@ -551,7 +531,7 @@ namespace NewFirearms
 
             DestroyComposedSprite();
             composedTexture = Plugin.CombineTextures(textures);
-            composedSprite = Plugin.TextureToSprite(composedTexture, prop.ppu);
+            composedSprite = ItemLoader.TextureToSprite(composedTexture, prop.ppu);
             gameObject.GetComponent<SpriteRenderer>().sprite = composedSprite;
         }
 

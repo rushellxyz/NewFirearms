@@ -14,14 +14,11 @@ namespace NewFirearms
         private void Awake()
         {
             it = GetComponent<Item>();
-            if (Plugin.useCuCore)
-            {
-                LoadPropFromCuCore();
-                if (gameObject.TryGetComponent<GunScript>(out GunScript gs))
-                    UnityEngine.Object.Destroy(gs);
-                if (gameObject.TryGetComponent<AmmoScript>(out AmmoScript ass))
-                    UnityEngine.Object.Destroy(ass);
-            }
+            LoadPropFromCuCore();
+            if (gameObject.TryGetComponent<GunScript>(out GunScript gs))
+                UnityEngine.Object.Destroy(gs);
+            if (gameObject.TryGetComponent<AmmoScript>(out AmmoScript ass))
+                UnityEngine.Object.Destroy(ass);
         }
 
         public abstract void LoadPropFromCuCore();

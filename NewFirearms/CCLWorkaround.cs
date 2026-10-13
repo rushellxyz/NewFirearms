@@ -48,14 +48,9 @@ namespace NewFirearms
             }
         }
 
-        static bool Prepare()
+        static void Prepare()
         {
-            if (Plugin.useCuCore)
-            {
-                itemsToDesc = new Dictionary<string, (string, string)>();
-                return true;
-            }
-       else     return false;
+            itemsToDesc = new Dictionary<string, (string, string)>();
         }
     }
 }

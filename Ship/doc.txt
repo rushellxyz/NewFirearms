@@ -61,7 +61,8 @@
     "barrelOffset": 0.0, // Vertical offset of barrel from model
     "hasLaser": false, // Laser
 
-    // normalTexturePath and rackedTexturePath are the only one mandatory, all other have a fallback, also all Texture and Sprite must be provided in .png, and all Audio must be provided in .wav
+    // normalTexturePath and rackedTexturePath are the only mandatory paths. Textures and sprites must be .png.
+    // Audio supports .wav, .ogg, .mp3, .aif/.aiff, .mod, .it, .s3m, and .xm; extensions may be omitted when a matching file exists.
     // The COPY__ is a work in progress
     "normalTexturePath": "string",
     "rackedTexturePath": "string",
@@ -105,7 +106,7 @@
     "capacity" 0, // Total amounts of rounds can be held
     "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compatabile
     "ammoTypes": [ "string", ], // ID of all rounds can be putted into, highly recomended to be mirrored with gun's "ammoTypes"
-    // Not neccesary. Required in .wav
+    // Optional audio paths; same formats as gun audio. Extensions may be omitted.
     "loadRoundAudioPath": "string",
     "unloadRoundAudioPath": "string",
 }
