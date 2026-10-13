@@ -3,10 +3,8 @@ using HarmonyLib;
 
 namespace NewFirearms
 {
-    // CCL Can't preoperly overrite vanilla items
-    // Боже мой, такой колхоз, хотя ccl supposed to make modding easier
-    // Ааааа, почему CCL такой убогий, сидели бы мы на rshlib и не было бы проблем
-    // да ИИ слоп было бы сложнее генерить без CCL но может это и к лучшему
+    // CCL can't properly override some vanilla item behavior, so this shim exists.
+    // The project intentionally keeps the compatibility layer small and explicit.
     [HarmonyPatch(typeof(Item), "SetupItems")]
     public static class CCLWorkaround
     {

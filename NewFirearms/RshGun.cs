@@ -468,8 +468,7 @@ namespace NewFirearms
                 if (null == body)
                     body = PlayerCamera.main.body;
                 GameObject go = Utils.Create(mag, transform.position, 0f);
-                // RshLib calls onSpawn immediantly once item is created
-                // Meanwhile CUCoreLib adds custom compoennts in Start of Item
+                // CUCoreLib installs custom components as the item starts up.
                 if (Plugin.useCuCore)
                 {
                     var _ = RemoveMagPart2WhenCuCore(body, go);

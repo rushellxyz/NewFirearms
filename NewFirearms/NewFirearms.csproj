@@ -37,9 +37,6 @@
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
-    <Reference Include="RshLib">
-      <HintPath>$(GameDirectory)/BepInEx/plugins/RshLib.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/Newtonsoft.Json.dll</HintPath>
     </Reference>

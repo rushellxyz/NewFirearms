@@ -18,8 +18,7 @@ namespace NewFirearms
 {
     [BepInPlugin("com.rushellxyz.newfirearms", "New Firearms", "1.6.5")]
     [BepInDependency("com.rushellxyz.gunminigame", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.rushellxyz.rshlib", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("meow.catpatch", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
@@ -45,27 +44,14 @@ namespace NewFirearms
         public static PlayerDamage playerDamageFallback;
         public static Sprite emptySprite;
 
-        public static bool useRshLib;
-        public static bool useCuCore;
+        public static bool useCuCore = true;
         public static bool togetherMpEnabled;
         public static bool catPatchActive;
 
         void Awake()
         {
             togetherMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
-            useRshLib = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rushellxyz.rshlib");
-            useCuCore = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("net.cucorelib");
             catPatchActive = togetherMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
-            if (useRshLib && useCuCore)
-            {
-                Logger.LogFatal("RshLib and CuCoreLib both are installed. They conflict! Choose one.");
-                return;
-            }
-       else if (!useRshLib && !useCuCore)
-            {
-                Logger.LogFatal("RshLib and CuCoreLib both are missing. Install RshLib!");
-                return;
-            }
 
             if (catPatchActive)
                 Logger.LogInfo("Cat patch detected - cancelling some of our patches to prevent conflict (try to not kill yourself)");
@@ -413,9 +399,7 @@ namespace NewFirearms
             };
             info.SetTags();
 
-            if (useRshLib)
-                RegisterGunRshLib(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
-       else     RegisterGunCuCore(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
+            RegisterGunCuCore(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
 
             if (prop.milkyCanSell)
                 milkyGuns.Add(itemId);
@@ -520,9 +504,7 @@ namespace NewFirearms
                 };
                 info.SetTags();
 
-                if (useRshLib)
-                    RegisterMagRshLib(itemId, info, LoadSprite("BepInEx/plugins/NewFirearms/", $"Mags/{itemId}/item"), prop);
-           else     RegisterMagCuCore(itemId, info, LoadSprite("BepInEx/plugins/NewFirearms/", $"Mags/{itemId}/item"), prop);
+                RegisterMagCuCore(itemId, info, LoadSprite("BepInEx/plugins/NewFirearms/", $"Mags/{itemId}/item"), prop);
 
                 if (prop.milkyCanSell)
                     milkyMags.Add(itemId);
@@ -618,9 +600,7 @@ namespace NewFirearms
                 };
                 info.SetTags();
 
-                if (useRshLib)
-                    RegisterRoundRshLib(itemId, info, LoadSprite(folder, "item"));
-           else     RegisterRoundCuCore(itemId, info, LoadSprite(folder, "item"));
+                RegisterRoundCuCore(itemId, info, LoadSprite(folder, "item"));
 
                 if (!prop.craftable)
                     continue;
@@ -704,60 +684,6 @@ namespace NewFirearms
             RunSettings.presets[4].presetValues.Add("newfirearms.gundmgmult", 1f);
             RunSettings.presets[4].presetValues.Add("newfirearms.stunhitbox", 2.5f);
             RunSettings.presets[4].presetValues.Add("newfirearms.gunejectcasing", true);
-        }
-
-        void RegisterGunRshLib(string id, ItemInfo info, Sprite sprite, GunJson prop)
-        {
-            RshLib.Plugin.RegisterItem(id, new RshLib.RshItem
-            {
-                info = info,
-                sprite = sprite,
-                onSpawn = delegate(GameObject go, string extraData)
-                {
-                    RshGun rshGun = go.AddComponent<RshGun>();
-                    rshGun.prop = prop;
-                    if (prop.hasLaser)
-                        go.AddComponent<LaserPointer>();
-                },
-            });
-        }
-
-        void RegisterMagRshLib(string id, ItemInfo info, Sprite sprite, MagJson prop)
-        {
-            RshLib.Plugin.RegisterItem(id, new RshLib.RshItem
-            {
-                info = info,
-                sprite = sprite,
-                onSpawn = delegate(GameObject go, string data)
-                {
-                    RshMag rshMag = go.AddComponent<RshMag>();
-                    rshMag.prop = prop;
-
-                    if (string.IsNullOrEmpty(data))
-                        return;
-                    sbyte ammoIndex = 0;
-                    if (!sbyte.TryParse(data, out ammoIndex))
-                    {
-                        ammoIndex = (sbyte)prop.ammoTypes.IndexOf(data);
-                        if (-1 >= ammoIndex)
-                        {
-                            UnityEngine.Debug.LogError($"Ammo {data} doesn't exist or can't be fit into this magazine");
-                            return;
-                        }
-                    }
-                    rshMag.Fill(ammoIndex, prop.capacity);
-                    rshMag.existed = true;
-                },
-            });
-        }
-
-        void RegisterRoundRshLib(string id, ItemInfo info, Sprite sprite)
-        {
-            RshLib.Plugin.RegisterItem(id, new RshLib.RshItem
-            {
-                info = info,
-                sprite = sprite,
-            });
         }
 
         private static readonly HashSet<string> vanillaItems = new HashSet<string> { "boxof12gauge", "riflemagazine", "smallmagazine", "pistol", "shotgun", "rifle", "makeshiftrifle" };

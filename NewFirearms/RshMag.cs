@@ -70,8 +70,6 @@ namespace NewFirearms
         {
             if (-2 == rounds[0])
                 return;
-            /*if (RshLib.Plugin.krokMpEnabled && RequestHostIfClient(0))
-                return;*/
             Sound.Play(prop.unloadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             if (null == body)
                 body = PlayerCamera.main.body;
