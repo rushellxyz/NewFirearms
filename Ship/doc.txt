@@ -130,4 +130,6 @@
 == MINIGAME JSON TEMPLATE ==
 {
     // work in progress
+    "fitMainSprite": false, // Fit the main gun image to the screen width
+    "fitLaserImage": true, // Fit the laser overlay to the screen width
 }

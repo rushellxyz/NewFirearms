@@ -69,6 +69,7 @@ namespace GunMinigame
         public float casingYPosition;
         public Sprite[] casingsSprite;
         public bool fitMainSprite;
+        public bool fitLaserImage;
         public bool resizeMagazine;
         public Sprite laserToggleTrigger;
         public Sprite laserImage;
@@ -281,6 +282,7 @@ namespace GunMinigame
             if (info.fitMainSprite)
                 mainImageRect.sizeDelta = fitSize;
        else     mainImageRect.sizeDelta = size;
+            laserImage.GetComponent<RectTransform>().sizeDelta = info.fitLaserImage ? fitSize : size;
             mainImage.sprite = info.mainSprite;
             sliderFrontImage.sprite = info.sliderFrontSprite;
             sliderBackImage.sprite = info.sliderBackSprite;

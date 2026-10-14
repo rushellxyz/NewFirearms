@@ -147,4 +147,39 @@
     "magazineTexturesPath": { "smallmagazine": "blank", },
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "bulletHollow", "bulletVenomus", ],
 
+    "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderFrontPath": "uiSliderFront",
+
+
+
+
+        "sliderMinimumPosition": -0.03,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePosition": 0,
+        "rackPoint": -0.025,
+        "rackedIdlePosition": -0.02,
+        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
+        "sliderHandFollowOffset": -0.125,
+        "canUseFannyPack": true,
+        "magReleasePath": "uiReleaseTrigger",
+        "magazinePaths": { "smallmagazine": "uiSmallmagazine" },
+        "ammosInMagazinePaths": { "smallmagazine": [ "uiSmallmagazine9mmround", "uiSmallmagazine9mmhollow", "uiSmallmagazine9mmvenomus" ] },
+        "magazineXPosition": -0.0859375,
+        "magazineYPosition": 0.01388888888888889,
+        "magazineXSpeed": -0.2,
+        "magazineYSpeed": -0.525,
+        "magazineAnimationTime": 0.2,
+        "magazinesOffset": 0.025,
+        "maximumMagazines": 4,
+        "magazineDragPath": "uiDragTrigger",
+        "casingXPosition": -0.075,
+        "casingYPosition": 0.0725,
+        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
+        "laserTogglePath": "uiLaserTrigger",
+        "laserPath": "uiLaser",
+    }
 }
