@@ -166,6 +166,7 @@ namespace GunMinigame
 
         public List<Image> ammoSelectAmmo;
         public Image ammoSelectCursor;
+        private bool pointerOverAmmoSelectionArea;
 
 
         public static Sprite fannyPackSprite;
@@ -576,8 +577,8 @@ namespace GunMinigame
             ammoSelector.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
             ammoSelector.transform.localPosition = new Vector3((385f/2560f)*Screen.width, (-115f/1440f)*Screen.height);
             ammoSelector.sprite = ammoSelectorSprite;
-            ammoSelector.gameObject.AddComponent<Button>().onClick.AddListener(()=>ToggleAmmo());
             ammoSelector.gameObject.AddComponent<ImageHoverror>();
+            AddAmmoSelectionPointerTracking(ammoSelector);
 
             ammoIcon = new GameObject("MinigameAmmoIcon").AddComponent<Image>();
             ammoIcon.transform.SetParent(ammoSelector.transform);
@@ -591,6 +592,8 @@ namespace GunMinigame
             ammoSelectWindow.transform.localScale = new Vector3((3f/2560f)*Screen.width, (1f/1440f)*Screen.height, 1f);
             ammoSelectWindow.transform.localPosition = new Vector3((590f/2560f)*Screen.width, (-115f/1440f)*Screen.height, 0);;
             ammoSelectWindow.sprite = ammoSelectWindowSprite;
+            ammoSelectWindow.gameObject.SetActive(false);
+            AddAmmoSelectionPointerTracking(ammoSelectWindow);
 
             ammoSelectCursor = new GameObject("MinigameAmmoSelectCursor").AddComponent<Image>();
             ammoSelectCursor.transform.SetParent(ammoSelectWindow.transform);
@@ -604,7 +607,6 @@ namespace GunMinigame
             ammoSelectAmmo[0].transform.localPosition = new Vector3(-32.5f, 1f);
             ammoSelectAmmo[0].transform.localScale = new Vector3(0.5f*(1f/5f), 0.5f);
             ammoSelectAmmo[0].enabled = false;
-            ammoSelectAmmo[0].gameObject.AddComponent<Button>().onClick.AddListener(() => SetAmmoType(0));
 
             handTransform = UnityEngine.Object.Instantiate(MinigameBase.main.handTransform.gameObject, Vector2.zero, Quaternion.identity).GetComponent<RectTransform>();
             handTransform.SetParent(maskBase.transform);
@@ -628,7 +630,6 @@ namespace GunMinigame
             ammoSelectAmmo[curCount].transform.localScale = new Vector3(0.5f*(1f/5f), 0.5f);
             ammoSelectAmmo[curCount].transform.localPosition = new Vector3(ammoSelectAmmo[ammoSelectAmmo.Count - 2].transform.localPosition.x + 20 , 1f);
             ammoSelectAmmo[curCount].enabled = false;
-            ammoSelectAmmo[curCount].gameObject.AddComponent<Button>().onClick.AddListener(() => SetAmmoType(curCount));
         }
 
         static void PrepareResources()
@@ -705,6 +706,7 @@ namespace GunMinigame
 
             HandleMag();
             HandleBandolier();
+            HandleAmmoSelection();
             HandleWindowAlpha();
             HandleFannyPack();
             HandleCover();
@@ -1305,22 +1307,52 @@ namespace GunMinigame
             return PauseHandler.main.isPaused;
         }
 
-        public void ToggleAmmo()
-        { // // is that enough conversions for you?!
-            //info.dCurrentAmmo = (ushort)(ushort)((ushort)((ushort)info.dCurrentAmmo+(ushort)1) % (ushort)info.ammos.Length);
-            //ammoIcon.sprite = info.ammosIcons[info.dCurrentAmmo + 2];
-            ammoSelectWindow.gameObject.SetActive(!ammoSelectWindow.gameObject.activeSelf);
-            EventSystem.current.SetSelectedGameObject(null);
-            if (ammoSelectWindow.gameObject.activeSelf)
+        private void HandleAmmoSelection()
+        {
+            bool canSelectAmmo = ammoSelector.gameObject.activeSelf;
+            bool selectionWindowOpen = canSelectAmmo &&
+                Input.GetKey(KeyCode.Mouse1) &&
+                pointerOverAmmoSelectionArea;
+            ammoSelectWindow.gameObject.SetActive(selectionWindowOpen);
+            if (!canSelectAmmo || 0f == Input.mouseScrollDelta.y || info.ammos.Length < 2)
+                return;
+
+            int direction = Input.mouseScrollDelta.y > 0f ? 1 : -1;
+            int nextAmmo = (info.dCurrentAmmo + direction + info.ammos.Length) % info.ammos.Length;
+            SetAmmoType((ushort)nextAmmo);
+        }
+
+        private void AddAmmoSelectionPointerTracking(Image image)
+        {
+            EventTrigger trigger = image.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            pointerEnterEntry.callback.AddListener(_ => pointerOverAmmoSelectionArea = true);
+            trigger.triggers.Add(pointerEnterEntry);
+
+            EventTrigger.Entry pointerExitEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+            pointerExitEntry.callback.AddListener(data => UpdateAmmoSelectionPointerState(data as PointerEventData));
+            trigger.triggers.Add(pointerExitEntry);
+        }
+
+        private void UpdateAmmoSelectionPointerState(PointerEventData eventData)
+        {
+            if (null == eventData)
             {
-                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
+                pointerOverAmmoSelectionArea = false;
+                return;
             }
-       else     PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Close);
+
+            GameObject pointerTarget = eventData.pointerCurrentRaycast.gameObject;
+            pointerOverAmmoSelectionArea = null != pointerTarget &&
+                (pointerTarget.transform == ammoSelector.transform ||
+                pointerTarget.transform.IsChildOf(ammoSelector.transform) ||
+                pointerTarget.transform == ammoSelectWindow.transform ||
+                pointerTarget.transform.IsChildOf(ammoSelectWindow.transform));
         }
 
         public void SetAmmoType(ushort index)
         {
-            if (index > info.ammos.Length)
+            if (index >= info.ammos.Length)
                 throw new Exception("[GunMinigame] Requested ammo index is out of bountry! :tourniqet:");
             info.dCurrentAmmo = index;
             ammoIcon.sprite = info.ammosIcons[info.dCurrentAmmo];
