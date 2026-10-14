@@ -273,6 +273,17 @@ namespace NewFirearms
                     prop.minigame.laserImage = LoadSprite(folder, prop.minigame.laserPath);
                 else prop.minigame.laserImage = emptySprite;
 
+                if (!string.IsNullOrEmpty(prop.minigame.fireTogglePath))
+                    prop.minigame.fireToggleTrigger = LoadSprite(folder, prop.minigame.fireTogglePath);
+
+                if (null != prop.minigame.fireModePaths)
+                {
+                    prop.minigame.fireModeSprites = new Sprite[prop.minigame.fireModePaths.Length];
+                    for (int i = 0; i < prop.minigame.fireModePaths.Length; i++)
+                        if (!string.IsNullOrEmpty(prop.minigame.fireModePaths[i]))
+                            prop.minigame.fireModeSprites[i] = LoadSprite(folder, prop.minigame.fireModePaths[i]);
+                }
+
                 if (null != prop.minigame.coverAnimationPaths && 0 != prop.minigame.coverAnimationPaths.Length)
                 {
                     prop.minigame.coverAnimation = new Sprite[prop.minigame.coverAnimationPaths.Length];

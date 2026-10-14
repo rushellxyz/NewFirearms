@@ -53,8 +53,8 @@ namespace NewFirearms
                     }
                else     __instance.gunCrosshair.gameObject.SetActive(false);
 
-                    // TODO TODO
-                    rshGun.fireMode = rshGun.prop.fireModes.Max();
+                    if (null == rshGun.prop.minigame.fireToggleTrigger)
+                        rshGun.fireMode = rshGun.prop.fireModes.Max();
                 }
            else     HandleLegacyGunUi(__instance, holdinChecksCanBeIgonredForPerfomnrenr:true);
             }
@@ -170,14 +170,7 @@ namespace NewFirearms
         public static bool Prefix(PlayerCamera __instance)
         {
             if (__instance.body.HoldingItem(__instance.body.handSlot) && __instance.body.GetItem(__instance.body.handSlot).TryGetComponent<RshGun>(out var component))
-            { // TODO i think it eould be great to move it into funciton in RshGun
-                if (Plugin.togetherMpEnabled && component.RequestHostIfClient(4))
-                    return false;
-                Sound.Play(component.prop.toggleFireModeAudio, component.transform.position);
-                component.fireMode = component.prop.fireModes[(component.prop.fireModes.IndexOf(component.fireMode) + 1) % component.prop.fireModes.Count];
-                if (Plugin.togetherMpEnabled)
-                    component.SyncIfHost();
-            }
+                component.ToggleFireMode();
             return false;
         }
     }

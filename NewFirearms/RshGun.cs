@@ -64,6 +64,9 @@ namespace NewFirearms
         public bool IsRacked()
          => racked;
 
+        public byte CurrentFireMode()
+         => fireMode;
+
         public string CurrentMag()
          => mag;
 
@@ -508,6 +511,17 @@ namespace NewFirearms
                 SyncIfHost();
         }
 
+        public void ToggleFireMode()
+        {
+            if (Plugin.togetherMpEnabled && RequestHostIfClient(4))
+                return;
+
+            Sound.Play(prop.toggleFireModeAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+            fireMode = prop.fireModes[(prop.fireModes.IndexOf(fireMode) + 1) % prop.fireModes.Count];
+            if (Plugin.togetherMpEnabled)
+                SyncIfHost();
+        }
+
         void DestroyComposedSprite()
         {
             UnityEngine.Object.Destroy(composedSprite);
@@ -799,11 +813,7 @@ namespace NewFirearms
        else if (3 == action)
                 rshGun.RemoveMag(pb.body);
        else if (4 == action)
-            {
-                Sound.Play(rshGun.prop.toggleFireModeAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                rshGun.fireMode = rshGun.prop.fireModes[(rshGun.prop.fireModes.IndexOf(rshGun.fireMode) + 1) % rshGun.prop.fireModes.Count];
-                rshGun.SyncIfHost();
-            }
+                rshGun.ToggleFireMode();
        else if (5 == action)
                 rshGun.shooter = null;
         }

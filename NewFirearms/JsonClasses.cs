@@ -112,6 +112,8 @@ namespace NewFirearms
         public string[] casingsPath;
         public string laserTogglePath;
         public string laserPath;
+        public string fireTogglePath;
+        public string[] fireModePaths;
         public string[] coverAnimationPaths;
     }
 

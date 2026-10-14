@@ -73,6 +73,8 @@ namespace GunMinigame
         public bool resizeMagazine;
         public Sprite laserToggleTrigger;
         public Sprite laserImage;
+        public Sprite fireToggleTrigger;
+        public Sprite[] fireModeSprites;
         public Sprite[] coverAnimation;
         public float coverSpeed;
         public float coverXPosition;
@@ -209,6 +211,8 @@ namespace GunMinigame
         public ILaser laser;
         public Image laserToggleTrigger;
         public Image laserImage;
+        public Image fireToggleTrigger;
+        public Image fireModeImage;
 
         public Image coverImage;
         public float coverTimer;
@@ -291,6 +295,8 @@ namespace GunMinigame
             magazineDragTrigger.sprite = info.magazineDragTrigger;
             laserToggleTrigger.sprite = info.laserToggleTrigger;
             laserImage.sprite = info.laserImage;
+            fireToggleTrigger.sprite = info.fireToggleTrigger;
+            fireToggleTrigger.gameObject.SetActive(null != info.fireToggleTrigger);
             if (null == info.coverAnimation)
                 coverImage.enabled = false;
        else if (newGun != gun)
@@ -396,6 +402,14 @@ namespace GunMinigame
             coverImage.transform.localScale = new Vector3(0.15f, 0.15f);
             coverImage.GetComponent<RectTransform>().sizeDelta = size;
 
+            fireModeImage = new GameObject("MinigameFireModeImage").AddComponent<Image>();
+            fireModeImage.transform.SetParent(gunBase.transform);
+            fireModeImage.transform.localPosition = Vector3.zero;
+            fireModeImage.transform.localScale = Vector3.one;
+            fireModeImage.GetComponent<RectTransform>().sizeDelta = size;
+            fireModeImage.raycastTarget = false;
+            fireModeImage.enabled = false;
+
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
             sliderFrontImage.transform.localPosition = Vector3.zero;
@@ -429,6 +443,20 @@ namespace GunMinigame
             laserToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
             laserToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
                 laser.Toggle();
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
+                EventSystem.current.SetSelectedGameObject(null);
+            });
+
+            fireToggleTrigger = new GameObject("FireToggleTrigger").AddComponent<Image>();
+            fireToggleTrigger.transform.SetParent(gunBase.transform);
+            fireToggleTrigger.transform.localPosition = Vector3.zero;
+            fireToggleTrigger.transform.localScale = Vector3.one;
+            fireToggleTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            fireToggleTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            fireToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            fireToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
+            fireToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
+                gun.ToggleFireMode();
                 PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
                 EventSystem.current.SetSelectedGameObject(null);
             });
@@ -654,6 +682,7 @@ namespace GunMinigame
             Item it = PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot);
             HandleInertia();
             HandleLaser();
+            HandleFireModeImage();
 
             Vector2 mousePos = GetMousePos();
 
@@ -829,6 +858,19 @@ namespace GunMinigame
         private void HandleLaser()
         {
             laserImage.gameObject.SetActive(null != laser && laser.IsEnabled());
+        }
+
+        private void HandleFireModeImage()
+        {
+            if (null == info.fireModeSprites || gun.CurrentFireMode() >= info.fireModeSprites.Length)
+            {
+                fireModeImage.enabled = false;
+                return;
+            }
+
+            Sprite sprite = info.fireModeSprites[gun.CurrentFireMode()];
+            fireModeImage.sprite = sprite;
+            fireModeImage.enabled = null != sprite;
         }
 
         private void HandleMag()

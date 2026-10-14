@@ -79,8 +79,6 @@
     <Reference Include="LiteEntitySystem">
       <HintPath>$(GameDirectory)/BepInEx/plugins/Together/LiteEntitySystem.dll</HintPath>
     </Reference>
-    <Reference Include="GunMinigame">
-      <HintPath>$(GameDirectory)/BepInEx/plugins/GunMinigame.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="../GunMinigame/GunMinigame.csproj" />
   </ItemGroup>
 </Project>

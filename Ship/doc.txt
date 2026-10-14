@@ -130,6 +130,10 @@
 == MINIGAME JSON TEMPLATE ==
 {
     // work in progress
+    // TODO Rewrite this as current AI Agent generates documentation
     "fitMainSprite": false, // Fit the main gun image to the screen width
     "fitLaserImage": true, // Fit the laser overlay to the screen width
+    "fireTogglePath": "string", // Optional fire-mode toggle hit area; enables manual fire-mode selection
+    // With fireTogglePath set, fire mode starts normally and this hit area cycles the available modes.
+    "fireModePaths": [ "safe", "", "semi", "full" ], // Optional sprites indexed by fire mode; empty entries hide the indicator for that mode
 }
