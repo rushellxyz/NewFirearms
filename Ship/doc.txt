@@ -56,6 +56,7 @@
         },
     ],
     "desiredGasTime": 0.0, // Must always stay at 0 for barrel feed
+    "spawnUnracked": false, // If true, newly spawned guns start with the slide unracked
     "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full
     "magazineType": [ "string", ], // If it inresects with "magazineType" in at least one entry, mag is considered compataible
     "barrelOffset": 0.0, // Vertical offset of barrel from model

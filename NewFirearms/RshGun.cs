@@ -176,7 +176,8 @@ namespace NewFirearms
                 fireMode = prop.fireModes.Min();
                 if (Plugin.togetherMpEnabled)
                     MpStartOp();
-           else     Rack(manual: true);
+           else if (!prop.spawnUnracked)
+                    Rack(manual: true);
                 existed = true;
             }
        else if (Plugin.togetherMpEnabled)
@@ -193,8 +194,9 @@ namespace NewFirearms
                 return;
             if (!existed)
             {
-                racked = true;
-                Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                racked = !prop.spawnUnracked;
+                if (racked)
+                    Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 UpdateSprite();
             }
             InvokeRepeating("SyncIfHostt", Plugin.sett.gunSyncRate, Plugin.sett.gunSyncRate);

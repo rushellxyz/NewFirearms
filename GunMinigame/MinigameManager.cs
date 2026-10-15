@@ -454,7 +454,7 @@ namespace GunMinigame
             fireToggleTrigger.transform.localScale = Vector3.one;
             fireToggleTrigger.alphaHitTestMinimumThreshold = 0.1f;
             fireToggleTrigger.GetComponent<RectTransform>().sizeDelta = size;
-            fireToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            fireToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>(); // :hmm:
             fireToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
             fireToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
                 gun.ToggleFireMode();
@@ -1211,6 +1211,7 @@ namespace GunMinigame
             Color colo = new Color(1f, 1f, 1f, windowAlpha);
             uiImage.color = colo;
             mainImage.color = colo;
+            fireModeImage.color = colo;
             sliderFrontImage.color = colo;
             sliderBackImage.color = colo;
             rackedSpecific.color = colo;

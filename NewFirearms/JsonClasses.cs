@@ -43,6 +43,7 @@ namespace NewFirearms
         public int internalCapacity = 1;
         public List<AmmoInfo> ammoTypes;
         public float desiredGasTime;
+        public bool spawnUnracked;
         public List<byte> fireModes;
         /*
         * 0 - Safe
