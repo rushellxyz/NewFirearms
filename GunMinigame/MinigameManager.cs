@@ -1424,6 +1424,7 @@ namespace GunMinigame
     public class AlphaRaycastFilter : MonoBehaviour, ICanvasRaycastFilter
     {
         private Image myImage;
+        private const float minimumAlpha = 0.1f;
 
         void Awake()
         {
@@ -1456,7 +1457,7 @@ namespace GunMinigame
                 Color pixelColor = tex.GetPixel(pixelX, pixelY);
 
                 // If alpha is below your threshold, return false so the ray passes through
-                return pixelColor.a >= myImage.alphaHitTestMinimumThreshold;
+                return pixelColor.a >= minimumAlpha;
             }
             catch
             {
