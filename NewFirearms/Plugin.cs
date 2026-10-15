@@ -385,7 +385,7 @@ namespace NewFirearms
     {
         static void Postfix()
         {
-            Locale.currentLang.other.Add("runsetnewfirearms.gunjamming", "Gun jaminng");
+            Locale.currentLang.other.Add("runsetnewfirearms.gunjamming", "Gun jamming");
             Locale.currentLang.other.Add("runsetnewfirearms.gunjammingdsc", "Do guns jam?");
             Locale.currentLang.other.Add("runsetnewfirearms.gundmgmult", "Gun damage multiplier");
             if (Plugin.togetherMpEnabled)
