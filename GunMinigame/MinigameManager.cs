@@ -258,6 +258,7 @@ namespace GunMinigame
         {
             if (null == uiBase)
                 PrepareGunUi();
+            PlayerCamera.main.gunMenu.SetActive(false);
 
             info = newInfo;
             if (!info.initialized)
