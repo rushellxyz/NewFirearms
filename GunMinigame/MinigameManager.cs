@@ -43,6 +43,7 @@ namespace GunMinigame
         public float rackPoint;
         public float rackedIdlePosition;
         public bool rackByRotation;
+        public bool frontSliderInvisble;
         public float rackRotationCenterXPosition;
         public float rackRotationCenterYPosition;
         public bool removeMagazineOnRack;
@@ -75,6 +76,7 @@ namespace GunMinigame
         public Sprite laserImage;
         public Sprite fireToggleTrigger;
         public Sprite[] fireModeSprites;
+        public bool sliderFireToggle;
         public Sprite[] coverAnimation;
         public float coverSpeed;
         public float coverXPosition;
@@ -291,6 +293,7 @@ namespace GunMinigame
             laserImage.GetComponent<RectTransform>().sizeDelta = info.fitLaserImage ? fitSize : size;
             mainImage.sprite = info.mainSprite;
             sliderFrontImage.sprite = info.sliderFrontSprite;
+            sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.sprite = info.sliderBackSprite;
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
@@ -331,6 +334,7 @@ namespace GunMinigame
             active = true;
             gun = newGun;
             laser = newLaser;
+            UpdateSliderFireToggle(gun.IsRacked());
 
             laserToggleTrigger.enabled = null != laser;
             uiBase.SetActive(true);
@@ -795,7 +799,10 @@ namespace GunMinigame
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
             if (info.rackByRotation)
+            {
+                UpdateSliderFireToggle(racked);
                 return;
+            }
             float xPos;
             if (holdsSlide)
             {
@@ -830,6 +837,19 @@ namespace GunMinigame
             sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderLastXPos = xPos;
+            UpdateSliderFireToggle(gun.IsRacked());
+        }
+
+        private void UpdateSliderFireToggle(bool racked)
+        {
+            if (!info.sliderFireToggle)
+                return;
+
+            fireToggleTrigger.transform.localPosition = sliderFrontImage.transform.localPosition;
+            fireToggleTrigger.transform.localRotation = sliderFrontImage.transform.localRotation;
+            fireModeImage.transform.localPosition = sliderFrontImage.transform.localPosition;
+            fireModeImage.transform.localRotation = sliderFrontImage.transform.localRotation;
+            fireToggleTrigger.gameObject.SetActive(null != info.fireToggleTrigger && !racked);
         }
 
         private void HandleInertia()
@@ -1213,7 +1233,7 @@ namespace GunMinigame
             uiImage.color = colo;
             mainImage.color = colo;
             fireModeImage.color = colo;
-            sliderFrontImage.color = colo;
+            sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.color = colo;
             rackedSpecific.color = colo;
             hideShowButton.color = colo;
