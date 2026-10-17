@@ -129,6 +129,7 @@ namespace GunMinigame
         public bool shouldResetHandSprite;
 
         private float sliderLastXPos;
+        private bool automatedHandAction;
 
         public Image rackedSpecific;
 
@@ -716,7 +717,11 @@ namespace GunMinigame
             HandleFannyPack();
             HandleCover();
 
-            if (handFaded)
+            if (automatedHandAction)
+            {
+                handImage.color = new Color(1f, 1f - body.averagePain * 0.01f, 1f - body.averagePain * 0.01f, Mathf.Max(handImage.color.a, 0.8f));
+            }
+            else if (handFaded)
             { // idk why that weird looking number for alpha, i stole it from decompiled code
                 handImage.color = new Color(1f, 1f - body.averagePain * 0.01f, 1f - body.averagePain * 0.01f, Mathf.Clamp(handImage.color.a - Time.deltaTime * 4f, 0f, 0.8235294f));
                 if (0f >= handImage.color.a)
@@ -777,16 +782,19 @@ namespace GunMinigame
                 ignoreNextMouseKey = false;
             }
 
-            float num2 = 0.25f;
-            float num3 = 4f + body.skills.STRFrom10 * 0.3f;
-            float num4 = 1.5f;
-            num3 *= body.consciousness * 0.01f;
-            num2 *= body.consciousness * 0.01f;
-            Vector2 b = Vector2.ClampMagnitude((mousePos - handPos) * num2, 75f);
-            handVelocity = Vector2.Lerp(handVelocity, b, num3 * Time.deltaTime);
-            handVelocity = Vector2.Lerp(handVelocity, Vector2.zero, Time.deltaTime * num4);
-            handVelocity *= 0.9f; // is this is fps-dependent, i just stole it from keypadminigame
-            handPos += handVelocity * Time.deltaTime * 120f;
+            if (!automatedHandAction)
+            {
+                float num2 = 0.25f;
+                float num3 = 4f + body.skills.STRFrom10 * 0.3f;
+                float num4 = 1.5f;
+                num3 *= body.consciousness * 0.01f;
+                num2 *= body.consciousness * 0.01f;
+                Vector2 b = Vector2.ClampMagnitude((mousePos - handPos) * num2, 75f);
+                handVelocity = Vector2.Lerp(handVelocity, b, num3 * Time.deltaTime);
+                handVelocity = Vector2.Lerp(handVelocity, Vector2.zero, Time.deltaTime * num4);
+                handVelocity *= 0.9f; // is this is fps-dependent, i just stole it from keypadminigame
+                handPos += handVelocity * Time.deltaTime * 120f;
+            }
 
             // handPos = Vector2.Lerp(Minigame.game.handPos, mousePos, Time.deltaTime * 10f);
 
@@ -798,6 +806,11 @@ namespace GunMinigame
             if (racked)
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
+            if (automatedHandAction)
+            {
+                UpdateSliderFireToggle(racked);
+                return;
+            }
             if (info.rackByRotation)
             {
                 UpdateSliderFireToggle(racked);
@@ -850,6 +863,120 @@ namespace GunMinigame
             fireModeImage.transform.localPosition = sliderFrontImage.transform.localPosition;
             fireModeImage.transform.localRotation = sliderFrontImage.transform.localRotation;
             fireToggleTrigger.gameObject.SetActive(null != info.fireToggleTrigger && !racked);
+        }
+
+        public void HandleMarksmanHotkey(KeyCode key)
+        {
+            if (!active || hiden || automatedHandAction || handIsHovered || IsAnyGameUIOpen())
+                return;
+
+            if (key == KeyCode.Z)
+                StartCoroutine(AnimateMarksmanRack());
+            else if (key == KeyCode.X && !string.IsNullOrEmpty(gun.CurrentMag()))
+                StartCoroutine(AnimateMarksmanMagazineRemoval());
+        }
+
+        private IEnumerator AnimateMarksmanRack()
+        {
+            automatedHandAction = true;
+            bool wasRacked = gun.IsRacked();
+            Vector3 sliderPosition = sliderFrontImage.transform.position;
+            Vector2 belowSlider = new Vector2(sliderPosition.x, sliderPosition.y - Screen.height * 0.08f);
+            handPos = belowSlider;
+            handTransform.position = handPos;
+            handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
+            yield return MoveAutomatedHand(new Vector2(sliderPosition.x, sliderPosition.y), 0.09f);
+
+            float startPosition = sliderFrontImage.transform.localPosition.x;
+            float targetPosition = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
+            float startAngle = sliderFrontImage.transform.localEulerAngles.z;
+            float targetAngle = wasRacked ? info.unrackedIdlePosition : info.rackedIdlePosition;
+            handImage.sprite = MinigameBase.main.handSprites[2];
+            RotatingSlider rotatingSlider = sliderFrontImage.GetComponent<RotatingSlider>();
+            if (info.rackByRotation)
+                rotatingSlider.automated = true;
+
+            const float duration = 0.12f;
+            float elapsed = 0f;
+            bool rackRequested = false;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float progress = Mathf.Clamp01(elapsed / duration);
+                if (info.rackByRotation)
+                {
+                    float angle = Mathf.LerpAngle(startAngle, targetAngle, progress);
+                    sliderFrontImage.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+                }
+                else
+                {
+                    float x = Mathf.Lerp(startPosition, targetPosition, progress);
+                    sliderFrontImage.transform.localPosition = new Vector3(x, sliderFrontImage.transform.localPosition.y, sliderFrontImage.transform.localPosition.z);
+                    sliderBackImage.transform.localPosition = new Vector3(x, sliderBackImage.transform.localPosition.y, sliderBackImage.transform.localPosition.z);
+                    sliderLastXPos = x;
+                }
+                handPos = sliderFrontImage.transform.position;
+                handTransform.position = handPos;
+
+                if (!rackRequested && progress >= 0.5f)
+                {
+                    gun.Rack();
+                    if (info.removeMagazineOnRack)
+                        gun.RemoveMag();
+                    rackRequested = true;
+                }
+                yield return null;
+            }
+
+            if (info.rackByRotation)
+            {
+                rotatingSlider.automated = false;
+                sliderFrontImage.transform.localRotation = Quaternion.Euler(0f, 0f, targetAngle);
+            }
+            else
+            {
+                sliderFrontImage.transform.localPosition = new Vector3(targetPosition, sliderFrontImage.transform.localPosition.y, sliderFrontImage.transform.localPosition.z);
+                sliderBackImage.transform.localPosition = new Vector3(targetPosition, sliderBackImage.transform.localPosition.y, sliderBackImage.transform.localPosition.z);
+                sliderLastXPos = targetPosition;
+            }
+
+            handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
+            Vector2 belowEnd = handPos + Vector2.down * (Screen.height * 0.08f);
+            yield return MoveAutomatedHand(belowEnd, 0.09f);
+            automatedHandAction = false;
+        }
+
+        private IEnumerator AnimateMarksmanMagazineRemoval()
+        {
+            automatedHandAction = true;
+            Vector3 magazinePosition = null != insertedMagazine
+                ? insertedMagazine.transform.position
+                : gunBase.transform.TransformPoint(new Vector3(info.magazineXPosition, info.magazineYPosition));
+            Vector2 belowMagazine = new Vector2(magazinePosition.x, magazinePosition.y - Screen.height * 0.08f);
+            handPos = belowMagazine;
+            handTransform.position = handPos;
+            handImage.sprite = MinigameBase.main.handSprites[2];
+            yield return MoveAutomatedHand(new Vector2(magazinePosition.x, magazinePosition.y), 0.09f);
+            gun.RemoveMag();
+            handImage.sprite = MinigameBase.main.handSprites[3];
+            yield return MoveAutomatedHand(new Vector2(magazinePosition.x, magazinePosition.y - Screen.height * 0.08f), 0.11f);
+            handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
+            automatedHandAction = false;
+        }
+
+        private IEnumerator MoveAutomatedHand(Vector2 target, float duration)
+        {
+            Vector2 start = handPos;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                handPos = Vector2.Lerp(start, target, Mathf.Clamp01(elapsed / duration));
+                handTransform.position = handPos;
+                yield return null;
+            }
+            handPos = target;
+            handTransform.position = handPos;
         }
 
         private void HandleInertia()
@@ -1497,6 +1624,7 @@ namespace GunMinigame
         private float lastPointerAngle = 0f;
 
         bool dragged;
+        public bool automated;
 
         void Awake()
         {
@@ -1512,7 +1640,7 @@ namespace GunMinigame
 
         void Update()
         {
-            if (dragged)
+            if (dragged || automated)
                 return;
 
             bool racked = minigame.gun.IsRacked();

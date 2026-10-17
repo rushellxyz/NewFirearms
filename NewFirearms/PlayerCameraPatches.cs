@@ -19,10 +19,18 @@ namespace NewFirearms
         static bool Prefix(PlayerCamera __instance)
         {
             if (__instance.body.HoldingItem(__instance.body.handSlot) && null != __instance.body.GetItem(__instance.body.handSlot).GetComponent<GunScript>())
+            {
+                if (null != GunMinigame.MinigameManager.instance && GunMinigame.MinigameManager.instance.active)
+                    GunMinigame.MinigameManager.instance.Hide();
                 return true;
+            }
 
             if (!GunMinigame.Plugin.useMinigame)
+            {
+                if (null != GunMinigame.MinigameManager.instance && GunMinigame.MinigameManager.instance.active)
+                    GunMinigame.MinigameManager.instance.Hide();
                 HandleLegacyGunUi(__instance);
+            }
        else {
                 if (!(__instance.body.HoldingItem(__instance.body.handSlot)))
                 {
@@ -56,7 +64,11 @@ namespace NewFirearms
                     if (null == rshGun.prop.minigame.fireToggleTrigger)
                         rshGun.fireMode = rshGun.prop.fireModes.Max();
                 }
-           else     HandleLegacyGunUi(__instance, holdinChecksCanBeIgonredForPerfomnrenr:true);
+           else {
+                    if (null != GunMinigame.MinigameManager.instance && GunMinigame.MinigameManager.instance.active)
+                        GunMinigame.MinigameManager.instance.Hide();
+                    HandleLegacyGunUi(__instance, holdinChecksCanBeIgonredForPerfomnrenr:true);
+                }
             }
             return false;
         }
