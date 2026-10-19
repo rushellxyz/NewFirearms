@@ -20,6 +20,9 @@ namespace NewFirearms
         public string description;
         public string category = "utility";
         public float slotRotation = -90f;
+        // Local position offsets while held in an inventory hand slot.
+        public float itemSpriteXOffset;
+        public float itemSpriteYOffset;
         public float weight;
         public int value;
         public int recognition;

@@ -161,6 +161,7 @@ namespace NewFirearms
                 onlyHoldInHands = info.onlyHoldInHands,
 
                 Icon = sprite,
+                VisualOffset = new Vector2(prop.itemSpriteXOffset, prop.itemSpriteYOffset),
                 SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" },
                 CustomData = new Dictionary<string, object> { ["prop"] = prop }
             };

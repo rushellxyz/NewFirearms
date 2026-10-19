@@ -122,6 +122,9 @@
     "magazineType": [  ],
     "barrelOffset": 0.5,
 
+    "itemSpriteXOffset": 0.1,
+    "itemSpriteYOffset": -1.3,
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
     "shootAudioPath": "shoot",

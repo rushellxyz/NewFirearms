@@ -62,6 +62,8 @@
     "barrelOffset": 0.0, // Vertical offset of barrel from model
     "hasLaser": false, // Laser
 
+    "itemSpriteXOffset": 0.0, // X Offset of sprite when held in hand
+    "itemSpriteYOffset": 0.0, // same but y
     // normalTexturePath and rackedTexturePath are the only mandatory paths. Textures and sprites must be .png.
     // Audio supports .wav, .ogg, .mp3, .aif/.aiff, .mod, .it, .s3m, and .xm; extensions may be omitted when a matching file exists.
     // The COPY__ is a work in progress
