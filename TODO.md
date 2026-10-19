@@ -7,4 +7,4 @@ TODO List - Agents stay away unless stated otherwise
  - When loading ammo into magazine account properly when magazine is already full 
  - Save laser state
  - Do something about M1911, as people often complain that it supposed to use .45ACP
- 
+ - Fix short desync when switching ammo 
