@@ -13,7 +13,7 @@ namespace GunMinigame
 
     public interface IMinigameMag
     {
-        public void DragOnto(Item item);
+        public bool DragOnto(Item item); // Returns whether the load succeeded or was requested from the host.
     }
 
     public interface ILaser

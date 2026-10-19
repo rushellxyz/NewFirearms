@@ -757,12 +757,23 @@ namespace GunMinigame
                             IMinigameMag mag = (MagazineScript.currentlyHovering.it.GetComponent(typeof(IMinigameMag)) as IMinigameMag);
                             if (null != mag)
                             {
-                                mag.DragOnto(holding);
-                                SpinBandolied();
-                                shouldUpdateMagazineCount = true;
-                                pendingJump = MagazineScript.currentlyHovering.it;
+                                if (mag.DragOnto(holding))
+                                {
+                                    SpinBandolied();
+                                    shouldUpdateMagazineCount = true;
+                                    pendingJump = MagazineScript.currentlyHovering.it;
+                                }
+                                else
+                                {
+                                    PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Deny);
+                                    shouldntRefreshBandolierCount = false;
+                                }
                             }
-                       else     UnityEngine.Debug.LogWarning("[GunMinigame] Target magazine doesnt implement IMinigameMag!");
+                            else
+                            {
+                                shouldntRefreshBandolierCount = false;
+                                UnityEngine.Debug.LogWarning("[GunMinigame] Target magazine doesnt implement IMinigameMag!");
+                            }
                         }
                    else if (!Plugin.IsMarksman(PlayerCamera.main.body))
                         {

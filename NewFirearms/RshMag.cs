@@ -46,17 +46,17 @@ namespace NewFirearms
             }
         }
 
-        public void DragOnto(Item item)
+        public bool DragOnto(Item item)
         {
             if (-2 != rounds[rounds.Count() - 1])
-                return;
+                return false;
 
             sbyte round = (sbyte)prop.ammoTypes.IndexOf(item.id);
             if (-1 == round)
-                return;
+                return false;
 
             if (Plugin.togetherMpEnabled && RequestHostIfClient(1, item))
-                return;
+                return true;
 
             Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             Plugin.ShiftRight(ref rounds);
@@ -64,6 +64,7 @@ namespace NewFirearms
             UnityEngine.Object.Destroy(item.gameObject);
             if (Plugin.togetherMpEnabled)
                 SyncIfHost(1);
+            return true;
         }
 
         public void RemoveRound(Body body=null)
