@@ -31,7 +31,7 @@ namespace NewFirearms
         {
             if (existed)
                 return;
-            Fill((sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count), Mathf.RoundToInt(prop.capacity * it.condition));
+            Fill((sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count), Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition)));
             it.condition = 1f;
             if (Plugin.togetherMpEnabled)
                 MpStartOp();
@@ -92,6 +92,7 @@ namespace NewFirearms
 
         public void Fill(sbyte type, int amount)
         {
+            amount = Mathf.Clamp(amount, 0, prop.capacity);
             rounds = Enumerable.Repeat(type, amount).ToList();
             rounds.AddRange(Enumerable.Repeat((sbyte)-2, prop.capacity - amount));
             if (Plugin.togetherMpEnabled && existed)

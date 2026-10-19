@@ -7,3 +7,4 @@ TODO List - Agents stay away unless stated otherwise
  - Resize casings, expecially pistols
  - Do something about M1911, as people often complain that it supposed to use .45ACP
  - Fix short desync when switching ammo 
+ - Integration with New Descents: add Gun tag to custom guns
