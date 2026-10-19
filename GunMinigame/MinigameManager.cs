@@ -60,6 +60,7 @@ namespace GunMinigame
         public string[] magazines;
         public float magazineXPosition;
         public float magazineYPosition;
+        public float magazineRotation;
         public float magazineXSpeed;
         public float magazineYSpeed;
         public float magazineAnimationTime;
@@ -1052,6 +1053,7 @@ namespace GunMinigame
             }
         else    insertedMagazine.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
             insertedMagazine.transform.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition);
+            insertedMagazine.transform.localRotation = Quaternion.Euler(0f, 0f, info.magazineRotation);
             insertedMagazine.transform.SetAsFirstSibling();
             insertedMagazine.color = new Color(1f, 1f, 1f, windowAlpha);
         }

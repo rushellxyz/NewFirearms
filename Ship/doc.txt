@@ -139,4 +139,5 @@
     // With fireTogglePath set, fire mode starts normally and this hit area cycles the available modes.
     "fireModePaths": [ "safe", "", "semi", "full" ], // Optional sprites indexed by fire mode; empty entries hide the indicator for that mode
     "sliderFireToggle": false, // Move the fire-mode indicator and toggle hit area with the slider; hide the hit area while racked
+    "magazineRotation": 0.0, // Optional inserted-magazine rotation in degrees
 }
