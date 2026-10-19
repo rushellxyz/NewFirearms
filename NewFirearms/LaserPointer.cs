@@ -7,9 +7,11 @@ namespace NewFirearms
         public Item it;
         public LineRenderer lr;
         public Collider2D coll;
+        private RshGun gun;
 
         public void Awake()
         {
+            gun = GetComponent<RshGun>();
             coll = GetComponent<Collider2D>();
             it = GetComponent<Item>();
             lr = gameObject.AddComponent<LineRenderer>();
@@ -60,7 +62,11 @@ namespace NewFirearms
         }
 
         public void Toggle()
-         => this.enabled = !this.enabled;
+        {
+            enabled = !enabled;
+            //if (null != gun) null should be impossible here
+                gun.laserEnabled = enabled;
+        }
 
         public bool IsEnabled()
          => this.enabled;

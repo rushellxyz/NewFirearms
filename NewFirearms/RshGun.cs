@@ -30,6 +30,8 @@ namespace NewFirearms
         public byte fireMode;
         [JsonProperty("racked")]
         public bool racked;
+        [JsonProperty("laserEnabled")]
+        public bool laserEnabled = true;
 
         public float gasTime = 0f;
         public bool currentlyShooting;
@@ -169,6 +171,8 @@ namespace NewFirearms
 
         public void Start()
         {
+            if (TryGetComponent<LaserPointer>(out var laser))
+                laser.enabled = laserEnabled;
             jamming = WorldGeneration.GetRunSettingBool("newfirearms.gunjamming");
             if (!existed)
             {
