@@ -32,7 +32,7 @@ namespace GunMinigame
         {
             MinigameManager mang = MinigameManager.GetOrAddInstance();
             if (MagazineDragTrigger.isHovering)
-                mang.gun.DragOnto(it);
+                mang.DropMagazine(it, GetComponent<Image>());
        else if (!FannyPackScript.isHovering && !Plugin.IsMarksman(PlayerCamera.main.body))
                 it.transform.parent.GetComponent<Container>().UnloadItem(it);
             mang.magazineDragTrigger.gameObject.SetActive(false);

@@ -385,6 +385,7 @@ namespace NewFirearms
                 UpdateSprite();
                 if (Plugin.togetherMpEnabled)
                     SyncIfHost();
+                return true;
             }
        else {
                 for (sbyte i = 0; i < prop.ammoTypes.Count(); i++)

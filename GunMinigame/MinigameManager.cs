@@ -83,6 +83,7 @@ namespace GunMinigame
         public float coverXPosition;
         public float coverYPosition;
         public bool chargingHandle;
+        public bool p90reload;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -91,6 +92,75 @@ namespace GunMinigame
 
     public class MinigameManager : MonoBehaviour
     {
+        private Item stagedMagazineItem;
+        private Image stagedMagazineImage;
+
+        private void ClearStagedMagazine()
+        {
+            if (null == stagedMagazineItem && null == stagedMagazineImage)
+                return;
+            stagedMagazineItem = null;
+            if (null != stagedMagazineImage)
+                UnityEngine.Object.Destroy(stagedMagazineImage.gameObject);
+            stagedMagazineImage = null;
+            shouldUpdateMagazineCount = true;
+        }
+
+        public void DropMagazine(Item item, Image draggedImage)
+        {
+            if (!info.p90reload)
+            {
+                gun.DragOnto(item);
+                return;
+            }
+            if (null != stagedMagazineItem || !string.IsNullOrEmpty(gun.CurrentMag()))
+            {
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Deny);
+                return;
+            }
+            stagedMagazineItem = item;
+            stagedMagazineImage = new GameObject("StagedMagazine").AddComponent<Image>();
+            stagedMagazineImage.transform.SetParent(gunBase.transform, false);
+            stagedMagazineImage.sprite = draggedImage.sprite;
+            if (info.resizeMagazine)
+            {
+                stagedMagazineImage.rectTransform.sizeDelta = new Vector2(draggedImage.sprite.rect.width, draggedImage.sprite.rect.height);
+                stagedMagazineImage.transform.localScale = new Vector3((1.25f / 2560f) * Screen.width, (1.25f / 1440f) * Screen.height);
+            }
+            else
+                stagedMagazineImage.transform.localScale = new Vector3((1f / 2560f) * Screen.width, (1f / 1440f) * Screen.height);
+            stagedMagazineImage.transform.localPosition = new Vector3(info.magazineXPosition + Screen.width * 0.08f, info.magazineYPosition);
+            stagedMagazineImage.transform.localRotation = Quaternion.Euler(0f, 0f, info.magazineRotation);
+            stagedMagazineImage.transform.SetAsFirstSibling();
+            stagedMagazineImage.gameObject.AddComponent<SlidingMagazine>();
+            shouldUpdateMagazineCount = true;
+        }
+
+        public void SlideStagedMagazine(float delta)
+        {
+            if (null == stagedMagazineItem || null == stagedMagazineImage)
+            {
+                ClearStagedMagazine();
+                return;
+            }
+            Vector3 position = stagedMagazineImage.transform.localPosition;
+            position.x = Mathf.Clamp(position.x + delta, info.magazineXPosition, info.magazineXPosition + Screen.width * 0.08f);
+            stagedMagazineImage.transform.localPosition = position;
+            if (position.x > info.magazineXPosition)
+                return;
+            if (!gun.DragOnto(stagedMagazineItem))
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Deny);
+            ClearStagedMagazine();
+            // Destroy(Item) is deferred until the end of the frame. Refresh after it is gone.
+            StartCoroutine(RefreshMagazinesAfterInsertion());
+        }
+
+        private IEnumerator RefreshMagazinesAfterInsertion()
+        {
+            yield return null;
+            shouldUpdateMagazineCount = true;
+        }
+
         public bool active;
 
         public bool holdsSlide;
@@ -251,6 +321,7 @@ namespace GunMinigame
 
         public void Hide()
         {
+            ClearStagedMagazine();
             PlayerCamera.main.gunMenu.SetActive(value: false);
             PlayerCamera.main.gunCrosshair.gameObject.SetActive(value: false);
             active = false;
@@ -260,6 +331,8 @@ namespace GunMinigame
 
         public void Show(MinigameInfo newInfo, IMinigameGun newGun, ILaser newLaser=null)
         {
+            if (!ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo))
+                ClearStagedMagazine();
             if (null == uiBase)
                 PrepareGunUi();
             PlayerCamera.main.gunMenu.SetActive(false);
@@ -379,6 +452,7 @@ namespace GunMinigame
             gunBase.transform.localScale = Vector3.one;
 
             sliderBackImage = new GameObject("MinigameSliderBack").AddComponent<Image>();
+            sliderBackImage.raycastTarget = false;
             sliderBackImage.transform.SetParent(gunBase.transform);
             sliderBackImage.transform.localPosition = Vector3.zero;
             sliderBackImage.transform.localScale = Vector3.one;
@@ -392,12 +466,14 @@ namespace GunMinigame
             rackedSpecific.raycastTarget = false;
 
             mainImage = new GameObject("MinigameMainSprite").AddComponent<Image>();
+            mainImage.raycastTarget = false;
             mainImage.transform.SetParent(gunBase.transform);
             mainImage.transform.localPosition = Vector3.zero;
             mainImage.transform.localScale = Vector3.one;
             mainImageRect = mainImage.GetComponent<RectTransform>();
 
             laserImage = new GameObject("MinigameLaserImage").AddComponent<Image>();
+            laserImage.raycastTarget = false;
             laserImage.transform.SetParent(gunBase.transform);
             laserImage.transform.localPosition = Vector3.zero;
             laserImage.transform.localScale = Vector3.one;
@@ -405,6 +481,7 @@ namespace GunMinigame
             laserImage.gameObject.SetActive(false);
 
             coverImage = new GameObject("CoverImage").AddComponent<Image>();
+            coverImage.raycastTarget = false;
             coverImage.transform.SetParent(gunBase.transform);
             coverImage.transform.localPosition = Vector3.zero;
             coverImage.transform.localScale = new Vector3(0.15f, 0.15f);
@@ -1037,6 +1114,9 @@ namespace GunMinigame
 
         private void HandleMag()
         {
+            if (null != stagedMagazineImage &&
+                (null == stagedMagazineItem || !string.IsNullOrEmpty(gun.CurrentMag())))
+                ClearStagedMagazine();
             if (0f < magSyncIgnoreTime)
             {
                 magSyncIgnoreTime -= Time.deltaTime;
@@ -1055,6 +1135,7 @@ namespace GunMinigame
             if (string.IsNullOrEmpty(currentMag))
                 return;
             insertedMagazine = new GameObject("InsertedMagazine").AddComponent<Image>();
+            insertedMagazine.raycastTarget = false;
             insertedMagazine.transform.SetParent(gunBase.transform);
             insertedMagazine.sprite = info.magazineSprites[currentMag];
             if (info.resizeMagazine)
@@ -1143,6 +1224,8 @@ namespace GunMinigame
                 foreach (Transform trans in PlayerCamera.main.body.GetWearableBySlotID("torsofront").transform)
                 {
                     if (!trans.TryGetComponent<Item>(out Item it))
+                        continue;
+                    if (it == stagedMagazineItem)
                         continue;
                     if (!info.magazineSprites.TryGetValue(it.id, out Sprite sprite))
                         continue;
@@ -1400,6 +1483,8 @@ namespace GunMinigame
             }
             if (null != insertedMagazine)
                 insertedMagazine.color = colo;
+            if (null != stagedMagazineImage)
+                stagedMagazineImage.color = colo;
         }
 
         private IEnumerator _HideShow()
