@@ -142,5 +142,6 @@
     "fireModePaths": [ "safe", "", "semi", "full" ], // Optional sprites indexed by fire mode; empty entries hide the indicator for that mode
     "sliderFireToggle": false, // Move the fire-mode indicator and toggle hit area with the slider; hide the hit area while racked
     "magazineRotation": 0.0, // Optional inserted-magazine rotation in degrees
-    "p90reload": false, // Stage a dropped magazine to the right; grab and slide left to insert. Closing the minigame cancels staging.
+    "p90reload": false, // Stage the magazine with its right end tilted up and left end anchored; grab the right half and drag down to insert. Closing the minigame cancels staging.
+    "casingsDrop": false, // Omit the initial upward casing impulse; gravity makes casings fall. Horizontal motion and spin are unchanged.
 }

@@ -162,11 +162,13 @@
         "magazinesOffset": 0.04,
         "maximumMagazines": 3,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.062,
-        "casingYPosition": 0.067,
+        "casingXPosition": -0.1,
+        "casingYPosition": -0.01,
         "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
         "resizeMagazine": true,
         "fitMainSprite": true,
         "p90reload": true,
+        "casingsDrop": true,
+        "fireTogglePath": "uiFireToggleTrigger",
     }
 }

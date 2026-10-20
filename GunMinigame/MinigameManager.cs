@@ -70,6 +70,7 @@ namespace GunMinigame
         public float casingXPosition;
         public float casingYPosition;
         public Sprite[] casingsSprite;
+        public bool casingsDrop;
         public bool fitMainSprite;
         public bool fitLaserImage;
         public bool resizeMagazine;
@@ -94,6 +95,8 @@ namespace GunMinigame
     {
         private Item stagedMagazineItem;
         private Image stagedMagazineImage;
+        private Transform stagedMagazinePivot;
+        private float stagedMagazineAngle;
 
         private void ClearStagedMagazine()
         {
@@ -101,8 +104,9 @@ namespace GunMinigame
                 return;
             stagedMagazineItem = null;
             if (null != stagedMagazineImage)
-                UnityEngine.Object.Destroy(stagedMagazineImage.gameObject);
+                UnityEngine.Object.Destroy(stagedMagazinePivot.gameObject);
             stagedMagazineImage = null;
+            stagedMagazinePivot = null;
             shouldUpdateMagazineCount = true;
         }
 
@@ -129,9 +133,22 @@ namespace GunMinigame
             }
             else
                 stagedMagazineImage.transform.localScale = new Vector3((1f / 2560f) * Screen.width, (1f / 1440f) * Screen.height);
-            stagedMagazineImage.transform.localPosition = new Vector3(info.magazineXPosition + Screen.width * 0.08f, info.magazineYPosition);
             stagedMagazineImage.transform.localRotation = Quaternion.Euler(0f, 0f, info.magazineRotation);
-            stagedMagazineImage.transform.SetAsFirstSibling();
+            Vector3 halfSize = Vector3.Scale(stagedMagazineImage.rectTransform.rect.size, stagedMagazineImage.transform.localScale) * 0.5f;
+            Quaternion rotation = stagedMagazineImage.transform.localRotation;
+            Vector3 horizontal = rotation * new Vector3(halfSize.x, 0f);
+            Vector3 vertical = rotation * new Vector3(0f, halfSize.y);
+            Vector3 rightHalf = Mathf.Abs(horizontal.x) >= Mathf.Abs(vertical.x) ? horizontal : vertical;
+            if (rightHalf.x < 0f)
+                rightHalf = -rightHalf;
+            stagedMagazinePivot = new GameObject("StagedMagazinePivot").transform;
+            stagedMagazinePivot.SetParent(gunBase.transform, false);
+            stagedMagazinePivot.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition) - rightHalf;
+            stagedMagazinePivot.SetAsFirstSibling();
+            stagedMagazineImage.transform.SetParent(stagedMagazinePivot, false);
+            stagedMagazineImage.transform.localPosition = rightHalf;
+            stagedMagazineAngle = 12.5f;
+            stagedMagazinePivot.localRotation = Quaternion.Euler(0f, 0f, stagedMagazineAngle);
             stagedMagazineImage.gameObject.AddComponent<SlidingMagazine>();
             shouldUpdateMagazineCount = true;
         }
@@ -143,10 +160,9 @@ namespace GunMinigame
                 ClearStagedMagazine();
                 return;
             }
-            Vector3 position = stagedMagazineImage.transform.localPosition;
-            position.x = Mathf.Clamp(position.x + delta, info.magazineXPosition, info.magazineXPosition + Screen.width * 0.08f);
-            stagedMagazineImage.transform.localPosition = position;
-            if (position.x > info.magazineXPosition)
+            stagedMagazineAngle = Mathf.Clamp(stagedMagazineAngle + delta * 25f / (Screen.height * 0.06f), 0f, 25f);
+            stagedMagazinePivot.localRotation = Quaternion.Euler(0f, 0f, stagedMagazineAngle);
+            if (stagedMagazineAngle > 0f)
                 return;
             if (!gun.DragOnto(stagedMagazineItem))
                 PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Deny);
