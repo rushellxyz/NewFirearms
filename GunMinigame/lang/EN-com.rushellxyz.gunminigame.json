@@ -1,0 +1,8 @@
+{
+  "other": {
+    "gamesetgunminigame.useminigame": "Gun minigame",
+    "gamesetgunminigame.useminigamedsc": "Use minigame for gun handling?",
+    "runsetgunminigame.alwaysmarksman": "Always marksman",
+    "runsetgunminigame.alwaysmarksmandsc": "Press Z to operate the slide and X to eject the magazine while the cursor is outside the minigame window."
+  }
+}

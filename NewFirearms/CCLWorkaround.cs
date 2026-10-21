@@ -43,8 +43,8 @@ namespace NewFirearms
 
             foreach (KeyValuePair<string, (string, string)> kvp in itemsToDesc)
             {
-                Item.GlobalItems[kvp.Key].description = kvp.Value.Item1;
-                Item.GlobalItems[kvp.Key].fullName = kvp.Value.Item2;
+                Item.GlobalItems[kvp.Key].description = CUCoreLib.Registries.LocaleRegistry.Get("item", kvp.Key + "dsc", kvp.Value.Item1);
+                Item.GlobalItems[kvp.Key].fullName = CUCoreLib.Registries.LocaleRegistry.Get("item", kvp.Key, kvp.Value.Item2);
             }
         }
 

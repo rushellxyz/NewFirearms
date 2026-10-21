@@ -116,12 +116,10 @@ namespace GunMinigame
     [HarmonyPatch(typeof(Locale), "LoadLanguage")]
     class LocalePatch
     {
+        [HarmonyAfter("net.cucorelib")]
         static void Postfix()
         {
-            Locale.currentLang.other.Add("gamesetgunminigame.useminigame", "Gun minigame");
-            Locale.currentLang.other.Add("gamesetgunminigame.useminigamedsc", "Use minigame for gun handling?");
-            Locale.currentLang.other.Add("runsetgunminigame.alwaysmarksman", "Always marksman");
-            Locale.currentLang.other.Add("runsetgunminigame.alwaysmarksmandsc", "Press Z to operate the slide and X to eject the magazine while the cursor is outside the minigame window.");
+            ModLocale.ApplyFallback();
         }
     }
 

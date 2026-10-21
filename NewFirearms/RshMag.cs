@@ -177,8 +177,8 @@ namespace NewFirearms
 
         public static readonly Dictionary<byte, string> ACTIONS_NAME = new Dictionary<byte, string>
         {
-            {0, "remove round"},
-            {1, "load round"},
+            {0, "newfirearms.action.remove_round"},
+            {1, "newfirearms.action.load_round"},
         };
 
         public static void ServerReceiver(Together.ScavPlayer plr, LiteNetLib.Utils.NetDataReader reader)
@@ -188,27 +188,27 @@ namespace NewFirearms
 
             if (2 <= action)
             {
-                DenyAction(plr, "Denied unknown mag action");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.unknown"));
                 return;
             }
             if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var si, out var item))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nMag is not registred!");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.unregistered", ModLocale.Get(ACTIONS_NAME[action])));
                 return;
             }
             if (!item.TryGetComponent<RshMag>(out var rshMag))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nThis is not a mag?!");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.invalid", ModLocale.Get(ACTIONS_NAME[action])));
                 return;
             }
             if (!plr.TryGetNetBody(out var pb))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou dont have a body, whaaa??!!");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.noBody", ModLocale.Get(ACTIONS_NAME[action])));
                 return;
             }
             if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(si, pb.body, check_obstruction:true))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou can't reach that mag.", canBeFixedWithSwitchingStrictSync:true);
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.outOfReach", ModLocale.Get(ACTIONS_NAME[action])), canBeFixedWithSwitchingStrictSync:true);
                 return;
             }
 
@@ -219,12 +219,12 @@ namespace NewFirearms
                 reader.Get(out ushort ontoSyncId);
                 if (!Together.ItemSync.TryGetItem(new Together.knetid(ontoSyncId), out var ontoSi, out var ontoItem))
                 {
-                    DenyAction(plr, "Denied load round\nRound is not registred!");
+                    DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.roundUnregistered"));
                     return;
                 }
                 if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(ontoSi, pb.body, check_obstruction:true))
                 {
-                    DenyAction(plr, "Denied load round\nYou can't reach that round.", canBeFixedWithSwitchingStrictSync:true);
+                    DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.roundOutOfReach"), canBeFixedWithSwitchingStrictSync:true);
                     return;
                 }
                 rshMag.DragOnto(ontoItem);

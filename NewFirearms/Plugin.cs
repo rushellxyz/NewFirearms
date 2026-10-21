@@ -67,7 +67,7 @@ namespace NewFirearms
         void Start()
         {
             if (CUCoreLib.Registries.ItemRegistry.RegisteredItems.ContainsKey("thornslinger"))
-                CUCoreLib.Registries.ItemRegistry.RegisteredItems["thornslinger"].description = "A firearms made out from combined flesh and metal. Accepts 12gauge shells";
+                CUCoreLib.Registries.ItemRegistry.RegisteredItems["thornslinger"].description = ModLocale.Get("newfirearms.thornslinger.description");
         }
 
         void PatchPostfix(Harmony harmony, string targetClass, string targetMethod, string postfixClass)
@@ -380,25 +380,16 @@ namespace NewFirearms
 
 
 
-    // patch to add locale
+    // CUCoreLib loads the embedded lang files; only the conditional description needs selecting.
     [HarmonyPatch(typeof(Locale), "LoadLanguage")]
     class LocalePatch
     {
+        [HarmonyAfter("net.cucorelib")]
         static void Postfix()
         {
-            Locale.currentLang.other.Add("runsetnewfirearms.gunjamming", "Gun jamming");
-            Locale.currentLang.other.Add("runsetnewfirearms.gunjammingdsc", "Do guns jam?");
-            Locale.currentLang.other.Add("runsetnewfirearms.gundmgmult", "Gun damage multiplier");
-            if (Plugin.togetherMpEnabled)
-                Locale.currentLang.other.Add("runsetnewfirearms.gundmgmultdsc", "How much damage guns deal to tiles, enemies and other players? Gets futrher multiplier by PVPDamageMultiplier rule when hitting another player");
-       else     Locale.currentLang.other.Add("runsetnewfirearms.gundmgmultdsc", "How much damage guns deal to tiles and enemies?");
-            Locale.currentLang.other.Add("runsetnewfirearms.gunejectcasing", "Gun eject casings");
-            Locale.currentLang.other.Add("runsetnewfirearms.gunejectcasingdsc", "Do guns create casings after fire?");
-            Locale.currentLang.other.Add("runsetnewfirearms.stunhitbox", "Stun hitbox size");
-            Locale.currentLang.other.Add("runsetnewfirearms.stunhitboxdsc", "Whenevar you shoot right over/under enemy, they would still get stunned. Determines size of stun hitbox");
-
-            Locale.currentLang.other.Add("newfirearms.firearmhandlingcourse", "Firearm handling course");
-            Locale.currentLang.other.Add("newfirearms.firearmhandlingcourselock", "Reach layer 4 to unlock");
+            if (Plugin.togetherMpEnabled && Locale.currentLang != null)
+                Locale.currentLang.other["runsetnewfirearms.gundmgmultdsc"] =
+                    ModLocale.Get("runsetnewfirearms.gundmgmultdsc.mp");
         }
     }
 
@@ -409,16 +400,16 @@ namespace NewFirearms
         // patch to add commands
         static void Postfix(ConsoleScript __instance)
         {
-            ConsoleScript.Commands.Add(new Command("suicide", "You must have a loaded gun. Prevents last stand", delegate(string[] args)
+            ConsoleScript.Commands.Add(new Command("suicide", ModLocale.Get("newfirearms.command.suicide.description"), delegate(string[] args)
             {
                 if (!PlayerCamera.main.body.FindByTagThorough("gun", out var it))
                 {
-                    UnityEngine.Debug.Log("you dont have a gun. you are gonna suffer.");
+                    UnityEngine.Debug.Log(ModLocale.Get("newfirearms.command.suicide.noGun"));
                     return;
                 }
                 if (!it.GetComponent<RshGun>().IsReady())
                 {
-                    UnityEngine.Debug.Log("Gun is not ready. Try remove safety?");
+                    UnityEngine.Debug.Log(ModLocale.Get("newfirearms.command.suicide.notReady"));
                     return;
                 }
                 if (!Plugin.togetherMpEnabled || Plugin.IsHost())

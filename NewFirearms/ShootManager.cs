@@ -93,6 +93,14 @@ namespace NewFirearms
                     continue;
                 }*/
 
+                if (raycastHit2D.collider.TryGetComponent<FirearmCourseTarget>(out var courseTarget))
+                {
+                    float damage = Mathf.Max(info.structureDamage, info.animalDamage) * num;
+                    courseTarget.Hit(shooter, damage);
+                    visuals.hitNumbers.Add((raycastHit2D.point, (ushort)damage));
+                    vector = raycastHit2D.point;
+                    break;
+                }
                 if (raycastHit2D.collider.TryGetComponent<BuildingEntity>(out var component) && !component.cantHit)
                 {
                     if (null != info.explosionParams)

@@ -162,7 +162,7 @@ namespace NewFirearms
         {
             if (null == plr.body || !plr.body.alive || !plr.body.conscious || !plr.body.FindByTagThorough("gun", out var it) || !it.TryGetComponent<RshGun>(out var rshGun) || (Plugin.sett.strictSync && !rshGun.IsReady()))
             {
-                plr.Server_DoAlertSingle("Denied gun suicide");
+                plr.Server_DoAlertSingle(ModLocale.Get("newfirearms.denied.suicide"));
                 return;
             }
             float oldHappiness = plr.body.happiness;

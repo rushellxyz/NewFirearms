@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="lang/*.json" />
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
     <Reference Include="mscorlib">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/mscorlib.dll</HintPath>
@@ -45,6 +46,9 @@
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="GunsawGenetics" Publicize="true">
       <HintPath>$(GameDirectory)/BepInEx/plugins/GunsawGenetics.dll</HintPath>

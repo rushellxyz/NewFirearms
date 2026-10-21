@@ -19,6 +19,7 @@ namespace NewFirearms
         public const string MSGID_SHOOT_VISUALS = "NewFirearms_ShootVisuals";
 
         public GunJson prop;
+        internal event Action<GameObject> MagazineCreated; // :hmm:
 
         [JsonProperty("existed")]
         public bool existed;
@@ -478,6 +479,7 @@ namespace NewFirearms
                 if (null == body)
                     body = PlayerCamera.main.body;
                 GameObject go = Utils.Create(mag, transform.position, 0f);
+                MagazineCreated?.Invoke(go);
                 // CUCoreLib installs custom components as the item starts up.
                 var _ = RemoveMagPart2WhenCuCore(body, go);
             }
@@ -759,12 +761,12 @@ namespace NewFirearms
 
         public static readonly Dictionary<byte, string> ACTIONS_NAME = new Dictionary<byte, string>
         {
-            {0, "shoot"},
-            {1, "rack"},
-            {2, "chamber load"},
-            {3, "remove mag"},
-            {4, "toggle fire mode"},
-            {5, "stop shooting"},
+            {0, "newfirearms.action.shoot"},
+            {1, "newfirearms.action.rack"},
+            {2, "newfirearms.action.chamber_load"},
+            {3, "newfirearms.action.remove_mag"},
+            {4, "newfirearms.action.toggle_fire_mode"},
+            {5, "newfirearms.action.stop_shooting"},
         };
 
         public static void ServerReceiver(Together.ScavPlayer plr, LiteNetLib.Utils.NetDataReader reader)
@@ -774,27 +776,27 @@ namespace NewFirearms
 
             if (6 <= action)
             {
-                DenyAction(plr, "Denied unknown gun action");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.unknown"));
                 return;
             }
             if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var si, out Item it))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nGun is not registred!");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.unregistered", ModLocale.Get(ACTIONS_NAME[action])));
                 return;
             }
             if (!it.TryGetComponent<RshGun>(out var rshGun))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nThis is not a gun?!");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.invalid", ModLocale.Get(ACTIONS_NAME[action])));
                 return;
             }
             if (!plr.TryGetNetBody(out var pb))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou dont have a body, whaaa??!!");
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.noBody", ModLocale.Get(ACTIONS_NAME[action])));
                 return;
             }
             if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(si, pb.body, check_obstruction:true))
             {
-                DenyAction(plr, $"Denied {ACTIONS_NAME[action]}\nYou can't reach that gun.", canBeFixedWithSwitchingStrictSync:true);
+                DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.outOfReach", ModLocale.Get(ACTIONS_NAME[action])), canBeFixedWithSwitchingStrictSync:true);
                 return;
             }
 
@@ -807,12 +809,12 @@ namespace NewFirearms
                 reader.Get(out ushort ontoSyncId);
                 if (!Together.ItemSync.TryGetItem(new Together.knetid(ontoSyncId), out var ontoSi, out var ontoIt))
                 {
-                    DenyAction(plr, "Denied chamber load\nRound is not registred!");
+                    DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.roundUnregistered"));
                     return;
                 }
                 if (Plugin.sett.strictSync && !Together.ItemSync.CheckIfBodyReachThisItem(ontoSi, pb.body, check_obstruction:true))
                 {
-                    DenyAction(plr, "Denied chamber load\nYou can't reach that round.", canBeFixedWithSwitchingStrictSync:true);
+                    DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.roundOutOfReach"), canBeFixedWithSwitchingStrictSync:true);
                     return;
                 }
                 rshGun.DragOnto(ontoIt);

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="lang/*.json" />
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
     <Reference Include="mscorlib">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/mscorlib.dll</HintPath>
@@ -42,6 +43,12 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
