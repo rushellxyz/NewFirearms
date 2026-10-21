@@ -405,7 +405,12 @@ namespace GunMinigame
                 coverImage.transform.localPosition = new Vector3(info.coverXPosition, info.coverYPosition);
             }
             if (info.rackByRotation)
+            {
                 sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
+                sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
+            }
+            else
+                sliderBackImage.transform.localRotation = Quaternion.identity;
             sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
             /*            if (it.Stats.rec.recognizable)
              *             {                     * *
@@ -956,6 +961,15 @@ namespace GunMinigame
             sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderLastXPos = xPos;
             UpdateSliderFireToggle(gun.IsRacked());
+        }
+
+        private void LateUpdate()
+        {
+            if (!active || info == null || !info.rackByRotation) return;
+            // Run after both RotatingSlider.Update and the automated rack coroutine.
+            // Keep the sprites as siblings to preserve their separate render layers.
+            sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
+            sliderBackImage.transform.localRotation = sliderFrontImage.transform.localRotation;
         }
 
         private void UpdateSliderFireToggle(bool racked)
