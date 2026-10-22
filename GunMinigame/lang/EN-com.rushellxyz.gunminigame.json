@@ -3,6 +3,9 @@
     "gamesetgunminigame.useminigame": "Gun minigame",
     "gamesetgunminigame.useminigamedsc": "Use minigame for gun handling?",
     "runsetgunminigame.alwaysmarksman": "Always marksman",
-    "runsetgunminigame.alwaysmarksmandsc": "Press Z to operate the slide and X to eject the magazine while the cursor is outside the minigame window."
+    "runsetgunminigame.alwaysmarksmandsc": "Press Z to operate the slide and X to eject the magazine while the cursor is outside the minigame window.",
+    "gunminigame.command.visualize.description": "Toggle blue markers at configured gun-minigame coordinates.",
+    "gunminigame.command.visualize.enabled": "Gun minigame coordinate markers enabled.",
+    "gunminigame.command.visualize.disabled": "Gun minigame coordinate markers disabled."
   }
 }

@@ -466,6 +466,7 @@ namespace GunMinigame
             uiImage.GetComponent<RectTransform>().sizeDelta = size;
             maskBase.AddComponent<ImageHoverror>();
             maskBase.AddComponent<RectMask2D>();
+            maskBase.AddComponent<MinigameVisualization>().Initialize(this);
 
             gunBase = new GameObject("GunBase");
             gunBase.transform.SetParent(maskBase.transform);
@@ -1348,7 +1349,9 @@ namespace GunMinigame
             coverChange = 1;
             if (null == info || null == info.casingsSprite)
                 return;
-            Casing.Create(info.casingsSprite[index+1], new Vector3(info.casingXPosition, info.casingYPosition));
+            Vector3 gunPosition = new Vector3(info.casingXPosition, info.casingYPosition);
+            Vector3 spawnPosition = maskBase.transform.InverseTransformPoint(gunBase.transform.TransformPoint(gunPosition));
+            Casing.Create(info.casingsSprite[index+1], spawnPosition);
         }
 
         public void SliderClickDown()
