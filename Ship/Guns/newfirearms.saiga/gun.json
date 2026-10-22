@@ -122,6 +122,9 @@
     "magazineType": [ "saiga" ],
     "barrelOffset": 1.0,
 
+    "itemSpriteXOffset": -0.1,
+    "itemSpriteYOffset": -0.6,
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
     "shootAudioPath": "shoot",
@@ -137,4 +140,39 @@
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "bulletBuck", "bulletBird", "COPY__Resources/bulletRound", ],
     "magazineTexturesPath": { "newfirearms.saigamag": "saigamag" },
     //"attachmentTexturesPath: { },
+        "minigame":
+    {
+        "mainPath": "uiSprite",
+        "sliderBackPath": "uiSliderBack",
+        "sliderFrontPath": "uiSliderTrigger",
+        "frontSliderInvisble": true,
+
+        "sliderMinimumPosition": -0.025,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePosition": 0,
+        "rackPoint": -0.0125,
+        "rackedIdlePosition": -0.025,
+        "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
+        "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
+        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "sliderHandFollowOffset": -0.1375,
+        "casingXPosition": -0.05,
+        "casingYPosition": 0.07,
+        "casingsPath": [ "uiCasingEmpty", "uiCasing12gauge", "uiCasing12gaugeslug", "uiCasing12gaugebird" ],
+        "fitMainSprite": true,
+        "canUseFannyPack": true,
+        "magReleasePath": "uiMagRelease",
+        "magazinePaths": { "newfirearms.saigamag": "uiSaigamag" },
+        "ammosInMagazinePaths": { "newfirearms.saigamag": [ "uiSaigamag12gauge", "uiSaigamag12gaugeslug", "uiSaigamag12gaugebird" ] },
+        "magazineXPosition": -0.029,
+        "magazineYPosition": -0.034,
+        "magazineXSpeed": 0.06,
+        "magazineYSpeed": -0.525,
+        "magazineRotation": 12.5,
+        "magazineAnimationTime": 0.2,
+        "magazinesOffset": 0.05,
+        "maximumMagazines": 2,
+        "magazineDragPath": "uiDragTrigger",
+        "resizeMagazine": true,
+    }
 }
