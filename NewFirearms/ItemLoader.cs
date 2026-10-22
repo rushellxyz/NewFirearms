@@ -410,7 +410,7 @@ namespace NewFirearms
                     scaleWeightWithCondition = true,
                     useAction = delegate(Body body, Item item)
                     {
-                        item.GetComponent<RshMag>().RemoveRound(body);
+                        item.GetComponent<RshMag>().OnInventoryUse(body);
                     },
                     value = prop.value,
                     rec = new Recognition(prop.recognition),

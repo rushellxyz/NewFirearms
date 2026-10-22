@@ -10,5 +10,5 @@ TODO List - Agents stay away unless stated otherwise
  - Integration with New Descents: add Gun tag to custom guns
  - Fix gun repairing on reloading in multiplayer
  - Redo sawed off minigame
- - IDEA: A stuff that visuales points (e.g.0 casings flew out from) to simplify minigame creation
  - And hot reloading!
+ - Make mod work when MP enabled but not active

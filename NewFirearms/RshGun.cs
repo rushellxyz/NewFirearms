@@ -26,7 +26,7 @@ namespace NewFirearms
         [JsonProperty("mag")]
         public string mag;
         [JsonProperty("rounds")]
-        public List<sbyte> rounds;
+        public List<sbyte> rounds = new List<sbyte>();
         [JsonProperty("fireMode")]
         public byte fireMode;
         [JsonProperty("racked")]
@@ -165,9 +165,12 @@ namespace NewFirearms
             return null != netBody.piggybacking_on;
         }
 
-        public override void LoadPropFromCuCore()
+        public override void LoadDefinition()
         {
-            CUCoreLib.Registries.ItemRegistry.TryGetCustomData<GunJson>(GetComponent<Item>(), "prop", out prop);
+            Item item = GetComponent<Item>();
+            if (item == null || string.IsNullOrEmpty(item.id)) return;
+            it = item;
+            Plugin.GunDefinitions.TryGetValue(item.id, out prop);
         }
 
         public void Start()
@@ -353,6 +356,7 @@ namespace NewFirearms
 
         public bool CanFitMag(MagJson newMag)
         {
+            if (prop == null || newMag == null) return false;
             if (1 != prop.feedType)
                 return false;
             if (null != mag && "" != mag)
@@ -373,6 +377,8 @@ namespace NewFirearms
                 return true;
             if (item.TryGetComponent<RshMag>(out var newMag))
             {
+                if (newMag.prop == null || newMag.rounds == null || newMag.rounds.Count == 0)
+                    return false;
                 if (!CanFitMag(newMag.prop))
                     return false;
 
@@ -724,7 +730,8 @@ namespace NewFirearms
             reader.Get(out ushort roundsCount);
             if (0 == roundsCount)
                 throw new Exception("[NewFirearms] Attempt to initalize rounds with count of 0!");
-            rshGun.rounds.Clear();
+            if (rshGun.rounds == null) rshGun.rounds = new List<sbyte>(roundsCount);
+            else rshGun.rounds.Clear();
             for (ushort i = 0; i < roundsCount; i++)
             {
                 reader.Get(out sbyte newRound);

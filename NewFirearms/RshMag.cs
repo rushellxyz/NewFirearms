@@ -17,25 +17,38 @@ namespace NewFirearms
         public MagJson prop;
 
         [JsonProperty("rounds")]
-        public List<sbyte> rounds;
+        public List<sbyte> rounds = new List<sbyte>();
         [JsonProperty("existed")]
         public bool existed;
 
-
-        public override void LoadPropFromCuCore()
+        public override void LoadDefinition()
         {
-            CUCoreLib.Registries.ItemRegistry.TryGetCustomData<MagJson>(GetComponent<Item>(), "prop", out prop);
+            Item item = GetComponent<Item>();
+            if (item == null || string.IsNullOrEmpty(item.id)) return;
+            it = item;
+            Plugin.MagazineDefinitions.TryGetValue(item.id, out prop);
         }
 
-        void Start()
+        private void Start()
         {
-            if (existed)
+            if (prop == null) LoadDefinition();
+            if (prop == null || prop.capacity <= 0 || prop.ammoTypes == null || prop.ammoTypes.Count == 0)
+            {
+                Debug.LogError($"[NewFirearms] Magazine '{it?.id}' has no valid local definition; magazine initialization stopped.");
                 return;
-            Fill((sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count), Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition)));
-            it.condition = 1f;
+            }
+            if (rounds == null) rounds = new List<sbyte>();
+            // Only the host creates initial ammunition; clients wait for its snapshot.
+            if (!existed && (!Plugin.togetherMpEnabled || Plugin.IsHost()))
+            {
+                sbyte ammoType = (sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count);
+                int amount = Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition));
+                Fill(ammoType, amount);
+                it.condition = 1f;
+                existed = true;
+            }
             if (Plugin.togetherMpEnabled)
                 MpStartOp();
-            existed = true;
         }
 
         public void MpStartOp()
@@ -48,8 +61,7 @@ namespace NewFirearms
 
         public bool DragOnto(Item item)
         {
-            if (-2 != rounds[rounds.Count() - 1])
-                return false;
+            if (item == null || prop == null) return false;
 
             sbyte round = (sbyte)prop.ammoTypes.IndexOf(item.id);
             if (-1 == round)
@@ -57,6 +69,8 @@ namespace NewFirearms
 
             if (Plugin.togetherMpEnabled && RequestHostIfClient(1, item))
                 return true;
+            if (rounds == null || rounds.Count == 0 || -2 != rounds[rounds.Count - 1])
+                return false;
 
             Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             Plugin.ShiftRight(ref rounds);
@@ -67,9 +81,19 @@ namespace NewFirearms
             return true;
         }
 
+        public void OnInventoryUse(Body body)
+        {
+            // Together forwards inventory use to the host and relays it to clients.
+            // Only the host should unload; sending our own request would do it twice.
+            if (Plugin.togetherMpEnabled && !Plugin.IsHost()) return;
+            RemoveRound(body);
+        }
+
         public void RemoveRound(Body body=null)
         {
-            if (-2 == rounds[0])
+            if (Plugin.togetherMpEnabled && RequestHostIfClient(0))
+                return;
+            if (prop == null || rounds == null || rounds.Count == 0 || -2 == rounds[0])
                 return;
             Sound.Play(prop.unloadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             if (null == body)
@@ -87,7 +111,7 @@ namespace NewFirearms
 
         public int TotalRounds()
         {
-            return rounds.Where(round => 0 <= round).Count();
+            return rounds == null ? 0 : rounds.Count(round => 0 <= round);
         }
 
         public void Fill(sbyte type, int amount)
@@ -110,6 +134,7 @@ namespace NewFirearms
         {
             if (!Together.Net.IsServer)
                 return;
+            if (rounds == null || rounds.Count == 0) return;
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(reliable) as Together.SyncInfoGameObjectTracker);
             if (null == tracker)
                 return;
@@ -152,23 +177,23 @@ namespace NewFirearms
         public static void ClientSync(LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var _, out Item it))
-                throw new Exception("[NewFirearms] Recived mag sync info for non-registred mag!");
-            if (!it.TryGetComponent<RshMag>(out var rshMag))
-                throw new Exception("[NewFirearms] Mag sync packet refering to item without RshMag component :tourniqet:");
-            rshMag.existed = true;
-
             reader.Get(out ushort roundsCount);
             if (0 == roundsCount)
                 throw new Exception("[NewFirearms] Attempt to initalize rounds with count of 0!");
-            rshMag.rounds.Clear();
+            var snapshot = new List<sbyte>(roundsCount);
             for (ushort i = 0; i < roundsCount; i++)
             {
                 reader.Get(out sbyte newRound);
-                rshMag.rounds.Add(newRound);
+                snapshot.Add(newRound);
             }
-
             reader.Get(out byte extraData);
+            // Periodic packets can race item spawn/despawn. A later snapshot retries.
+            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var _, out Item it) || it == null ||
+                !it.TryGetComponent<RshMag>(out var rshMag)) return;
+            rshMag.rounds = snapshot;
+            rshMag.existed = true;
+            if (rshMag.prop == null) rshMag.LoadDefinition();
+            if (rshMag.prop == null) return;
             if (1 == extraData)
                 Sound.Play(rshMag.prop.loadRoundAudio, rshMag.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
        else if (2 == extraData)

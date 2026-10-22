@@ -1,5 +1,3 @@
-// TODO Fix magazine count desync
-
 using BepInEx;
 using HarmonyLib;
 using System;
@@ -28,6 +26,13 @@ namespace NewFirearms
         public static List<string> milkyMags;
         public static bool togetherMpEnabled;
         public static bool catPatchActive;
+
+        // There because CUCoreLib overwrites CustomData on multiplayer clients. Блять, а нахуя
+
+        // Runtime custom data can arrive after components on multiplayer clients.
+        // Keep locally loaded definitions (including their Unity assets) available.
+        internal static readonly Dictionary<string, GunJson> GunDefinitions = new Dictionary<string, GunJson>();
+        internal static readonly Dictionary<string, MagJson> MagazineDefinitions = new Dictionary<string, MagJson>();
 
         void Awake()
         {
@@ -143,6 +148,7 @@ namespace NewFirearms
         private static readonly HashSet<string> vanillaItems = new HashSet<string> { "boxof12gauge", "riflemagazine", "smallmagazine", "pistol", "shotgun", "rifle", "makeshiftrifle" };
         public static void RegisterGunCuCore(string id, ItemInfo info, Sprite sprite, GunJson prop)
         {
+            GunDefinitions[id] = prop;
             CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
             {
                 category = info.category,
@@ -162,8 +168,7 @@ namespace NewFirearms
 
                 Icon = sprite,
                 VisualOffset = new Vector2(prop.itemSpriteXOffset, prop.itemSpriteYOffset),
-                SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" },
-                CustomData = new Dictionary<string, object> { ["prop"] = prop }
+                SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" }
             };
             if (prop.hasLaser)
                 cuInfo.SpawnComponents.Add("NewFirearms.LaserPointer, NewFirearms.dll");
@@ -175,6 +180,7 @@ namespace NewFirearms
 
         public static void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)
         {
+            MagazineDefinitions[id] = prop;
             CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
             {
                 category = info.category,
@@ -193,8 +199,7 @@ namespace NewFirearms
                 description = info.description,
 
                 Icon = sprite,
-                SpawnComponents = new List<string> { "NewFirearms.RshMag, NewFirearms.dll" },
-                CustomData = new Dictionary<string, object> { ["prop"] = prop }
+                SpawnComponents = new List<string> { "NewFirearms.RshMag, NewFirearms.dll" }
             };
             cuInfo.SetTags();
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
@@ -229,12 +234,12 @@ namespace NewFirearms
         {
             GunMinigame.MinigameManager.bulletToShow = (it) => {
                 RshMag mag = it.GetComponent<RshMag>();
-                if (null == it)
+                if (null == mag)
                 {
                     UnityEngine.Debug.LogWarning("[GunMinigame-NewFirearms] Expected item doesnt have a RshMag :tourniqet:");
                     return null;
                 }
-                if (0 > mag.rounds[0])
+                if (mag.prop == null || mag.rounds == null || mag.rounds.Count == 0 || 0 > mag.rounds[0] || mag.rounds[0] >= mag.prop.ammoTypes.Count)
                     return null;
                 return mag.prop.ammoTypes[mag.rounds[0]];
             };

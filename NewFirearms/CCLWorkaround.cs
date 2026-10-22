@@ -14,15 +14,15 @@ namespace NewFirearms
         {
             Item.GlobalItems["boxof12gauge"].useAction = delegate(Body body, Item item)
             {
-                item.GetComponent<RshMag>().RemoveRound(body);
+                item.GetComponent<RshMag>().OnInventoryUse(body);
             };
             Item.GlobalItems["smallmagazine"].useAction = delegate(Body body, Item item)
             {
-                item.GetComponent<RshMag>().RemoveRound(body);
+                item.GetComponent<RshMag>().OnInventoryUse(body);
             };
             Item.GlobalItems["riflemagazine"].useAction = delegate(Body body, Item item)
             {
-                item.GetComponent<RshMag>().RemoveRound(body);
+                item.GetComponent<RshMag>().OnInventoryUse(body);
             };
             Item.GlobalItems["pistol"].useAction = delegate(Body body, Item item)
             {

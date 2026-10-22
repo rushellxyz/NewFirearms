@@ -14,14 +14,14 @@ namespace NewFirearms
         private void Awake()
         {
             it = GetComponent<Item>();
-            LoadPropFromCuCore();
+            LoadDefinition();
             if (gameObject.TryGetComponent<GunScript>(out GunScript gs))
                 UnityEngine.Object.Destroy(gs);
             if (gameObject.TryGetComponent<AmmoScript>(out AmmoScript ass))
                 UnityEngine.Object.Destroy(ass);
         }
 
-        public abstract void LoadPropFromCuCore();
+        public abstract void LoadDefinition();
 
         // if it returns KrokoshaCasualtiesMP.KrokoshaScavMultiGameObjectNetworkTracker
         // then the entire game would crash on saving without mp mod dll

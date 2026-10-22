@@ -45,6 +45,12 @@ namespace NewFirearms
                 }
 
                 RshGun rshGun = it.GetComponent<RshGun>();
+                if (rshGun == null || rshGun.prop == null)
+                {
+                    GunMinigame.MinigameManager.GetOrAddInstance().Hide();
+                    __instance.gunCrosshair.gameObject.SetActive(false);
+                    return true;
+                }
                 if (null != rshGun.prop.minigame)
                 {
                     GunMinigame.MinigameManager.GetOrAddInstance().Show(rshGun.prop.minigame, rshGun, rshGun.GetComponent<LaserPointer>());
@@ -82,6 +88,12 @@ namespace NewFirearms
             if (holdinChecksCanBeIgonredForPerfomnrenr || (__instance.body.HoldingItem(__instance.body.handSlot) && __instance.body.GetItem(__instance.body.handSlot).Stats.HasTag("gun")))
             {
                 RshGun rshGun = __instance.body.GetItem(__instance.body.handSlot).GetComponent<RshGun>();
+                if (rshGun == null || rshGun.prop == null)
+                {
+                    __instance.gunMenu.SetActive(false);
+                    __instance.gunCrosshair.gameObject.SetActive(false);
+                    return;
+                }
                 __instance.gunMenu.SetActive(!__instance.radialOpen);
                 if (rshGun.racked)
                     __instance.gunRackImage.sprite = rshGun.prop.unrackSprite;
@@ -200,7 +212,7 @@ namespace NewFirearms
             if (!item.Stats.rec.recognizable)
                 return;
 
-            __result.Item2 += "<color=#ff8fb0><sprite index=8 tint=1>" + rshMag.TotalRounds() + "/" + rshMag.rounds.Count + " " + Locale.GetOther("magazinerounds") + "\n";
+            __result.Item2 += "<color=#ff8fb0><sprite index=8 tint=1>" + rshMag.TotalRounds() + "/" + (rshMag.prop?.capacity ?? rshMag.rounds?.Count ?? 0) + " " + Locale.GetOther("magazinerounds") + "\n";
         }
     }
 }

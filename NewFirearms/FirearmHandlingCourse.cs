@@ -416,9 +416,8 @@ namespace NewFirearms
 
         private string FindMagazine(GunJson gun)
         {
-            foreach (var entry in CUCoreLib.Registries.ItemRegistry.RegisteredItems)
-                if (entry.Value.CustomData != null && entry.Value.CustomData.TryGetValue("prop", out object data) &&
-                    data is MagJson mag && mag.magazineType.Intersect(gun.magazineType).Any()) return entry.Key;
+            foreach (var entry in Plugin.MagazineDefinitions)
+                if (entry.Value.magazineType.Intersect(gun.magazineType).Any()) return entry.Key;
             throw new InvalidOperationException("[NewFirearms] Course could not find a magazine for " + gun.fullName);
         }
 
