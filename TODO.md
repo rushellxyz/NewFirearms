@@ -3,7 +3,6 @@ TODO List - Agents stay away unless stated otherwise
  - Move more guns to use offset, copy, compressed audio
  - Do something about RshGun.RemoveMagPart2WhenCuCore
  - Name for loading order
- - Update ShootManager logic to respect new legs rule
  - Resize casings, expecially pistols
  - Do something about M1911, as people often complain that it supposed to use .45ACP
  - Fix short desync when switching ammo 

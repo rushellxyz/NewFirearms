@@ -313,18 +313,6 @@ namespace NewFirearms
             if (limb.isVital || limb.isAbdomen)
                 return;
 
-            if (limb.body.alive && limb.isLegLimb)
-            {
-                /* so, yeah you could notice that elder thorn back and amputation minigame doesnt let you amputate leg limb if another is already missing
-                 * i saw bug report in target planet, that says you can walk with both legs missing, on which moffe sayed that there are no situation in which you can lose both legs
-                 * fun fact: dune skips that check, so there is situation in which you can lose both legs
-                 * but anyway, og check would means that losing only one paw protects you from further leg damage
-                 * this check is less.. hostile, now you need to lose any thigh to not lose remaining leg limb
-                 */
-                if (limb.body.limbs[9].dismembered || limb.body.limbs[12].dismembered)
-                    return;
-            }
-
             float multiplier;
             if (limb.isHead && !limb.body.disfigured)
                 multiplier = -0.005f;
