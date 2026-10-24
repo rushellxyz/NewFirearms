@@ -23,6 +23,7 @@
         {
             "round": "string", // ID of item this ammo refereing to, highly recomended to be mirrored with mags "ammoTypes"
             "structureDamage": 0.0, // Damage to tiles
+            "piercing": false, // Pass through two terrain blocks; damage and stop at the third. Explosive rounds still detonate on first impact.
             "animalDamage": 0.0, // Damage to anything else
             "stopAtFirstHit": false, // If true, raycast would stop at first hit
 

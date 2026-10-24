@@ -1,0 +1,24 @@
+{
+    "category": "custom",
+    "fullName": "5.56 Armor piercing round",
+    "description": "Another eternity to come up with description for this one",
+
+
+    "weight": 0.05,
+
+    "recognition": 11,
+
+    "craftable": true,
+    "recipe":
+    [
+        "casing",
+        "casing",
+        "casing",
+        "casing",
+        "flammablepowder",
+    ],
+    "craftHammering": 1,
+    "craftCutting": 1,
+    "craftInt": 16,
+    "craftAmount": 3,
+}

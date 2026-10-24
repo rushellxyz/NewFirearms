@@ -23,6 +23,7 @@
     "ammoTypes":
     [
         "556round",
+        "nf.556piercing"
     ],
 
 

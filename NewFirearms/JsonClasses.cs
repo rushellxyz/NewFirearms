@@ -127,6 +127,7 @@ namespace NewFirearms
     // params of ammo shoot
     public class AmmoInfo
     {
+        public bool piercing;
         public string round;
         public float structureDamage;
         public float animalDamage;

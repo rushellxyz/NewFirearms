@@ -49,6 +49,39 @@
             "conditionLoss": 0.0025,
 
         },
+        {
+            "round": "nf.556piercing",
+            "structureDamage": 300,
+            "animalDamage": 200,
+            "playerDamage":
+            {
+                "traumaAmount": 11,
+                "pain": 150,
+                "adrenaline": 75,
+                "skinDamage": 60,
+                "muscleDamage": 180,
+                "bleedAmount": 40,
+                "wearableDamage": 1.4,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.6,
+                "internalBleed": 25,
+                "brainDamage": 50,
+                "disfigureChance": 2.0,
+
+            },
+
+            "knockback": 6,
+            "muzzleRise": 1,
+
+            "verticalSpread": 0,
+            "loudness": 5.5,
+            "conditionLoss": 0.0025,
+            "piercing": true,
+
+        },
     ],
 
     "fireModes": [ 0, 1, ],
@@ -57,7 +90,7 @@
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
 
-
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Resources/bulletRound" ],
 
 
     "magazineTexturesPath": { },

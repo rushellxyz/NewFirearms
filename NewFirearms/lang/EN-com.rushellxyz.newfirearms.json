@@ -12,7 +12,7 @@
     "newfirearms.command.suicide.noGun": "you dont have a gun. you are gonna suffer.",
     "newfirearms.command.suicide.notReady": "Gun is not ready. Try remove safety?",
 
-    "newfirearms.cou-JUST A NOTE FOR TRANSLATORS": "The course is still heavy WIP, all other lines will change, dont even bother translating them. Флойда, хз, всегда хотел как-то отрегировать на то что ты переводишь мой мод",
+    "newfirearms.cou-JUST A NOTE FOR TRANSLATORS": "The course is currently broken, all other lines will change, dont even bother translating them. Флойда, хз, всегда хотел как-то отрегировать на то что ты переводишь мой мод",
     "newfirearms.course.dialogue.intro": "Welcome to firearm handling. First of all, lets pin first aid knowledge",
     "newfirearms.course.dialogue.medical": "You know how to treat it.",
     "newfirearms.course.dialogue.medicalComplete": "Good job Experiment #{0}, now, lets move on to when you are the one firing",

@@ -84,10 +84,10 @@ namespace NewFirearms
             Vector2 vector = pos + dir * 200f;
             float num = WorldGeneration.GetRunSettingFloat("newfirearms.gundmgmult") * UnityEngine.Random.Range(0.85f, 1.15f);
             List<Body> list = new List<Body>();
-            RaycastHit2D[] array2 = array;
-            for (int i = 0; i < array2.Length; i++)
+            int blocksHit = 0;
+            for (int i = 0; i < array.Length; i++)
             {
-                RaycastHit2D raycastHit2D = array2[i];
+                RaycastHit2D raycastHit2D = array[i];
                 /*if (raycastHit2D.transform == info.ignoreTrans)
                 {
                     continue;
@@ -156,6 +156,8 @@ namespace NewFirearms
                     }
                     WorldGeneration.world.DamageBlock(raycastHit2D.point + dir * 0.5f, info.structureDamage * num);
                     visuals.hitNumbers.Add((raycastHit2D.point, (ushort)(info.structureDamage * num)));
+                    if (info.piercing && ++blocksHit <= 2)
+                        continue;
                     vector = raycastHit2D.point;
                     break;
                 }
