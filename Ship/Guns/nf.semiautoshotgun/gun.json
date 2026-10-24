@@ -65,7 +65,7 @@
 
         },
         {
-            "round": "12gaugebird",
+            "round": "nf.12gaugebird",
             "structureDamage": 14.375,
             "animalDamage": 14.375,
             "playerDamage":
@@ -98,7 +98,7 @@
 
         },
         {
-            "round": "12gaugeslug",
+            "round": "nf.12gaugeslug",
             "structureDamage": 400,
             "animalDamage": 400,
             "playerDamage":

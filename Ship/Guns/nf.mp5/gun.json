@@ -49,7 +49,7 @@
             "conditionLoss": 0.0009,
         },
         {
-            "round": "9mmhollow",
+            "round": "nf.9mmhollow",
             "structureDamage": 60,
             "animalDamage": 150,
 
@@ -80,7 +80,7 @@
             "conditionLoss": 0.0009,
         },
         {
-            "round": "9mmvenomus",
+            "round": "nf.9mmvenomus",
             "structureDamage": 50,
             "animalDamage": 150,
 

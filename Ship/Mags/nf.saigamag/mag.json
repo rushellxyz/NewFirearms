@@ -23,8 +23,8 @@
     "ammoTypes":
     [
         "12gauge",
-        "12gaugebird",
-        "12gaugeslug",
+        "nf.12gaugebird",
+        "nf.12gaugeslug",
     ],
 
 

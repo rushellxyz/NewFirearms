@@ -23,8 +23,8 @@
     "ammoTypes":
     [
         "9mmround",
-        "9mmhollow",
-        "9mmvenomus",
+        "nf.9mmhollow",
+        "nf.9mmvenomus",
     ],
 
 
