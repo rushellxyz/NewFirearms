@@ -116,6 +116,9 @@
     "magazineType": [ "smg", ],
     "barrelOffset": 0.5,
 
+    "itemSpriteXOffset": 0.0,
+    "itemSpriteYOffset": -0.5,
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
     "shootAudioPath": "shoot",

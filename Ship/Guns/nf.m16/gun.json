@@ -57,6 +57,10 @@
     "barrelOffset": 0.8,
     "hasLaser": true,
 
+    "itemSpriteXOffset": 0.2,
+    "itemSpriteYOffset": -0.9,
+
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
 

@@ -55,6 +55,10 @@
     "magazineType": [ "rifflemagazine", ],
     "barrelOffset": 1,
 
+    "itemSpriteXOffset": 0.0,
+    "itemSpriteYOffset": -1.0,
+
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
 

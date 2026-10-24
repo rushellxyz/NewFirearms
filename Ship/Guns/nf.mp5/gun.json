@@ -116,6 +116,9 @@
     "magazineType": [ "glock17", "smg", ],
     "barrelOffset": 1,
 
+    "itemSpriteXOffset": 0.0,
+    "itemSpriteYOffset": -0.3,
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
     "shootAudioPath": "shoot",

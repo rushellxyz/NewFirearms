@@ -135,6 +135,9 @@
     "fireModes": [ 0, 2, ],
     "magazineType": [  ],
 
+    "itemSpriteXOffset": 0.0,
+    "itemSpriteYOffset": -0.9,
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
     "shootAudioPath": "shoot",

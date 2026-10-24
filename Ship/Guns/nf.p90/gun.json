@@ -116,6 +116,9 @@
     "magazineType": [ "p90", ],
     "barrelOffset": 0,
 
+    "itemSpriteXOffset": 0.2,
+    "itemSpriteYOffset": 0.0,
+
     "normalTexturePath": "normal",
     "rackedTexturePath": "normal",
     "shootAudioPath": "shoot",
