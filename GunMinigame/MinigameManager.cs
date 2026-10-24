@@ -32,7 +32,23 @@ namespace GunMinigame
 {
     public class MinigameInfo
     {
-        public Sprite mainSprite;
+        public Sprite mainExperimentSprite;
+        public Sprite mainMilkyTriggerOnSprite;
+        public Sprite mainMilkyTriggerOffSprite;
+        public Sprite mainDuneSprite;
+
+        public Sprite GetMainSprite(PlayerSpecies species, bool cursorInWindow)
+        {
+            switch (species)
+            {
+                case PlayerSpecies.Milky:
+                    return cursorInWindow ? mainMilkyTriggerOffSprite : mainMilkyTriggerOnSprite;
+                case PlayerSpecies.Dune:
+                    return mainDuneSprite;
+                default:
+                    return mainExperimentSprite;
+            }
+        }
         public Sprite sliderFrontSprite;
         public Sprite sliderBackSprite;
         public Sprite rackedOnlySprite;
@@ -382,7 +398,7 @@ namespace GunMinigame
                 mainImageRect.sizeDelta = fitSize;
        else     mainImageRect.sizeDelta = size;
             laserImage.GetComponent<RectTransform>().sizeDelta = info.fitLaserImage ? fitSize : size;
-            mainImage.sprite = info.mainSprite;
+            UpdateMainSprite();
             sliderFrontImage.sprite = info.sliderFrontSprite;
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.sprite = info.sliderBackSprite;
@@ -769,6 +785,11 @@ namespace GunMinigame
             * body.averagePain * Mathf.Clamp01(1f - body.skills.RESFrom10 * 0.06f) * WorldGeneration.GetRunSettingFloat("minigamehandshake");
         }
 
+        private void UpdateMainSprite()
+        {
+            mainImage.sprite = info.GetMainSprite(Plugin.GetPlayerSpecies(), handIsHovered);
+        }
+
         public void Update()
         {
 #if DEBUG
@@ -810,6 +831,7 @@ namespace GunMinigame
                 windowAlpha = Mathf.Clamp01(windowAlpha + Time.deltaTime * 4f);
             }
 
+            UpdateMainSprite();
             HandleMag();
             HandleBandolier();
             HandleAmmoSelection();

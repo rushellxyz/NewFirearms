@@ -138,7 +138,10 @@
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
     "minigame":
     {
-        "mainPath": "uiSprite",
+        "mainExperimentPath": "uiSprite",
+        "mainMilkyTriggerOnPath": "uiSprite",
+        "mainMilkyTriggerOffPath": "uiSprite",
+        "mainDunePath": "uiSprite",
         "sliderFrontPath": "uiSliderFront",
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,

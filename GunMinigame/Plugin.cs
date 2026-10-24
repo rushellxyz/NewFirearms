@@ -7,6 +7,13 @@ using HarmonyLib;
 
 namespace GunMinigame
 {
+    public enum PlayerSpecies
+    {
+        Experiment,
+        Milky,
+        Dune
+    }
+
     [BepInPlugin("com.rushellxyz.gunminigame", "Gun Minigame", "1.0.0")]
     [BepInDependency("GunsawGenetics", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
@@ -15,6 +22,38 @@ namespace GunMinigame
         public static bool useMinigame;
 
         static bool ggEnabled;
+        static bool speciesIntegrationFailed;
+
+        public static PlayerSpecies GetPlayerSpecies()
+        {
+            if (!ggEnabled || speciesIntegrationFailed) return PlayerSpecies.Experiment;
+            try
+            {
+                return GetGeneticsSpecies();
+            }
+            catch (Exception ex)
+            {
+                speciesIntegrationFailed = true;
+                Debug.LogWarning($"[GunMinigame] Could not read Gunsaw Genetics species; using Experiment sprites. {ex}");
+                return PlayerSpecies.Experiment;
+            }
+        }
+
+        // Ха а вот еще один ai gave away
+        // про reflection думаю уже все знают, но ии любит NoInlining когда просишь через jit гонку написать
+        // помню видел в моде на протезы NoInlining в мп синхе, просто, holy memory
+
+        // Keep optional assembly references outside the fallback method's JIT boundary.
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        private static PlayerSpecies GetGeneticsSpecies()
+        {
+            string species = GunsawGenetics.SpeciesAbilityManager.ActiveSpecies;
+            if (species == "Dune" || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Dune"))
+                return PlayerSpecies.Dune;
+            if (species == "Milky" || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Milky") || "Voyager" == species)
+                return PlayerSpecies.Milky;
+            return PlayerSpecies.Experiment;
+        }
 
         void Awake()
         {

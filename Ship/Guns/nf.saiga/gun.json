@@ -142,7 +142,10 @@
     //"attachmentTexturesPath: { },
         "minigame":
     {
-        "mainPath": "uiSprite",
+        "mainExperimentPath": "uiSprite",
+        "mainMilkyTriggerOnPath": "uiSprite",
+        "mainMilkyTriggerOffPath": "uiSprite",
+        "mainDunePath": "uiSprite",
         "sliderBackPath": "uiSliderBack",
         "sliderFrontPath": "uiSliderTrigger",
         "frontSliderInvisble": true,

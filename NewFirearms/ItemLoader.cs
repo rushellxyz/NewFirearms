@@ -181,9 +181,28 @@ namespace NewFirearms
 
             if (null != prop.minigame)
             {
-                if (!string.IsNullOrEmpty(prop.minigame.mainPath))
-                    prop.minigame.mainSprite = LoadSprite(folder, prop.minigame.mainPath);
-                else UnityEngine.Debug.LogWarning($"[NewFirearms] {folder} is decalared that its minigame compatabile, but missing mandatory mainPath field!");
+                var mainPaths = new[] {
+                    prop.minigame.mainExperimentPath,
+                    prop.minigame.mainMilkyTriggerOnPath,
+                    prop.minigame.mainMilkyTriggerOffPath,
+                    prop.minigame.mainDunePath
+                };
+                if (mainPaths.Any(string.IsNullOrEmpty))
+                    throw new InvalidOperationException("Minigame requires mainExperimentPath, mainMilkyTriggerOnPath, mainMilkyTriggerOffPath and mainDunePath");
+                // Shared paths intentionally reuse the same loaded sprite.
+                var mainSprites = new Dictionary<string, Sprite>();
+                foreach (string path in mainPaths)
+                {
+                    if (mainSprites.ContainsKey(path)) continue;
+                    Sprite sprite = LoadSprite(folder, path);
+                    if (sprite == null)
+                        throw new InvalidOperationException($"Could not load minigame main sprite '{path}'.");
+                    mainSprites.Add(path, sprite);
+                }
+                prop.minigame.mainExperimentSprite = mainSprites[mainPaths[0]];
+                prop.minigame.mainMilkyTriggerOnSprite = mainSprites[mainPaths[1]];
+                prop.minigame.mainMilkyTriggerOffSprite = mainSprites[mainPaths[2]];
+                prop.minigame.mainDuneSprite = mainSprites[mainPaths[3]];
 
                 if (!string.IsNullOrEmpty(prop.minigame.sliderFrontPath))
                     prop.minigame.sliderFrontSprite = LoadSprite(folder, prop.minigame.sliderFrontPath);

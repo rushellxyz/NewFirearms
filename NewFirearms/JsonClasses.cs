@@ -101,7 +101,10 @@ namespace NewFirearms
 
     public class JsonMinigameInfo : GunMinigame.MinigameInfo
     {
-        public string mainPath;
+        public string mainExperimentPath;
+        public string mainMilkyTriggerOnPath;
+        public string mainMilkyTriggerOffPath;
+        public string mainDunePath;
         public string sliderFrontPath;
         public string sliderBackPath;
         public string rackedOnlyPath;

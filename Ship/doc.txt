@@ -133,6 +133,12 @@
 
 == MINIGAME JSON TEMPLATE ==
 {
+    // Breaking change: mainPath has been removed. All four paths are required.
+    // Paths are relative to the gun folder, without .png; paths may share the same image.
+    "mainExperimentPath": "uiExperiment",
+    "mainMilkyTriggerOnPath": "uiMilkyTriggerOn",
+    "mainMilkyTriggerOffPath": "uiMilkyTriggerOff", // Cursor inside the minigame window
+    "mainDunePath": "uiDune",
     // work in progress
     // TODO Rewrite this as current AI Agent generates documentation
     "fitMainSprite": false, // Fit the main gun image to the screen width

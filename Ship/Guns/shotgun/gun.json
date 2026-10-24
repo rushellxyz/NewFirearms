@@ -142,7 +142,10 @@
 
     "minigame":
     {
-        "mainPath": "uiSprite",
+        "mainExperimentPath": "uiSprite",
+        "mainMilkyTriggerOnPath": "uiSprite",
+        "mainMilkyTriggerOffPath": "uiSprite",
+        "mainDunePath": "uiSprite",
         "sliderFrontPath": "uiPumpFront",
         "sliderBackPath": "uiPumpBack",
 

@@ -160,7 +160,10 @@
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.saiga/bulletBuck", "COPY__Guns/nf.saiga/bulletBird", "COPY__Resources/bulletRound", ],
     "minigame":
     {
-        "mainPath": "uiSprite",
+        "mainExperimentPath": "uiSprite",
+        "mainMilkyTriggerOnPath": "uiSprite",
+        "mainMilkyTriggerOffPath": "uiSprite",
+        "mainDunePath": "uiSprite",
         "sliderFrontPath": "uiBarrel",
 
 

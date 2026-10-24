@@ -70,7 +70,10 @@
     "magazineTexturesPath": { "riflemagazine": "riflemag" },
     "minigame":
     {
-        "mainPath": "uiSprite",
+        "mainExperimentPath": "uiSprite",
+        "mainMilkyTriggerOnPath": "uiSprite",
+        "mainMilkyTriggerOffPath": "uiSprite",
+        "mainDunePath": "uiSprite",
         "sliderFrontPath": "uiSliderFront",
         "sliderBackPath": "uiSliderBack",
 
