@@ -11,6 +11,8 @@
     "newfirearms.command.suicide.description": "You must have a loaded gun. Prevents last stand.",
     "newfirearms.command.suicide.noGun": "you dont have a gun. you are gonna suffer.",
     "newfirearms.command.suicide.notReady": "Gun is not ready. Try remove safety?",
+
+    "newfirearms.cou-JUST A NOTE FOR TRANSLATORS": "The course is still heavy WIP, all other lines will change, dont even bother translating them. Флойда, хз, всегда хотел как-то отрегировать на то что ты переводишь мой мод",
     "newfirearms.course.dialogue.intro": "Welcome to firearm handling. First of all, lets pin first aid knowledge",
     "newfirearms.course.dialogue.medical": "You know how to treat it.",
     "newfirearms.course.dialogue.medicalComplete": "Good job Experiment #{0}, now, lets move on to when you are the one firing",
@@ -32,6 +34,7 @@
     "newfirearms.course.ui.result": "{0}\nSurvived: {1}",
     "newfirearms.course.ui.resultsTitle": "Firearm handling — survival results",
     "newfirearms.course.ui.return": "Return to menu",
+
     "newfirearms.denied.gun.invalid": "Denied {0}\nThis is not a gun?!",
     "newfirearms.denied.gun.noBody": "Denied {0}\nYou dont have a body, whaaa??!!",
     "newfirearms.denied.gun.outOfReach": "Denied {0}\nYou can't reach that gun.",
