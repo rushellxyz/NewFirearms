@@ -49,6 +49,7 @@ namespace NewFirearms
             }
             if (Plugin.togetherMpEnabled)
                 MpStartOp();
+            UpdateSprite();
         }
 
         public void MpStartOp()
@@ -75,6 +76,7 @@ namespace NewFirearms
             Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             Plugin.ShiftRight(ref rounds);
             rounds[0] = round;
+            UpdateSprite();
             UnityEngine.Object.Destroy(item.gameObject);
             if (Plugin.togetherMpEnabled)
                 SyncIfHost(1);
@@ -105,6 +107,7 @@ namespace NewFirearms
             body.AutoPickUpItem(Utils.Create(round, transform.position, 0f).GetComponent<Item>());
             rounds[0] = -2;
             Plugin.ShiftLeft(ref rounds);
+            UpdateSprite();
             if (Plugin.togetherMpEnabled)
                 SyncIfHost(2);
         }
@@ -114,11 +117,19 @@ namespace NewFirearms
             return rounds == null ? 0 : rounds.Count(round => 0 <= round);
         }
 
+        public void UpdateSprite()
+        {
+            if (prop == null || prop.nonEmptySprite == null) return;
+            if (TryGetComponent<SpriteRenderer>(out var renderer))
+                renderer.sprite = TotalRounds() > 0 ? prop.nonEmptySprite : prop.emptySprite;
+        }
+
         public void Fill(sbyte type, int amount)
         {
             amount = Mathf.Clamp(amount, 0, prop.capacity);
             rounds = Enumerable.Repeat(type, amount).ToList();
             rounds.AddRange(Enumerable.Repeat((sbyte)-2, prop.capacity - amount));
+            UpdateSprite();
             if (Plugin.togetherMpEnabled && existed)
                 SyncIfHost();
         }
@@ -194,6 +205,7 @@ namespace NewFirearms
             rshMag.existed = true;
             if (rshMag.prop == null) rshMag.LoadDefinition();
             if (rshMag.prop == null) return;
+            rshMag.UpdateSprite();
             if (1 == extraData)
                 Sound.Play(rshMag.prop.loadRoundAudio, rshMag.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
        else if (2 == extraData)

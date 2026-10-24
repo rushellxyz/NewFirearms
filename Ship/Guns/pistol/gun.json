@@ -132,10 +132,10 @@
 
 
 
-    "fireModesSpritePath": [ "COPY__Guns/newfirearms.glock18/safe", "", "COPY__Guns/newfirearms.m1911/unsafe", ],
+    "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "", "COPY__Guns/nf.m1911/unsafe", ],
 
     "magazineTexturesPath": { "smallmagazine": "blank", },
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
 
     "minigame":
     {

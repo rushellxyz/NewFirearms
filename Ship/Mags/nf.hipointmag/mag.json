@@ -1,5 +1,5 @@
 {
-    "fullName": "M1911 magazine",
+    "fullName": "Hi-Point magazine",
     "description": "A handgun magazine. Can hold up to eight 9mm rounds in it",
 
 
@@ -18,7 +18,7 @@
     "craftInt": 12,
 
     "capacity": 8,
-    "magazineType": [ "m1911", ],
+    "magazineType": [ "hipoint", ],
     "ammoTypes":
     [
         "9mmround",
@@ -26,6 +26,7 @@
         "9mmvenomus",
     ],
 
+    "nonEmptySpritePath": "nonempty",
 
 
 }

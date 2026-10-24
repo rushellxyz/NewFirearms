@@ -420,7 +420,10 @@ namespace NewFirearms
                 };
                 info.SetTags();
 
-                Plugin.RegisterMagCuCore(itemId, info, LoadSprite("BepInEx/plugins/NewFirearms/", $"Mags/{itemId}/item"), prop);
+                prop.emptySprite = LoadSprite(folder, "item");
+                if (!string.IsNullOrEmpty(prop.nonEmptySpritePath))
+                    prop.nonEmptySprite = LoadSprite(folder, prop.nonEmptySpritePath);
+                Plugin.RegisterMagCuCore(itemId, info, prop.emptySprite, prop);
 
                 if (prop.milkyCanSell)
                     Plugin.milkyMags.Add(itemId);

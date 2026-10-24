@@ -129,13 +129,13 @@
 
 
 
-    "unrackSpritePath": "COPY__Guns/newfirearms.mp5/unrack",
-    "rackSpritePath": "COPY__Guns/newfirearms.mp5/rack",
+    "unrackSpritePath": "COPY__Guns/nf.mp5/unrack",
+    "rackSpritePath": "COPY__Guns/nf.mp5/rack",
 
 
 
-    "magazineTexturesPath": { "newfirearms.p90mag": "p90mag", },
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+    "magazineTexturesPath": { "nf.p90mag": "p90mag", },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
     "minigame":
     {
         "mainPath": "uiSprite",
@@ -151,8 +151,8 @@
         "sliderHandFollowOffset": -0.14,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
-        "magazinePaths": { "newfirearms.p90mag": "uiP90mag" },
-        "ammosInMagazinePaths": { "newfirearms.p90mag": [ "uiP90mag9mmround", "uiP90mag9mmhollow", "uiP90mag9mmvenomus" ] },
+        "magazinePaths": { "nf.p90mag": "uiP90mag" },
+        "ammosInMagazinePaths": { "nf.p90mag": [ "uiP90mag9mmround", "uiP90mag9mmhollow", "uiP90mag9mmvenomus" ] },
         "magazineXPosition": -0.057,
         "magazineYPosition": 0.058,
         "magazineRotation": 90,

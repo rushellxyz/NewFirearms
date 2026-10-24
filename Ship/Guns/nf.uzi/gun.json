@@ -157,14 +157,14 @@
 
 
 
-    "unrackSpritePath": "COPY__Guns/newfirearms.mp5/unrack",
-    "rackSpritePath": "COPY__Guns/newfirearms.mp5/rack",
+    "unrackSpritePath": "COPY__Guns/nf.mp5/unrack",
+    "rackSpritePath": "COPY__Guns/nf.mp5/rack",
 
 
     "fireModesSpritePath": [ "safe", "", "", "unsafe", ],
 
-    "magazineTexturesPath": { "smallmagazine": "blank", "newfirearms.smgmag": "smgmag" },
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+    "magazineTexturesPath": { "smallmagazine": "blank", "nf.smgmag": "smgmag" },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
     "minigame":
     {
         "mainPath": "uiSprite",
@@ -182,8 +182,8 @@
         "sliderHandFollowOffset": -0.15,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
-        "magazinePaths": { "newfirearms.smgmag": "uiSmgmag" },
-        "ammosInMagazinePaths": { "newfirearms.smgmag": [ "uiSmgmag9mmround", "uiSmgmag9mmhollow", "uiSmgmag9mmvenomus" ] },
+        "magazinePaths": { "nf.smgmag": "uiSmgmag" },
+        "ammosInMagazinePaths": { "nf.smgmag": [ "uiSmgmag9mmround", "uiSmgmag9mmhollow", "uiSmgmag9mmvenomus" ] },
         "magazineXPosition": -0.064,
         "magazineYPosition": -0.034,
         "magazineXSpeed": -0.0,

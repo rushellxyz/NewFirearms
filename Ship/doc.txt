@@ -109,6 +109,7 @@
     "capacity" 0, // Total amounts of rounds can be held
     "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compatabile
     "ammoTypes": [ "string", ], // ID of all rounds can be putted into, highly recomended to be mirrored with gun's "ammoTypes"
+    "nonEmptySpritePath": "string", // Optional sprite path relative to this magazine's folder (omit .png). Used when at least one round remains; empty magazines use item.png.
     // Optional audio paths; same formats as gun audio. Extensions may be omitted.
     "loadRoundAudioPath": "string",
     "unloadRoundAudioPath": "string",

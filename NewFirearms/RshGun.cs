@@ -507,6 +507,7 @@ namespace NewFirearms
             mag = "";
             Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             body.AutoPickUpItem(go.GetComponent<Item>());
+            rshMag.UpdateSprite();
             UpdateSprite();
             if (Plugin.togetherMpEnabled)
             {

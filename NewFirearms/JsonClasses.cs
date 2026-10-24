@@ -172,6 +172,10 @@ namespace NewFirearms
     // params of mag model
     public class MagJson
     {
+        public string nonEmptySpritePath;
+        public Sprite nonEmptySprite;
+        public Sprite emptySprite;
+
         public string fullName;
         public string description;
         public string category = "utility";

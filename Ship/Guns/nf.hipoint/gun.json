@@ -1,5 +1,5 @@
 {
-    "fullName": "M1911",
+    "fullName": "Hi-Point",
     "description": "An old, small, magazine-feed 9mm handgun. Would do well in combat. Can only fit m1911 magazines",
 
 
@@ -11,7 +11,7 @@
     "craftable": true,
     "recipe":
     [
-        "newfirearms.makeshiftpistol",
+        "nf.makeshiftpistol",
         "scrappanel",
         "scrappanel",
         "scrappanel",
@@ -63,7 +63,7 @@
 
             "verticalSpread": 0.0075,
             "loudness": 2.5,
-            "conditionLoss": 0.002,
+            "conditionLoss": 0.003,
         },
         {
             "round": "9mmhollow",
@@ -94,7 +94,7 @@
 
             "verticalSpread": 0.015,
             "loudness": 2.5,
-            "conditionLoss": 0.002,
+            "conditionLoss": 0.003,
         },
         {
             "round": "9mmvenomus",
@@ -125,12 +125,12 @@
 
             "verticalSpread": 0.0225,
             "loudness": 2.25,
-            "conditionLoss": 0.002,
+            "conditionLoss": 0.003,
         },
     ],
     "desiredGasTime": 0.075,
     "fireModes": [ 0, 2, ],
-    "magazineType": [ "m1911", ],
+    "magazineType": [ "hipoint", ],
     "barrelOffset": 0.5,
 
     "normalTexturePath": "normal",
@@ -147,10 +147,10 @@
 
 
 
-    "fireModesSpritePath": [ "COPY__Guns/newfirearms.glock18/safe", "", "unsafe", ],
+    "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "", "unsafe", ],
 
-    "magazineTexturesPath": { "newfirearms.m1911mag": "blank", },
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+    "magazineTexturesPath": { "nf.m1911mag": "blank", },
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
 
     "minigame":
     {
@@ -173,8 +173,8 @@
         "sliderHandFollowOffset": -0.125,
         "canUseFannyPack": true,
         "magReleasePath": "uiReleaseTrigger",
-        "magazinePaths": { "newfirearms.m1911mag": "uiM1911mag" },
-        "ammosInMagazinePaths": { "newfirearms.m1911mag": [ "uiM1911mag9mmround", "uiM1911mag9mmhollow", "uiM1911mag9mmvenomus" ] },
+        "magazinePaths": { "nf.m1911mag": "uiM1911mag" },
+        "ammosInMagazinePaths": { "nf.m1911mag": [ "uiM1911mag9mmround", "uiM1911mag9mmhollow", "uiM1911mag9mmvenomus" ] },
         "magazineXPosition": -0.0859375,
         "magazineYPosition": 0.01388888888888889,
         "magazineXSpeed": -0.175,

@@ -143,7 +143,7 @@
     "unrackSpritePath": "unrack",
     "removeMagSpritePath": "removeMag",
     "fireModesSpritePath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletEmpty", "COPY__Resources/bulletEmpty", ],
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/newfirearms.glock18/bulletHollow", "COPY__Guns/newfirearms.glock18/bulletVenomus", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
     "minigame":
     {
         "mainPath": "uiSprite",

@@ -10,7 +10,7 @@ namespace NewFirearms
     {
         public const int LEFT_PAW = 14;
         internal const string BestTimeKey = "NewFirearms.FirearmHandling.BestSurvivalSeconds";
-        private static readonly string[] Weapons = { "newfirearms.m1911", "newfirearms.mp5", "newfirearms.saiga" };
+        private static readonly string[] Weapons = { "nf.m1911", "nf.mp5", "nf.saiga" };
         private static readonly string[] EnemyTypes = { "wallbiter", "thornbackyoung" };
         private readonly List<GameObject> spawned = new List<GameObject>();
         private readonly List<GameObject> medicine = new List<GameObject>();

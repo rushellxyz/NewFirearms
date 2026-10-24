@@ -138,7 +138,7 @@
 
 
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "bulletBuck", "bulletBird", "COPY__Resources/bulletRound", ],
-    "magazineTexturesPath": { "newfirearms.saigamag": "saigamag" },
+    "magazineTexturesPath": { "nf.saigamag": "saigamag" },
     //"attachmentTexturesPath: { },
         "minigame":
     {
@@ -162,8 +162,8 @@
         "fitMainSprite": true,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
-        "magazinePaths": { "newfirearms.saigamag": "uiSaigamag" },
-        "ammosInMagazinePaths": { "newfirearms.saigamag": [ "uiSaigamag12gauge", "uiSaigamag12gaugeslug", "uiSaigamag12gaugebird" ] },
+        "magazinePaths": { "nf.saigamag": "uiSaigamag" },
+        "ammosInMagazinePaths": { "nf.saigamag": [ "uiSaigamag12gauge", "uiSaigamag12gaugeslug", "uiSaigamag12gaugebird" ] },
         "magazineXPosition": -0.029,
         "magazineYPosition": -0.034,
         "magazineXSpeed": 0.06,

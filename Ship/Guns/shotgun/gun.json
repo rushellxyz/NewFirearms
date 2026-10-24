@@ -136,7 +136,7 @@
 
 
 
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/newfirearms.saiga/bulletBuck", "COPY__Guns/newfirearms.saiga/bulletBird", "COPY__Resources/bulletRound" ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.saiga/bulletBuck", "COPY__Guns/nf.saiga/bulletBird", "COPY__Resources/bulletRound" ],
     "magazineTexturesPath": { },
     //"attachmentTexturesPath: { },
 
