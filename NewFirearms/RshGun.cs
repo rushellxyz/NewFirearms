@@ -27,6 +27,8 @@ namespace NewFirearms
         public string mag;
         [JsonProperty("rounds")]
         public List<sbyte> rounds = new List<sbyte>();
+        [JsonProperty("spentAmmoTypes")]
+        private Dictionary<int, sbyte> spentAmmoTypes = new Dictionary<int, sbyte>();
         [JsonProperty("fireMode")]
         public byte fireMode;
         [JsonProperty("racked")]
@@ -109,7 +111,7 @@ namespace NewFirearms
                 }
 
                 if (4 == prop.feedType)
-                    Plugin.ShiftLeft(ref rounds);
+                    RotateChambers();
            else if (!(1 < rounds.Count && 0 > rounds[1]))
                     Rack(manual: false);
                 if (3 == fireMode && null != shooter)
@@ -272,8 +274,15 @@ namespace NewFirearms
             if (PlayerCamera.main.body == shooter && GunMinigame.Plugin.useMinigame)
                 GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(info.knockback, info.muzzleRise);
             if (info.caseless || !WorldGeneration.GetRunSettingBool("newfirearms.gunejectcasing"))
+            {
                 rounds[0] = -2;
-       else     rounds[0] = -1;
+                spentAmmoTypes.Remove(0);
+            }
+            else
+            {
+                spentAmmoTypes[0] = rounds[0];
+                rounds[0] = -1;
+            }
             if (1 == fireMode)
             {
                 gasTime = 0f;
@@ -298,7 +307,7 @@ namespace NewFirearms
                         SyncIfHost();
                 }
            else {
-                    Plugin.ShiftLeft(ref rounds);
+                    RotateChambers();
                     if (Plugin.togetherMpEnabled)
                         SyncIfHost();
                 }
@@ -330,7 +339,7 @@ namespace NewFirearms
                 if (racked)
                     EjectRound(0);
                 else if (-2 == rounds[0])
-                    Plugin.ShiftLeft(ref rounds);
+                    RotateChambers();
             }
             if (Plugin.togetherMpEnabled)
             {
@@ -350,8 +359,31 @@ namespace NewFirearms
                 GunMinigame.MinigameManager.GetOrAddInstance().CreateCasing(rounds[index]);
             if (0 <= rounds[index])
                 round = prop.ammoTypes[rounds[index]].round;
-            Utils.Create(round, transform.position, transform.rotation.eulerAngles.z).GetComponent<Rigidbody2D>().velocity = transform.up * 12f;
+            GameObject dropped = round == "casing" ? CreateSpentCasing(index)
+                : Utils.Create(round, transform.position, transform.rotation.eulerAngles.z);
+            dropped.GetComponent<Rigidbody2D>().velocity = transform.up * 12f;
             rounds[index] = -2;
+        }
+
+        private GameObject CreateSpentCasing(int chamber)
+        {
+            GameObject casing = Utils.Create("casing", transform.position, transform.rotation.eulerAngles.z);
+            if (spentAmmoTypes.TryGetValue(chamber, out sbyte ammoIndex))
+            {
+                if (ammoIndex >= 0 && ammoIndex < prop.ammoTypes.Count &&
+                    prop.ammoTypes[ammoIndex].loadedCasingSprite != null)
+                    CasingAppearance.Attach(casing, it.id, ammoIndex);
+                spentAmmoTypes.Remove(chamber);
+            }
+            return casing;
+        }
+
+        private void RotateChambers()
+        {
+            if (rounds.Count <= 1) return;
+            Plugin.ShiftLeft(ref rounds);
+            spentAmmoTypes = spentAmmoTypes.ToDictionary(
+                entry => (entry.Key + rounds.Count - 1) % rounds.Count, entry => entry.Value);
         }
 
         public bool CanFitMag(MagJson newMag)
@@ -445,8 +477,8 @@ namespace NewFirearms
                         {
                             if (int.MaxValue != casing)
                             {
+                                GameObject go = CreateSpentCasing(casing);
                                 rounds[casing] = i;
-                                GameObject go = Utils.Create("casing", transform.position, transform.rotation.eulerAngles.z);
                                 if (!Input.GetKey(KeyCode.LeftShift))
                                     PlayerCamera.main.body.AutoPickUpItem(go.GetComponent<Item>());
                             }

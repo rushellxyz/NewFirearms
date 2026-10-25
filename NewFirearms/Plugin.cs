@@ -225,6 +225,7 @@ namespace NewFirearms
             Together.Multiplayer.RegisterCustomServerReceiver(RshGun.MSGID_ACTION, RshGun.ServerReceiver);
             Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SHOOT_VISUALS, RshGun.ReceiveShoot);
             Together.Multiplayer.RegisterCustomClientReceiver(RshMag.MSGID_SYNC, RshMag.ClientSync);
+            Together.Multiplayer.RegisterCustomClientReceiver(CasingAppearance.MessageId, CasingAppearance.ClientSync);
             Together.Multiplayer.RegisterCustomServerReceiver(RshMag.MSGID_ACTION, RshMag.ServerReceiver);
         }
 

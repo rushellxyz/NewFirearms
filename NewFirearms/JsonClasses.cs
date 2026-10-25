@@ -129,6 +129,9 @@ namespace NewFirearms
     public class AmmoInfo
     {
         public bool piercing;
+        public string casingSprite;
+        [Newtonsoft.Json.JsonIgnore]
+        public Sprite loadedCasingSprite;
         public string round;
         public float structureDamage;
         public float animalDamage;

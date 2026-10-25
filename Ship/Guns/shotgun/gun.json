@@ -19,6 +19,7 @@
     [
         {
             "round": "12gauge",
+            "casingSprite": "12gaugeCasing",
             "structureDamage": 60,
             "animalDamage": 60,
             "playerDamage":
@@ -52,6 +53,7 @@
         },
         {
             "round": "nf.12gaugebird",
+            "casingSprite": "12gaugebirdCasing",
             "structureDamage": 14.375,
             "animalDamage": 14.375,
             "playerDamage":
@@ -85,6 +87,7 @@
         },
         {
             "round": "nf.12gaugeslug",
+            "casingSprite": "12gaugeslugCasing",
             "structureDamage": 400,
             "animalDamage": 400,
             "playerDamage":
