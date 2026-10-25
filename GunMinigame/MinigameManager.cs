@@ -51,6 +51,7 @@ namespace GunMinigame
         }
         public Sprite sliderFrontSprite;
         public Sprite sliderBackSprite;
+        public Sprite backLayerSprite;
         public Sprite rackedOnlySprite;
         public Sprite unrackedOnlySprite;
         public float sliderMinimumPosition;
@@ -205,6 +206,7 @@ namespace GunMinigame
 
         public Image sliderFrontImage;
         public Image sliderBackImage;
+        private Image backLayerImage;
 
         public Vector2 sliderHoldOffset;
         public GameObject canvas;
@@ -402,6 +404,8 @@ namespace GunMinigame
             sliderFrontImage.sprite = info.sliderFrontSprite;
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.sprite = info.sliderBackSprite;
+            backLayerImage.sprite = info.backLayerSprite;
+            backLayerImage.enabled = info.backLayerSprite != null;
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             magazineDragTrigger.sprite = info.magazineDragTrigger;
@@ -488,6 +492,11 @@ namespace GunMinigame
             gunBase.transform.SetParent(maskBase.transform);
             gunBase.transform.localPosition = Vector3.zero;
             gunBase.transform.localScale = Vector3.one;
+
+            backLayerImage = new GameObject("MinigameBackLayer").AddComponent<Image>();
+            backLayerImage.raycastTarget = false;
+            backLayerImage.transform.SetParent(gunBase.transform, false);
+            backLayerImage.rectTransform.sizeDelta = size;
 
             sliderBackImage = new GameObject("MinigameSliderBack").AddComponent<Image>();
             sliderBackImage.raycastTarget = false;
@@ -1513,6 +1522,7 @@ namespace GunMinigame
             fireModeImage.color = colo;
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.color = colo;
+            backLayerImage.color = colo;
             rackedSpecific.color = colo;
             hideShowButton.color = colo;
             ammoSelector.color = colo;

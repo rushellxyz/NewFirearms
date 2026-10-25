@@ -134,6 +134,7 @@
 
 == MINIGAME JSON TEMPLATE ==
 {
+    "backLayerPath": "uiBackLayer", // Optional sprite below the back slider. Moves with the gun, independently of the slider; omit .png.
     // Breaking change: mainPath has been removed. All four paths are required.
     // Paths are relative to the gun folder, without .png; paths may share the same image.
     "mainExperimentPath": "uiExperiment",

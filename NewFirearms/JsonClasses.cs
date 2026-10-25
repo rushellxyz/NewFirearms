@@ -107,6 +107,7 @@ namespace NewFirearms
         public string mainDunePath;
         public string sliderFrontPath;
         public string sliderBackPath;
+        public string backLayerPath;
         public string rackedOnlyPath;
         public string unrackedOnlyPath;
         public string[] ammosInHandPaths;

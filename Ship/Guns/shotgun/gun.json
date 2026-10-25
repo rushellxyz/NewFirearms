@@ -142,13 +142,13 @@
 
     "minigame":
     {
-        "mainExperimentPath": "uiSprite",
-        "mainMilkyTriggerOnPath": "uiSprite",
-        "mainMilkyTriggerOffPath": "uiSprite",
-        "mainDunePath": "uiSprite",
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiPumpFront",
         "sliderBackPath": "uiPumpBack",
-
+        "backLayerPath": "uiBackLayer",
         "unrackedOnlyPath": "uiUnrackedOnly",
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,

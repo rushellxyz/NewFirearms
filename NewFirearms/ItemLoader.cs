@@ -212,6 +212,9 @@ namespace NewFirearms
                     prop.minigame.sliderBackSprite = LoadSprite(folder, prop.minigame.sliderBackPath);
                 else prop.minigame.sliderBackSprite = emptySprite;
 
+                if (!string.IsNullOrEmpty(prop.minigame.backLayerPath))
+                    prop.minigame.backLayerSprite = LoadSprite(folder, prop.minigame.backLayerPath);
+
                 if (!string.IsNullOrEmpty(prop.minigame.rackedOnlyPath))
                     prop.minigame.rackedOnlySprite = LoadSprite(folder, prop.minigame.rackedOnlyPath);
                 else prop.minigame.rackedOnlySprite = emptySprite;
