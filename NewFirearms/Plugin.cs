@@ -9,9 +9,6 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-// Currently, whenevar it creates new 9mmround/12gaugeround/556round the round would still have AmmoScript
-// TODO Come up with way to destroy it, bc, optimization
-
 namespace NewFirearms
 {
     [BepInPlugin("com.rushellxyz.newfirearms", "New Firearms", "2.0.0")]
@@ -60,6 +57,7 @@ namespace NewFirearms
             ItemLoader.LoadGuns();
             ItemLoader.LoadMags();
             ItemLoader.LoadRounds();
+            ItemLoader.LoadVanillaAmmoSprites();
             RegisterRunSettings();
             RegisterCourse();
             ItemLoader.ClearResourcesDict();

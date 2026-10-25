@@ -39,6 +39,17 @@ namespace NewFirearms
             sprites = null;
         }
 
+        public static void LoadVanillaAmmoSprites()
+        {
+            foreach (string id in new[] { "12gauge", "9mmround", "556round" })
+            {
+                Sprite sprite = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/" + id);
+                if (sprite == null) continue;
+                CUCoreLib.Helpers.CUCoreUtils.EditVanillaItem(id, info =>
+                    Plugin.RegisterRoundCuCore(id, info, sprite));
+            }
+        }
+
         public static void LoadFallbackResources()
         {
             emptySprite = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/bulletEmpty");
