@@ -55,7 +55,7 @@
         {
             "round": "nf.12gaugebird",
             "casingSprite": "12gaugebirdCasing",
-            "minigameCasingSprite": "uiEject12gaugebird",
+            "minigameCasingSprite": "uiEject12gaugebirdCasing",
             "structureDamage": 14.375,
             "animalDamage": 14.375,
             "playerDamage":
