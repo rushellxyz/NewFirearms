@@ -25,6 +25,7 @@
             "structureDamage": 0.0, // Damage to tiles
             "piercing": false, // Pass through two terrain blocks; damage and stop at the third. Explosive rounds still detonate on first impact.
             "casingSprite": "string", // Optional changes sprite of casing for this
+            "minigameCasingSprite": "uiCasing556", // Optional spent casing sprite inside the minigame
             "animalDamage": 0.0, // Damage to anything else
             "stopAtFirstHit": false, // If true, raycast would stop at first hit
 

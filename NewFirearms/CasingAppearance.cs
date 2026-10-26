@@ -58,6 +58,7 @@ namespace NewFirearms
 
         private void StartSync()
         {
+            // Ngl, i actually hate how we handle late joiners
             if (Together.Net.IsServer)
                 InvokeRepeating(nameof(Sync), 0.1f, 1f);
         }

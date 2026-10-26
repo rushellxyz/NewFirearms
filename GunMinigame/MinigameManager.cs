@@ -1375,14 +1375,20 @@ namespace GunMinigame
             Update();
         }
 
-        public void CreateCasing(int index)
+        public void CreateCasing(int index, Sprite spriteOverride = null)
         {
             coverChange = 1;
-            if (null == info || null == info.casingsSprite)
-                return;
+            if (info == null) return;
+            Sprite sprite = spriteOverride;
+            if (sprite == null)
+            {
+                if (info.casingsSprite == null || index + 1 < 0 || index + 1 >= info.casingsSprite.Length)
+                    return;
+                sprite = info.casingsSprite[index + 1];
+            }
             Vector3 gunPosition = new Vector3(info.casingXPosition, info.casingYPosition);
             Vector3 spawnPosition = maskBase.transform.InverseTransformPoint(gunBase.transform.TransformPoint(gunPosition));
-            Casing.Create(info.casingsSprite[index+1], spawnPosition);
+            Casing.Create(sprite, spawnPosition);
         }
 
         public void SliderClickDown()

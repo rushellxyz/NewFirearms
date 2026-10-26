@@ -11,3 +11,5 @@ TODO List - Agents stay away unless stated otherwise
  - Redo sawed off minigame
  - And hot reloading!
  - Make mod work when MP enabled but not active
+ - Compatability mode, bc some packes refer to newfirearm. items that now replaced with nf.
+ - Gunsaw genetics voyager hashset?

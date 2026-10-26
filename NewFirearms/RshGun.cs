@@ -17,6 +17,7 @@ namespace NewFirearms
         public const string MSGID_ACTION = "NewFirearms_RshGunAction";
         public const string MSGID_SHOOT = "NewFirearms_Shoot";
         public const string MSGID_SHOOT_VISUALS = "NewFirearms_ShootVisuals";
+        public const string MSGID_EJECT_VISUALS = "NewFirearms_EjectVisuals";
 
         public GunJson prop;
         internal event Action<GameObject> MagazineCreated; // :hmm:
@@ -355,27 +356,71 @@ namespace NewFirearms
             if (-2 == rounds[index])
                 return;
             string round = "casing";
-            if (!Plugin.togetherMpEnabled && GunMinigame.Plugin.useMinigame)
-                GunMinigame.MinigameManager.GetOrAddInstance().CreateCasing(rounds[index]);
             if (0 <= rounds[index])
                 round = prop.ammoTypes[rounds[index]].round;
             GameObject dropped = round == "casing" ? CreateSpentCasing(index)
                 : Utils.Create(round, transform.position, transform.rotation.eulerAngles.z);
             dropped.GetComponent<Rigidbody2D>().velocity = transform.up * 12f;
+            if (round != "casing")
+                NotifyEjectionVisual(rounds[index], rounds[index]);
             rounds[index] = -2;
         }
 
         private GameObject CreateSpentCasing(int chamber)
         {
             GameObject casing = Utils.Create("casing", transform.position, transform.rotation.eulerAngles.z);
+            sbyte visualAmmoIndex = -1;
             if (spentAmmoTypes.TryGetValue(chamber, out sbyte ammoIndex))
             {
+                visualAmmoIndex = ammoIndex;
                 if (ammoIndex >= 0 && ammoIndex < prop.ammoTypes.Count &&
                     prop.ammoTypes[ammoIndex].loadedCasingSprite != null)
                     CasingAppearance.Attach(casing, it.id, ammoIndex);
                 spentAmmoTypes.Remove(chamber);
             }
+            NotifyEjectionVisual(-1, visualAmmoIndex);
             return casing;
+        }
+
+        private void ShowEjectionVisual(int round, int ammoIndex)
+        {
+            var manager = GunMinigame.MinigameManager.instance;
+            if (!GunMinigame.Plugin.useMinigame || manager == null || !manager.active ||
+                !ReferenceEquals(manager.gun, this)) return;
+            Sprite sprite = round == -1 && ammoIndex >= 0 && ammoIndex < prop.ammoTypes.Count
+                ? prop.ammoTypes[ammoIndex].loadedMinigameCasingSprite : null;
+            manager.CreateCasing(round, sprite);
+        }
+
+        private void NotifyEjectionVisual(sbyte round, sbyte ammoIndex)
+        {
+            ShowEjectionVisual(round, ammoIndex);
+            if (!Plugin.togetherMpEnabled) return;
+            SendEjectionVisual(round, ammoIndex);
+        }
+
+        // TODO This also to be rewritten, maybe even combine with casing apperance
+        private void SendEjectionVisual(sbyte round, sbyte ammoIndex)
+        {
+            if (!Together.Net.IsServer) return;
+            var tracker = GetMpTracker(false) as Together.SyncInfoGameObjectTracker;
+            if (tracker == null) return;
+            var writer = Together.Multiplayer.CreateNamedWriter(MSGID_EJECT_VISUALS);
+            writer.Put((ushort)tracker.syncId);
+            writer.Put(round);
+            writer.Put(ammoIndex);
+            Together.Net.Server_SendToClients(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer,
+                Together.ServerMain.AllClientIdsExceptHost);
+        }
+
+        public static void ReceiveEjectionVisual(LiteNetLib.Utils.NetDataReader reader)
+        {
+            reader.Get(out ushort syncId);
+            reader.Get(out sbyte round);
+            reader.Get(out sbyte ammoIndex);
+            if (Together.ItemSync.TryGetItem(new Together.knetid(syncId), out _, out var item) &&
+                item != null && item.TryGetComponent<RshGun>(out var gun) && gun.prop != null)
+                gun.ShowEjectionVisual(round, ammoIndex);
         }
 
         private void RotateChambers()

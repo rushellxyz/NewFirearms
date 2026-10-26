@@ -130,8 +130,11 @@ namespace NewFirearms
     {
         public bool piercing;
         public string casingSprite;
+        public string minigameCasingSprite;
         [Newtonsoft.Json.JsonIgnore]
         public Sprite loadedCasingSprite;
+        [Newtonsoft.Json.JsonIgnore]
+        public Sprite loadedMinigameCasingSprite;
         public string round;
         public float structureDamage;
         public float animalDamage;

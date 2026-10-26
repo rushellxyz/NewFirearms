@@ -137,8 +137,12 @@ namespace NewFirearms
         public static void LoadGun(string itemId, string folder, GunJson prop)
         {
             foreach (AmmoInfo ammo in prop.ammoTypes)
+            {
                 if (!string.IsNullOrEmpty(ammo.casingSprite))
                     ammo.loadedCasingSprite = LoadSprite(folder, ammo.casingSprite);
+                if (!string.IsNullOrEmpty(ammo.minigameCasingSprite))
+                    ammo.loadedMinigameCasingSprite = LoadSprite(folder, ammo.minigameCasingSprite);
+            }
             prop.normalTexture = LoadTexture(Path.Combine(folder, prop.normalTexturePath));
             prop.rackedTexture = LoadTexture(Path.Combine(folder, prop.rackedTexturePath));
 

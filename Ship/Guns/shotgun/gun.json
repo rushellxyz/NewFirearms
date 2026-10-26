@@ -20,6 +20,7 @@
         {
             "round": "12gauge",
             "casingSprite": "12gaugeCasing",
+            "minigameCasingSprite": "uiEject12gaugeCasing",
             "structureDamage": 60,
             "animalDamage": 60,
             "playerDamage":
@@ -54,6 +55,7 @@
         {
             "round": "nf.12gaugebird",
             "casingSprite": "12gaugebirdCasing",
+            "minigameCasingSprite": "uiEject12gaugebird",
             "structureDamage": 14.375,
             "animalDamage": 14.375,
             "playerDamage":
@@ -88,6 +90,7 @@
         {
             "round": "nf.12gaugeslug",
             "casingSprite": "12gaugeslugCasing",
+            "minigameCasingSprite": "uiEject12gaugeslugCasing",
             "structureDamage": 400,
             "animalDamage": 400,
             "playerDamage":
@@ -139,7 +142,7 @@
 
 
 
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.saiga/bulletBuck", "COPY__Guns/nf.saiga/bulletBird", "COPY__Resources/bulletRound" ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
     "magazineTexturesPath": { },
     //"attachmentTexturesPath: { },
 
@@ -158,13 +161,13 @@
         "unrackedIdlePosition": 0,
         "rackPoint": -0.0125,
         "rackedIdlePosition": -0.025,
-        "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
-        "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
-        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "ammosInHandPaths": [ "uiHand12gauge", "uiHand12gaugebird", "uiHand12gaugeslug", ],
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
         "casingXPosition": -0.0275,
         "casingYPosition": 0.0725,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing12gauge", "uiCasing12gaugeslug", "uiCasing12gaugebird" ],
+        "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
     }
 }
