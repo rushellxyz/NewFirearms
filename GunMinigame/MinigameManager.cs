@@ -366,7 +366,10 @@ namespace GunMinigame
         public void Show(MinigameInfo newInfo, IMinigameGun newGun, ILaser newLaser=null)
         {
             if (!ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo))
+            {
                 ClearStagedMagazine();
+                shouldntRefreshBandolierCount = false;
+            }
             if (null == uiBase)
                 PrepareGunUi();
             PlayerCamera.main.gunMenu.SetActive(false);
@@ -438,6 +441,8 @@ namespace GunMinigame
         }*/
             ammoIcon.sprite = info.ammosIcons[info.dCurrentAmmo];
             EnsureAmmoIcons(info.ammos.Length);
+            // Он сломал анимацию, хотя пофиг
+            ammoSelectCursor.transform.localPosition = ammoSelectAmmo[info.dCurrentAmmo].transform.localPosition;
             for (int i = 0; i < ammoSelectAmmo.Count; i++)
             {
                 if (i < info.ammosIcons.Length)
@@ -1241,6 +1246,9 @@ namespace GunMinigame
             if (!shouldntRefreshBandolierCount)
             {
                 int ammoInBand = CountAllSpecificIdInContainerWithOffsetOfOne(bandolier.transform, info.ammos[info.dCurrentAmmo]);
+                if (holding != null && holding.id == info.ammos[info.dCurrentAmmo] &&
+                    holding.transform.parent == bandolier.transform)
+                    ammoInBand--;
                 shouldntRefreshBandolierCount = true;
                 for (int i = 1; i < 23; i ++)
                 {
@@ -1674,25 +1682,12 @@ namespace GunMinigame
                 throw new Exception("[GunMinigame] Requested ammo index is out of bountry! :tourniqet:");
             info.dCurrentAmmo = index;
             ammoIcon.sprite = info.ammosIcons[info.dCurrentAmmo];
-            StartCoroutine(_SetAmmoType());
+            ammoSelectCursor.transform.localPosition = ammoSelectAmmo[index].transform.localPosition;
+            shouldntRefreshBandolierCount = false;
+            HandleBandolier();
             PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.MiniClick);
             EventSystem.current.SetSelectedGameObject(null);
         }
-
-        private IEnumerator _SetAmmoType()
-        {
-            Vector3 finish = ammoSelectAmmo[info.dCurrentAmmo].transform.localPosition;
-            Vector3 change = (ammoSelectCursor.transform.localPosition - finish) * 0.8f;
-            float timer = 0f;
-            while (0.2f > timer)
-            {
-                ammoSelectCursor.transform.localPosition -= change * timer;
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            ammoSelectCursor.transform.localPosition = finish;
-        }
-
 
         public void DelayUpdateMagazineCount()
         {
