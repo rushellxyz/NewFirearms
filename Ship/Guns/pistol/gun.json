@@ -132,7 +132,7 @@
 
 
 
-    "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "", "COPY__Guns/nf.m1911/unsafe", ],
+    "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "", "COPY__Guns/nf.hipoint/unsafe", ],
 
     "magazineTexturesPath": { "smallmagazine": "blank", },
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
