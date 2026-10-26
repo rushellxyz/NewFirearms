@@ -640,6 +640,7 @@ namespace NewFirearms
             composedTexture = Plugin.CombineTextures(textures);
             composedSprite = ItemLoader.TextureToSprite(composedTexture, prop.ppu);
             gameObject.GetComponent<SpriteRenderer>().sprite = composedSprite;
+            CUCoreLib.Helpers.CUCoreUtils.SetItemSprite(it, composedSprite);
         }
 
         void OnDestroy()
