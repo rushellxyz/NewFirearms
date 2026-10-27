@@ -458,6 +458,7 @@ namespace GunMinigame
             UpdateSliderFireToggle(gun.IsRacked());
 
             laserToggleTrigger.enabled = null != laser;
+            laserToggleTrigger.GetComponent<Button>().interactable = null != laser;
             uiBase.SetActive(true);
         }
 
@@ -580,6 +581,7 @@ namespace GunMinigame
             laserToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
             laserToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
             laserToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
+                if (laser == null) return;
                 laser.Toggle();
                 PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
                 EventSystem.current.SetSelectedGameObject(null);

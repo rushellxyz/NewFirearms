@@ -1,0 +1,11 @@
+The playtest crash in `agentbox/Crash/` occurred during a QoL Unknown autosave. The Windows minidump records exception `0xc0000005`, reading address `0xC`, in `mono-2.0-bdwgc.dll` at offset `0x12D143`. The managed stack runs from `SaveSystem.SaveGame` through Newtonsoft.Json contract resolution into `RuntimeMethodInfo.ContainsGenericParameters` / `get_IsGenericMethod`.
+
+The failure was reproduced outside Unity using Mono, the game's Newtonsoft.Json assembly, and the built NewFirearms DLL with Together/LiteNetLib unavailable. Calling `new DefaultContractResolver().ResolveContract(typeof(RshGun))` produced a missing-LiteNetLib signature warning for `WriteJamState`, then a native SIGSEGV. The playtest log likewise shows no Together plugin loaded.
+
+Json.NET inspects methods for serialization callbacks even on classes using `JsonObject(MemberSerialization.OptIn)`. Consequently, optional assembly types must not appear in method signatures on saveable components or their base classes, including private and static methods. A runtime capability guard inside a method does not protect this reflection path.
+
+Network receivers and jam packet serialization now live in `GunNetwork`, `MagazineNetwork`, and `CasingNetwork`, with shared denial handling in `NetworkAction`. Saved components expose only dependency-safe state accessors. Serialized property names and outgoing packet field order remain unchanged.
+
+Validation used the actual built component types under Mono: contract creation plus populate/serialize round trips for `RshGun` (including jam and spent-ammo fields), `RshMag`, and `CasingAppearance`. All six checks passed with multiplayer assemblies absent and again with them present. Debug and Release builds passed. In-game autosave and live multiplayer still require retesting.
+
+The log also records an independent null-laser exception from a keyboard submit event on the minigame laser button. The button is now non-interactable without a laser, and its callback checks for a laser before toggling it. Additional startup issues in that installation include outdated gun configs missing the four main sprite paths and malformed `Lang/en.json` at line 152; these are separate from the reproduced native crash.

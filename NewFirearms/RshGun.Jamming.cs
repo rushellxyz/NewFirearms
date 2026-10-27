@@ -71,24 +71,15 @@ namespace NewFirearms
             if (Plugin.togetherMpEnabled) SyncIfHost(5);
         }
 
-        private void WriteJamState(LiteNetLib.Utils.NetDataWriter writer)
+        internal void GetJamState(out byte kind, out ushort chamber, out sbyte ammo)
         {
-            writer.Put((byte)jam);
-            writer.Put(jamChamber);
-            writer.Put(jamAmmo);
+            kind = (byte)jam;
+            chamber = jamChamber;
+            ammo = jamAmmo;
         }
 
-        private void ReadJamState(LiteNetLib.Utils.NetDataReader reader)
+        internal void ApplyJamState(byte kind, ushort chamber, sbyte ammo)
         {
-            /*// Older gun snapshots end after extraData.
-            if (reader.AvailableBytes < 4)
-            {
-                jam = GunJam.None;
-                return;
-            }*/
-            reader.Get(out byte kind);
-            reader.Get(out ushort chamber);
-            reader.Get(out sbyte ammo);
             jam = kind <= (byte)GunJam.Feed ? (GunJam)kind : GunJam.None;
             jamChamber = chamber;
             jamAmmo = ammo;

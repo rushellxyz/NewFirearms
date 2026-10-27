@@ -221,13 +221,13 @@ namespace NewFirearms
             if (!catPatchActive)
                 PatchPrefix(harmony, "Together.YOU_SHOULD_KILL_YOURSELF_NOOOW", "Client_SelfHarmMinigameMinigameEnd", "NewFirearms.YOU_SHOULD_KILL_YOURSELF_NOOOWPatch");
             Together.Multiplayer.RegisterCustomServerReceiver(SelfHarmerPatch.MSGID_SUICIDE_REQUEST, YOU_SHOULD_KILL_YOURSELF_NOOOWPatch.ReciveGunSuicideRequest);
-            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SYNC, RshGun.ClientSync);
-            Together.Multiplayer.RegisterCustomServerReceiver(RshGun.MSGID_ACTION, RshGun.ServerReceiver);
-            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SHOOT_VISUALS, RshGun.ReceiveShoot);
-            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_EJECT_VISUALS, RshGun.ReceiveEjectionVisual);
-            Together.Multiplayer.RegisterCustomClientReceiver(RshMag.MSGID_SYNC, RshMag.ClientSync);
-            Together.Multiplayer.RegisterCustomClientReceiver(CasingAppearance.MessageId, CasingAppearance.ClientSync);
-            Together.Multiplayer.RegisterCustomServerReceiver(RshMag.MSGID_ACTION, RshMag.ServerReceiver);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SYNC, GunNetwork.ClientSync);
+            Together.Multiplayer.RegisterCustomServerReceiver(RshGun.MSGID_ACTION, GunNetwork.ServerReceiver);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_SHOOT_VISUALS, GunNetwork.ReceiveShoot);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_EJECT_VISUALS, GunNetwork.ReceiveEjectionVisual);
+            Together.Multiplayer.RegisterCustomClientReceiver(RshMag.MSGID_SYNC, MagazineNetwork.ClientSync);
+            Together.Multiplayer.RegisterCustomClientReceiver(CasingAppearance.MessageId, CasingNetwork.ClientSync);
+            Together.Multiplayer.RegisterCustomServerReceiver(RshMag.MSGID_ACTION, MagazineNetwork.ServerReceiver);
         }
 
         void SetupGunminigame()

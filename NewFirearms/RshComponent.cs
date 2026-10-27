@@ -36,13 +36,6 @@ namespace NewFirearms
             return mpTracker;
         }
 
-        public static void DenyAction(Together.ScavPlayer plr, string msg, bool canBeFixedWithSwitchingStrictSync=false)
-        {
-            if (canBeFixedWithSwitchingStrictSync)
-                UnityEngine.Debug.LogWarning($"[NewFirearms] {plr}: {msg}\nThis can be fixing by toggling strictSync in Settings.json");
-       else     UnityEngine.Debug.LogWarning($"[NewFirearms] {plr}: {msg}");
-            plr.Server_DoAlertSingle(msg);
-        }
 
         public abstract void SyncIfHost(byte extraData=0, bool reliable=true);
 
