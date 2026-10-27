@@ -1,6 +1,7 @@
 {
   "other": {
     "newfirearms.action.chamber_load": "chamber load",
+    "newfirearms.action.clear_jam": "clear jam",
     "newfirearms.action.load_round": "load round",
     "newfirearms.action.rack": "rack",
     "newfirearms.action.remove_mag": "remove mag",

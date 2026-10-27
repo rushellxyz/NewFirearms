@@ -159,7 +159,12 @@ namespace NewFirearms
             {
                 Item it = __instance.body.GetItem(__instance.body.handSlot);
                 if (it.TryGetComponent<RshGun>(out var rshGun))
-                    rshGun.Rack(manual: true);
+                {
+                    if (rshGun.IsJammed && !GunMinigame.Plugin.useMinigame)
+                        rshGun.ClearJam();
+                    else
+                        rshGun.Rack(manual: true);
+                }
            else if (it.TryGetComponent<GunScript>(out var component))
                     component.TryRack();
            else     UnityEngine.Debug.LogError("[NewFirearms] Can not rack as item doesnt have any gun behaviour!");

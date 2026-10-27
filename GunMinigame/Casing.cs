@@ -16,11 +16,8 @@ namespace GunMinigame
             CreateVisual(MinigameManager.GetOrAddInstance(), casing, position, Vector3.zero, false);
         }
 
-        internal static void CreateVisual(MinigameManager manager, Sprite sprite, Vector3 position, Vector3 inherited, bool live)
+        internal static Sprite GetVisualSprite(Sprite sprite)
         {
-            if (manager.maskBase == null || !manager.active) return;
-            var existing = manager.maskBase.GetComponentsInChildren<Casing>();
-            if (existing.Length >= 40) Destroy(existing[0].gameObject);
             if (sprite == null || sprite.texture == null || sprite.rect.width < 3 || sprite.rect.height < 3)
             {
                 if (fallback == null)
@@ -35,6 +32,15 @@ namespace GunMinigame
                 }
                 sprite = fallback;
             }
+            return sprite;
+        }
+
+        internal static void CreateVisual(MinigameManager manager, Sprite sprite, Vector3 position, Vector3 inherited, bool live)
+        {
+            if (manager.maskBase == null || !manager.active) return;
+            var existing = manager.maskBase.GetComponentsInChildren<Casing>();
+            if (existing.Length >= 40) Destroy(existing[0].gameObject);
+            sprite = GetVisualSprite(sprite);
             var image = new GameObject("Casing").AddComponent<Image>();
             image.transform.SetParent(manager.maskBase.transform, false);
             image.transform.localPosition = position;

@@ -10,7 +10,7 @@ namespace NewFirearms
     // MonoBehaviour script for each individual gun
     [Saveable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class RshGun : RshComponent, GunMinigame.IMinigameGun
+    public partial class RshGun : RshComponent, GunMinigame.IMinigameGun, GunMinigame.IMinigameJammedGun
     {
         public const float MUZZLE_RISE_MODIFIER = 8f;
         public const string MSGID_SYNC = "NewFirearms_RshGunSync";
@@ -80,7 +80,10 @@ namespace NewFirearms
         {
             if (!jamming)
                 return false;
-            float num = ((!(it.condition > 0.5f)) ? Body.Remap(it.condition, 0f, 0.5f, 0.0025f, 0.1f) : Body.Remap(it.condition, 0.5f, 1f, 0f, 0.0025f));
+            float condition = Mathf.Clamp01(it.condition);
+            float num = condition <= 0.5f
+                ? Mathf.Lerp(0.1f, 0.0025f, condition * 2f)
+                : Mathf.Lerp(0.0025f, 0f, (condition - 0.5f) * 2f);
             if (it.isWet)
             {
                 num += 0.045f;
@@ -99,18 +102,12 @@ namespace NewFirearms
                 }
                 return;
             }
-            // There's theoreticly a miniascure chance for gun to in periodic subtraction subtract exactly to 0f, and thus skip second rack
-            // Tho, even if this happend, player would consider this as a jamming, so, lol
-            if (0f > gasTime)
+            if (IsJammed) return;
+            if (gasTime <= 0f) return;
+            gasTime -= Time.deltaTime;
+            if (gasTime <= 0f)
             {
                 gasTime = 0f;
-                if (JamChance())
-                {
-                    Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                    shooter = null;
-                    return;
-                }
-
                 if (4 == prop.feedType)
                     RotateChambers();
            else if (!(1 < rounds.Count && 0 > rounds[1]))
@@ -127,10 +124,6 @@ namespace NewFirearms
                             shooter = null;
                     }
                 }
-            }
-       else if (0f < gasTime)
-            {
-                gasTime -= Time.deltaTime;
             }
         }
 
@@ -215,7 +208,7 @@ namespace NewFirearms
 
         public bool IsReady()
         {
-            return !racked && 0 != fireMode && 0 <= rounds[0] && 0.005f < it.condition;
+            return !IsJammed && !racked && 0 != fireMode && rounds.Count > 0 && 0 <= rounds[0] && 0.005f < it.condition;
         }
 
         public bool Shoot(Body body = null)
@@ -234,13 +227,6 @@ namespace NewFirearms
                 Sound.Play(prop.unshootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 if (Plugin.togetherMpEnabled)
                     SyncIfHost(2);
-                return false;
-            }
-            if (JamChance())
-            {
-                Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                if (Plugin.togetherMpEnabled)
-                    SyncIfHost(3);
                 return false;
             }
             AmmoInfo info = prop.ammoTypes[rounds[0]];
@@ -293,14 +279,6 @@ namespace NewFirearms
        else {
                 if (0f < prop.desiredGasTime)
                 {
-                    if (JamChance())
-                    {
-                        Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                        if (Plugin.togetherMpEnabled)
-                            SyncIfHost(3);
-                        return true;
-                    }
-
                     gasTime = prop.desiredGasTime;
                     if (4 != prop.feedType)
                         Rack(manual: false);
@@ -320,17 +298,10 @@ namespace NewFirearms
         {
             if (manual && Plugin.togetherMpEnabled && RequestHostIfClient(1))
                 return;
+            if (IsJammed) return;
             racked = !racked;
             if (manual)
             {
-                if (JamChance())
-                {
-                    Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                    if (Plugin.togetherMpEnabled)
-                        SyncIfHost(3);
-                    return;
-                }
-
                 if (racked)
                     Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
            else     Sound.Play(prop.unrackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
@@ -340,8 +311,13 @@ namespace NewFirearms
                 if (racked)
                     EjectRound(0);
                 else if (-2 == rounds[0])
+                {
                     RotateChambers();
+                    if (rounds[0] >= 0 && JamChance())
+                        BeginJam(GunJam.Feed, 0, rounds[0]);
+                }
             }
+            if (IsJammed) return;
             if (Plugin.togetherMpEnabled)
             {
                 if (manual)
@@ -351,8 +327,15 @@ namespace NewFirearms
             UpdateSprite();
         }
 
-        public void EjectRound(int index)
+        public void EjectRound(int index, bool allowJam = true)
         {
+            if (IsJammed) return;
+            if (allowJam && rounds[index] == -1 && JamChance())
+            {
+                sbyte ammo = spentAmmoTypes.TryGetValue(index, out var spent) ? spent : (sbyte)-1;
+                BeginJam(GunJam.Ejection, index, ammo);
+                return;
+            }
             if (-2 == rounds[index])
                 return;
             string round = "casing";
@@ -450,6 +433,7 @@ namespace NewFirearms
 
         public bool DragOnto(Item item)
         {
+            if (IsJammed) return false;
             if (Plugin.togetherMpEnabled && RequestHostIfClient(2, item))
                 return true;
             if (item.TryGetComponent<RshMag>(out var newMag))
@@ -714,6 +698,7 @@ namespace NewFirearms
                 writer.Put((sbyte)rounds[i]);
 
             writer.Put((byte)extraData);
+            WriteJamState(writer);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)
@@ -818,6 +803,7 @@ namespace NewFirearms
             }
 
             reader.Get(out byte extraData);
+            rshGun.ReadJamState(reader);
             if (1 == extraData)
                 Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
        else if (2 == extraData)
@@ -853,6 +839,7 @@ namespace NewFirearms
             {3, "newfirearms.action.remove_mag"},
             {4, "newfirearms.action.toggle_fire_mode"},
             {5, "newfirearms.action.stop_shooting"},
+            {6, "newfirearms.action.clear_jam"},
         };
 
         public static void ServerReceiver(Together.ScavPlayer plr, LiteNetLib.Utils.NetDataReader reader)
@@ -860,7 +847,7 @@ namespace NewFirearms
             reader.Get(out ushort syncId);
             reader.Get(out byte action);
 
-            if (6 <= action)
+            if (7 <= action)
             {
                 DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.unknown"));
                 return;
@@ -911,6 +898,8 @@ namespace NewFirearms
                 rshGun.ToggleFireMode();
        else if (5 == action)
                 rshGun.shooter = null;
+       else if (6 == action)
+                rshGun.ClearJam();
         }
 
         public static void ReceiveShoot(LiteNetLib.Utils.NetDataReader reader)

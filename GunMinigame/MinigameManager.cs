@@ -492,6 +492,7 @@ namespace GunMinigame
             maskBase.AddComponent<ImageHoverror>();
             maskBase.AddComponent<RectMask2D>();
             maskBase.AddComponent<MinigameVisualization>().Initialize(this);
+            maskBase.AddComponent<MinigameJamVisual>().Initialize(this);
 
             gunBase = new GameObject("GunBase");
             gunBase.transform.SetParent(maskBase.transform);

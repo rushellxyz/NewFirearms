@@ -16,6 +16,14 @@ namespace GunMinigame
         public bool DragOnto(Item item); // Returns whether the load succeeded or was requested from the host.
     }
 
+    // ну, ок, ладно
+    // Optional capability: adapters without persistent jams continue to work.
+    public interface IMinigameJammedGun
+    {
+        bool TryGetJam(out UnityEngine.Sprite sprite, out bool liveRound);
+        void ClearJam();
+    }
+
     public interface ILaser
     {
         public void Toggle();
