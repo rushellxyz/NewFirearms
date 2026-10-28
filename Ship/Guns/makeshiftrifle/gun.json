@@ -19,6 +19,8 @@
     [
         {
             "round": "556round",
+            "casingSprite": "556roundCasing",
+            "minigameCasingSprite": "uiEject556roundCasing",
             "structureDamage": 250,
             "animalDamage": 250,
             "playerDamage":
@@ -51,6 +53,8 @@
         },
         {
             "round": "nf.556piercing",
+            "casingSprite": "556piercingasing",
+            "minigameCasingSprite": "uiEject556piercingCasing",
             "structureDamage": 300,
             "animalDamage": 200,
             "playerDamage":
@@ -90,9 +94,33 @@
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
 
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Resources/bulletRound" ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "556roundIcon", "556piercingIcon"],//, "12gaugeslugIcon" ], TODO
 
 
     "magazineTexturesPath": { },
     //"attachmentTexturesPath: { },
+    "minigame":
+    {
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteExpie", // TODO
+        "mainMilkyTriggerOffPath": "uiSpriteExpie", // TODO
+        "mainDunePath": "uiSpriteExpie", // TODO
+        "sliderFrontPath": "uiSliderFront",
+        "sliderBackPath": "uiSliderBack",
+        "sliderMinimumPosition": -0.025,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePosition": 0,
+        "rackPoint": -0.015,
+        "rackedIdlePosition": -0.025,
+        "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
+        "sliderHandFollowOffset": -0.135,
+        "canUseFannyPack": false,
+        "casingXPosition": -0.03,
+        "casingYPosition": 0.068,
+        "casingsPath": [ "uiEject556round", "uiEject556round", "uiEject556piercingCasing"],//, "uiEject12gaugeslug" ],
+        "fitMainSprite": true,
+        "mosynStyleRack": true,
+    }
 }

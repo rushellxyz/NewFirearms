@@ -1,7 +1,7 @@
 {
     "category": "custom",
     "fullName": "5.56 Armor piercing round",
-    "description": "Another eternity to come up with description for this one",
+    "description": "Armor-piercing variant of rifle round. Can be loaded into a rifle magazine, or directly into the chamber if the gun's bolt is open.",
 
 
     "weight": 0.05,

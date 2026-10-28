@@ -136,6 +136,7 @@
 
 == MINIGAME JSON TEMPLATE ==
 {
+    "mosynStyleRack": false, // Two-position slider: lift to unlock, lower only at sliderMinimumPosition to lock (racked -> unracked). Slide forward past rackPoint while raised to change unracked -> racked. Overrides rackByRotation and chargingHandle.
     "backLayerPath": "uiBackLayer", // Optional sprite below the back slider. Moves with the gun, independently of the slider; omit .png.
     // Breaking change: mainPath has been removed. All four paths are required.
     // Paths are relative to the gun folder, without .png; paths may share the same image.

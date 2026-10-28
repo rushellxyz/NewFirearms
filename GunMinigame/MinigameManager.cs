@@ -60,6 +60,7 @@ namespace GunMinigame
         public float rackPoint;
         public float rackedIdlePosition;
         public bool rackByRotation;
+        public bool mosynStyleRack;
         public bool frontSliderInvisble;
         public float rackRotationCenterXPosition;
         public float rackRotationCenterYPosition;
@@ -108,7 +109,7 @@ namespace GunMinigame
         public bool initialized;
     }
 
-    public class MinigameManager : MonoBehaviour
+    public partial class MinigameManager : MonoBehaviour
     {
         private Item stagedMagazineItem;
         private Image stagedMagazineImage;
@@ -355,6 +356,7 @@ namespace GunMinigame
 
         public void Hide()
         {
+            mosynInitialized = false;
             ClearStagedMagazine();
             PlayerCamera.main.gunMenu.SetActive(value: false);
             PlayerCamera.main.gunCrosshair.gameObject.SetActive(value: false);
@@ -367,6 +369,14 @@ namespace GunMinigame
         {
             if (!ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo))
             {
+                if (info != null && info.mosynStyleRack && !newInfo.mosynStyleRack && sliderFrontImage != null)
+                {
+                    Vector3 position = sliderFrontImage.transform.localPosition;
+                    position.y = 0f;
+                    sliderFrontImage.transform.localPosition = position;
+                    sliderBackImage.transform.localPosition = position;
+                }
+                mosynInitialized = false;
                 ClearStagedMagazine();
                 shouldntRefreshBandolierCount = false;
             }
@@ -377,7 +387,7 @@ namespace GunMinigame
             info = newInfo;
             if (!info.initialized)
             {
-                if (!info.rackByRotation)
+                if (!info.rackByRotation || info.mosynStyleRack)
                 {
                     info.sliderMaximumPosition *= Screen.width;
                     info.sliderMinimumPosition *= Screen.width;
@@ -427,14 +437,14 @@ namespace GunMinigame
                 coverChange = 0;
                 coverImage.transform.localPosition = new Vector3(info.coverXPosition, info.coverYPosition);
             }
-            if (info.rackByRotation)
+            if (info.rackByRotation && !info.mosynStyleRack)
             {
                 sliderFrontImage.transform.localPosition = new Vector3(info.rackRotationCenterXPosition, info.rackRotationCenterYPosition);
                 sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
             }
             else
                 sliderBackImage.transform.localRotation = Quaternion.identity;
-            sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation;
+            sliderFrontImage.gameObject.GetComponent<RotatingSlider>().enabled = info.rackByRotation && !info.mosynStyleRack;
             /*            if (it.Stats.rec.recognizable)
              *             {                     * *
              *
@@ -454,6 +464,7 @@ namespace GunMinigame
             }
             active = true;
             gun = newGun;
+            if (info.mosynStyleRack) EnsureMosynRack();
             laser = newLaser;
             UpdateSliderFireToggle(gun.IsRacked());
 
@@ -961,6 +972,12 @@ namespace GunMinigame
                 UpdateSliderFireToggle(racked);
                 return;
             }
+            if (info.mosynStyleRack)
+            {
+                HandleMosynRack();
+                UpdateSliderFireToggle(gun.IsRacked());
+                return;
+            }
             if (info.rackByRotation)
             {
                 UpdateSliderFireToggle(racked);
@@ -1005,7 +1022,7 @@ namespace GunMinigame
 
         private void LateUpdate()
         {
-            if (!active || info == null || !info.rackByRotation) return;
+            if (!active || info == null || !info.rackByRotation || info.mosynStyleRack) return;
             // Run after both RotatingSlider.Update and the automated rack coroutine.
             // Keep the sprites as siblings to preserve their separate render layers.
             sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
@@ -1037,6 +1054,11 @@ namespace GunMinigame
 
         private IEnumerator AnimateMarksmanRack()
         {
+            if (info.mosynStyleRack)
+            {
+                yield return AnimateMosynRack();
+                yield break;
+            }
             automatedHandAction = true;
             bool wasRacked = gun.IsRacked();
             Vector3 sliderPosition = sliderFrontImage.transform.position;
@@ -1407,6 +1429,7 @@ namespace GunMinigame
             holdsSlide = true;
             sliderHoldOffset = sliderFrontImage.transform.localPosition;
             onBeginHoldSlide = handPos;
+            if (info.mosynStyleRack) BeginMosynDrag();
         }
 
         public void BandolierClickDown()
