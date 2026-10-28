@@ -1,6 +1,7 @@
 using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
+using CUCoreLib.Helpers;
 
 namespace NewFirearms
 {
@@ -10,7 +11,7 @@ namespace NewFirearms
     {
         static void Prefix(TraderScript __instance)
         {
-            if (__instance.build.health >= 200f)
+            if (__instance.build.GetHealth() >= 200f)
                 return;
             if (__instance.didDeathMoodDebuff)
                 return;

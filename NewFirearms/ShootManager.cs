@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using CUCoreLib.Helpers;
 
 namespace NewFirearms
 {
@@ -110,7 +111,7 @@ namespace NewFirearms
                         vector = raycastHit2D.point;
                         break;
                     }
-                    component.health -= (component.animal ? (info.animalDamage * num) : (info.structureDamage * num));
+                    component.SetHealth(component.GetHealth() - (component.animal ? info.animalDamage * num : info.structureDamage * num));
                     if (component.animal)
                     {
                         component.gameObject.SendMessage("AnimalHit", info.animalDamage * num);

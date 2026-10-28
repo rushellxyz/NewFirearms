@@ -171,8 +171,8 @@
         "sliderMinimumPosition": -80,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "rackRotationCenterXPosition": -0.02,
-        "rackRotationCenterYPosition": 0.007,
+        "rackRotationCenterXPosition": -0.036,
+        "rackRotationCenterYPosition": 0.005,
         "rackPoint": -40,
         "rackedIdlePosition": -60,
         "rackByRotation": true,
@@ -183,7 +183,7 @@
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
         "casingXPosition": -0.0375,
-        "casingYPosition": 0.0375,
+        "casingYPosition": 0.04,
         "casingsPath": [ "uiCasingEmpty", "uiCasing12gauge", "uiCasing12gaugeslug", "uiCasing12gaugebird" ],
     }
 

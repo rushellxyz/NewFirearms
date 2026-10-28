@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using CUCoreLib.Helpers;
 
 namespace NewFirearms
 {
@@ -530,7 +531,7 @@ namespace NewFirearms
 
         private int LivingEnemies()
         {
-            enemies.RemoveAll(enemy => enemy == null || enemy.health < 0.5f);
+            enemies.RemoveAll(enemy => enemy == null || enemy.GetHealth() < 0.5f);
             return enemies.Count;
         }
 

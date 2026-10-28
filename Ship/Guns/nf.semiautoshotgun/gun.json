@@ -174,8 +174,8 @@
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],
         "sliderHandFollowOffset": -0.1375,
         "canUseFannyPack": false,
-        "casingXPosition": -0.0525,
-        "casingYPosition": 0.0725,
+        "casingXPosition": -0.05,
+        "casingYPosition": 0.068,
         "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
         "fitMainSprite": true,
     }
