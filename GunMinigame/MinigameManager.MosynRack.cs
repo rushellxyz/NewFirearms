@@ -25,7 +25,8 @@ namespace GunMinigame
         {
             mosynObservedRacked = gun.IsRacked();
             mosynRequestedRacked = null;
-            mosynMotion.SetPose(info.sliderMinimumPosition, !mosynObservedRacked);
+            mosynMotion.SetPose(mosynObservedRacked ? info.sliderMinimumPosition : info.sliderMaximumPosition,
+                !mosynObservedRacked);
             mosynMotion.BeginDrag(MosynPointer);
             ApplyMosynPose();
         }
@@ -120,7 +121,7 @@ namespace GunMinigame
                 // Lift before any horizontal travel, then slide to the requested end.
                 yield return MoveMosynSlider(new Vector2(mosynMotion.X, MosynLift), 0.08f);
                 mosynMotion.SetPose(mosynMotion.X, false);
-                float targetX = wasRacked ? info.sliderMinimumPosition : info.sliderMaximumPosition;
+                float targetX = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
                 yield return MoveMosynSlider(new Vector2(targetX, MosynLift), 0.12f);
                 mosynMotion.SetPose(targetX, false);
                 if (wasRacked)

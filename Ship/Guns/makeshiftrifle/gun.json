@@ -117,8 +117,8 @@
         "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
         "sliderHandFollowOffset": -0.135,
         "canUseFannyPack": false,
-        "casingXPosition": -0.03,
-        "casingYPosition": 0.068,
+        "casingXPosition": -0.05,
+        "casingYPosition": 0.05,
         "casingsPath": [ "uiEject556round", "uiEject556round", "uiEject556piercingCasing"],//, "uiEject12gaugeslug" ],
         "fitMainSprite": true,
         "mosynStyleRack": true,

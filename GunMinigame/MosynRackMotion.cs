@@ -28,7 +28,7 @@ namespace GunMinigame
             Vector2 delta = pointer - dragStart;
             if (LockedDown)
             {
-                if (delta.y >= lift * 0.5f)
+                if (X >= maximum && delta.y >= lift * 0.5f)
                 {
                     LockedDown = false;
                     BeginDrag(pointer);
@@ -37,13 +37,13 @@ namespace GunMinigame
             }
 
             X = Mathf.Clamp(dragStartX + delta.x, minimum, maximum);
-            if (X <= minimum && delta.y <= -lift * 0.5f)
+            if (X >= maximum && delta.y <= -lift * 0.5f)
             {
                 LockedDown = true;
                 BeginDrag(pointer);
                 return racked ? false : (bool?)null;
             }
-            return !racked && X > rackPoint ? true : (bool?)null;
+            return !racked && X < rackPoint ? true : (bool?)null;
         }
     }
 }
