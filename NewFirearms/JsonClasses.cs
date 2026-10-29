@@ -6,6 +6,7 @@ namespace NewFirearms
     // settings for mod
     public class SettingsJson
     {
+        public bool compatabilityMode = true;
         public bool ignoreCourseLock = false;
         public bool strictSync = true;
         public float maxSliderValue = 4f;

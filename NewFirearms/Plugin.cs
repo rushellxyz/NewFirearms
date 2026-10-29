@@ -53,6 +53,8 @@ namespace NewFirearms
             ItemLoader.SetupResourcesDict();
             SetupGunminigame();
             LoadSettings();
+            if (sett.compatabilityMode)
+                ItemLoader.MigrateLegacyPrefixes("BepInEx/plugins/NewFirearms");
             ItemLoader.LoadFallbackResources();
             ItemLoader.LoadGuns();
             ItemLoader.LoadMags();
@@ -91,7 +93,7 @@ namespace NewFirearms
         {
             try
             {
-                sett = JsonConvert.DeserializeObject<SettingsJson>(File.ReadAllText("BepInEx/plugins/NewFirearms/settings.json"));
+                sett = JsonConvert.DeserializeObject<SettingsJson>(File.ReadAllText("BepInEx/plugins/NewFirearms/settings.json")) ?? new SettingsJson();
             }
             catch (Exception e)
             {

@@ -39,6 +39,35 @@ namespace NewFirearms
             sprites = null;
         }
 
+        public static void MigrateLegacyPrefixes(string root)
+        {
+            int migrated = 0;
+            foreach (string category in new[] { "Guns", "Mags" })
+            {
+                string directory = Path.Combine(root, category);
+                if (!Directory.Exists(directory)) continue;
+                foreach (string path in Directory.EnumerateFiles(directory, "*.json", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        string text = File.ReadAllText(path);
+                        string updated = text.Replace("newfirearms.", "nf.");
+                        foreach (string ammo in new[] { "9mmhollow", "9mmvenomus", "12gaugebird", "12gaugeslug" })
+                            updated = updated.Replace("\"" + ammo + "\"", "\"nf." + ammo + "\"");
+                        if (updated == text) continue;
+                        File.WriteAllText(path, updated);
+                        migrated++;
+                    }
+                    catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+                    {
+                        UnityEngine.Debug.LogError($"[NewFirearms] Could not migrate prefixes in '{path}': {ex.Message}");
+                    }
+                }
+            }
+            if (migrated > 0)
+                UnityEngine.Debug.Log($"[NewFirearms] Migrated legacy item prefixes in {migrated} JSON configs.");
+        }
+
         public static void LoadVanillaAmmoSprites()
         {
             foreach (string id in new[] { "12gauge", "9mmround", "556round" })

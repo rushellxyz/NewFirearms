@@ -1,3 +1,12 @@
+README If you create pack for pre-2.0.0
+The 2.0.0 migrated all `newfirearms.` prefixes to `nf.`
+But we also introduced the `compatabilityMode` setting that when on, before loading configs goes thru them as a plain text and replaces all occurences of `newfirearms.` to `nf.`
+It mostly would work, but another thing that changed: 9mmhollow 9mmvenomus 12gaugebird and 12gaugeslug items now have nf.
+But it also covered by compatabilityMode prefixing non-prefixed instances
+Another thing that changed: m1911 got removed and its mag, this one, is not covered by compatabilityMode
+
+
+
 == GUN JSON TEMPLATE ==
 {
     "fullName": "string",
