@@ -7,7 +7,6 @@ TODO List - Agents stay away unless stated otherwise
  - Do something about M1911, as people often complain that it supposed to use .45ACP
  - Integration with New Descents: add Gun tag to custom guns
  - Fix gun repairing on reloading in multiplayer
- - Redo sawed off minigame
  - And hot reloading!
  - Make mod work when MP enabled but not active
  - Compatability mode, bc some packes refer to newfirearm. items that now replaced with nf.

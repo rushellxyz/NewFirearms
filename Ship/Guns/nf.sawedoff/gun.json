@@ -32,6 +32,8 @@
     [
         {
             "round": "12gauge",
+            "casingSprite": "12gaugeCasing",
+            "minigameCasingSprite": "uiEject12gaugeCasing",
             "structureDamage": 40,
             "animalDamage": 40,
             "playerDamage":
@@ -65,6 +67,8 @@
         },
         {
             "round": "nf.12gaugebird",
+            "casingSprite": "12gaugebirdCasing",
+            "minigameCasingSprite": "uiEject12gaugebirdCasing",
             "structureDamage": 10.5,
             "animalDamage": 10.5,
             "playerMultiplier": 0.09,
@@ -99,6 +103,8 @@
         },
         {
             "round": "nf.12gaugeslug",
+            "casingSprite": "12gaugeslugCasing",
+            "minigameCasingSprite": "uiEject12gaugeslugCasing",
             "structureDamage": 375,
             "animalDamage": 375,
             "playerDamage":
@@ -157,34 +163,33 @@
     "removeMagSpritePath": "removeMag",
 
     "fireModesSpritePath": [ "safe", "unsafe", "unsafe", ],
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.saiga/bulletBuck", "COPY__Guns/nf.saiga/bulletBird", "COPY__Resources/bulletRound", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
     "minigame":
     {
-        "mainExperimentPath": "uiSprite",
-        "mainMilkyTriggerOnPath": "uiSprite",
-        "mainMilkyTriggerOffPath": "uiSprite",
-        "mainDunePath": "uiSprite",
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiBarrel",
-
-
-
+        "sliderBackPath": "uiBarrel",
+        "frontSliderInvisble": true,
         "sliderMinimumPosition": -80,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "rackRotationCenterXPosition": -0.036,
-        "rackRotationCenterYPosition": 0.005,
+        "rackRotationCenterXPosition": -0.0255,
+        "rackRotationCenterYPosition": 0.029,
         "rackPoint": -40,
         "rackedIdlePosition": -60,
         "rackByRotation": true,
         "removeMagazineOnRack": true,
-        "ammosInHandPaths": [ "ui12gaugeInHand", "ui12gaugeslugInHand", "ui12gaugebirdInHand", ],
-        "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around
-        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugeslug", "uiPTR12gaugebird",  ],
+        "ammosInHandPaths": [ "uiHand12gauge", "uiHand12gaugebird", "uiHand12gaugeslug", ],
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
-        "casingXPosition": -0.0375,
-        "casingYPosition": 0.04,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing12gauge", "uiCasing12gaugeslug", "uiCasing12gaugebird" ],
+        "casingXPosition": -0.03,
+        "casingYPosition": 0.06,
+        "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
     }
 
 }
