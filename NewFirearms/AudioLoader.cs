@@ -36,6 +36,9 @@ namespace NewFirearms
         };
 
         public static void LoadAudio(string folder, string relativePath, Action<AudioClip> setClip, AudioClip fallback)
+            => LoadAudio(folder, relativePath, setClip, fallback, "audio");
+
+        public static void LoadAudio(string folder, string relativePath, Action<AudioClip> setClip, AudioClip fallback, string fieldName)
         {
             setClip(fallback);
             if (string.IsNullOrWhiteSpace(relativePath))
@@ -45,11 +48,11 @@ namespace NewFirearms
             string audioPath = ResolveAudioPath(path);
             if (null == audioPath)
             {
-                UnityEngine.Debug.LogError($"[NewFirearms] Audio file '{path}' doesn't exist or has an unsupported extension.");
+                UnityEngine.Debug.LogError($"[NewFirearms] {fieldName}: Audio file '{path}' doesn't exist or has an unsupported extension.");
                 return;
             }
 
-            LoadAudioAsync(audioPath, setClip);
+            LoadAudioAsync(audioPath, setClip, fieldName);
         }
 
         private static string ResolveAudioPath(string path)
@@ -72,7 +75,7 @@ namespace NewFirearms
             return null;
         }
 
-        private static async void LoadAudioAsync(string path, Action<AudioClip> setClip)
+        private static async void LoadAudioAsync(string path, Action<AudioClip> setClip, string fieldName)
         {
             try
             {
@@ -89,14 +92,14 @@ namespace NewFirearms
 
                     if (request.result != UnityWebRequest.Result.Success)
                     {
-                        UnityEngine.Debug.LogError($"[NewFirearms] Failed to load audio '{path}': {request.error}");
+                        UnityEngine.Debug.LogError($"[NewFirearms] {fieldName}: Failed to load audio '{path}': {request.error}");
                         return;
                     }
 
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(request);
                     if (null == clip)
                     {
-                        UnityEngine.Debug.LogError($"[NewFirearms] Audio file '{path}' returned no clip.");
+                        UnityEngine.Debug.LogError($"[NewFirearms] {fieldName}: Audio file '{path}' returned no clip.");
                         return;
                     }
 
@@ -105,7 +108,7 @@ namespace NewFirearms
             }
             catch (Exception exception)
             {
-                UnityEngine.Debug.LogError($"[NewFirearms] Exception loading audio '{path}': {exception}");
+                UnityEngine.Debug.LogError($"[NewFirearms] {fieldName}: Exception loading audio '{path}': {exception}");
             }
         }
     }
