@@ -164,6 +164,7 @@
 
     "fireModesSpritePath": [ "safe", "unsafe", "unsafe", ],
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
+    "removeMagazineOnRack": true,
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",
@@ -181,7 +182,6 @@
         "rackPoint": -40,
         "rackedIdlePosition": -60,
         "rackByRotation": true,
-        "removeMagazineOnRack": true,
         "ammosInHandPaths": [ "uiHand12gauge", "uiHand12gaugebird", "uiHand12gaugeslug", ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],

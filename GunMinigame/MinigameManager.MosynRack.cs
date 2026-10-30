@@ -82,7 +82,6 @@ namespace GunMinigame
             mosynRequestedRacked = target;
             mosynRequestTime = Time.unscaledTime;
             gun.Rack();
-            if (info.removeMagazineOnRack) gun.RemoveMag();
             if (gun.IsRacked() == target)
             {
                 mosynObservedRacked = target;

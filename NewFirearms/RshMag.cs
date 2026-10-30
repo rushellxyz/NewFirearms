@@ -42,7 +42,8 @@ namespace NewFirearms
             if (!existed && (!Plugin.togetherMpEnabled || Plugin.IsHost()))
             {
                 sbyte ammoType = (sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count);
-                int amount = Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition));
+                int amount = prop.pseudoMagazine ? prop.capacity
+                    : Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition));
                 Fill(ammoType, amount);
                 it.condition = 1f;
                 existed = true;
@@ -62,7 +63,7 @@ namespace NewFirearms
 
         public bool DragOnto(Item item)
         {
-            if (item == null || prop == null) return false;
+            if (item == null || prop == null || prop.pseudoMagazine) return false;
 
             sbyte round = (sbyte)prop.ammoTypes.IndexOf(item.id);
             if (-1 == round)
@@ -93,6 +94,7 @@ namespace NewFirearms
 
         public void RemoveRound(Body body=null)
         {
+            if (prop == null || prop.pseudoMagazine) return;
             if (Plugin.togetherMpEnabled && RequestHostIfClient(0))
                 return;
             if (prop == null || rounds == null || rounds.Count == 0 || -2 == rounds[0])

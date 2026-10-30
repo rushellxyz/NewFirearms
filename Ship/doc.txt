@@ -69,6 +69,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     ],
     "desiredGasTime": 0.0, // Must always stay at 0 for barrel feed
     "spawnUnracked": false, // If true, newly spawned guns start with the slide unracked
+    "removeMagazineOnRack": false, // Ejects the magazine when manually cycling the gun, with or without the minigame. Automatic firing cycles do not eject it.
     "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full, 4 - three-round burst
     "magazineType": [ "string", ], // If it inresects with "magazineType" in at least one entry, mag is considered compataible
     "barrelOffset": 0.0, // Vertical offset of barrel from model
@@ -119,6 +120,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "craftInt": 0,
 
     "capacity" 0, // Total amounts of rounds can be held
+    "pseudoMagazine": false, // Hides round count, blocks loose-round loading/unloading, spawns full regardless of condition. Requires a racked gun to insert; discarded when ejected without live rounds (the chamber is excluded).
     "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compatabile
     "ammoTypes": [ "string", ], // ID of all rounds can be putted into, highly recomended to be mirrored with gun's "ammoTypes"
     "nonEmptySpritePath": "string", // Optional sprite path relative to this magazine's folder (omit .png). Used when at least one round remains; empty magazines use item.png.

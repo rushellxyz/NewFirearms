@@ -144,6 +144,7 @@
     "removeMagSpritePath": "removeMag",
     "fireModesSpritePath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletEmpty", "COPY__Resources/bulletEmpty", ],
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
+    "removeMagazineOnRack": true,
     "minigame":
     {
         "mainExperimentPath": "uiSprite",
@@ -162,7 +163,6 @@
         "rackPoint": -40,
         "rackedIdlePosition": -60,
         "rackByRotation": true,
-        "removeMagazineOnRack": true,
         "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],

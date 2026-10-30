@@ -211,7 +211,7 @@ namespace NewFirearms
         static void Postfix(ref (string, string) __result, Item item)
         {
             if ((!Input.GetKey(KeyBinds.GetBind("expanddesc")) && !PlayerCamera.alwaysExpandDescriptions) ||
-                !item.TryGetComponent<RshMag>(out var rshMag))
+                !item.TryGetComponent<RshMag>(out var rshMag) || rshMag.prop?.pseudoMagazine == true)
                 return;
 
             if (!item.Stats.rec.recognizable)

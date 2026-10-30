@@ -1,0 +1,57 @@
+{
+    "fullName": "Grenade launcher",
+    "description": "TODO",
+
+
+    "weight": 1,
+    "value": 40,
+    "recognition": 11,
+
+    "craftable": false,
+
+
+
+
+
+    "feedType": 1,
+    "internalCapacity": 1,
+    "ammoTypes":
+    [
+        {
+            "round": "nf.grenade",
+            "explosionParams": { },
+
+            "knockback": 0,
+            "muzzleRise": 1,
+
+            "pellets": 1,
+            "verticalSpread": 0.01,
+            "loudness": 0,
+            "conditionLoss": 0.001,
+            "caseless": true
+
+        }
+    ],
+
+    "fireModes": [ 0, 1, ],
+    "magazineType": [ "grenade" ],
+    "barrelOffset": 0.0,
+
+    "itemSpriteXOffset": 0.0,
+    "itemSpriteYOffset": -1.5,
+
+    "normalTexturePath": "normal",
+    "rackedTexturePath": "racked",
+    "shootAudioPath": "shoot",
+    "removeMagazineOnRack": true,
+
+
+//    "rackAudioPath": "rack",
+//    "unrackAudioPath": "unrack",
+
+
+
+
+    "magazineTexturesPath": { },
+    //"attachmentTexturesPath: { },
+}

@@ -1,0 +1,30 @@
+// It is a magazine, which, yea, pretty cursed
+//but the more you think about it, the more sense it makes
+{
+    "category": "custom",
+    "fullName": "Grenade launcher projectile",
+    "description": "A projectile for use in grenade launcher TODO",
+
+
+    "weight": 0.1,
+
+    "recognition": 11,
+
+    "craftable": true,
+    "recipe":
+    [
+        "casing",
+        "flammablepowder",
+    ],
+    "craftHammering": 1,
+    "craftInt": 13,
+    "craftAmount": 1,
+
+    "capacity": 1,
+    "magazineType": [ "grenade" ],
+    "ammoTypes":
+    [
+        "nf.grenade"
+    ],
+    "pseudoMagazine": true,
+}

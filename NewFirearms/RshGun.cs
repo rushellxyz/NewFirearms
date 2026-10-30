@@ -307,6 +307,13 @@ namespace NewFirearms
                 }
             }
             if (IsJammed) return;
+
+            /*
+             The ejection runs on the host and syncs to clients, but there’s a bug: `RemoveMag(null)` falls back to `PlayerCamera.main.body` on the host, so a client’s ejected magazine could go into the host’s inventory.
+             The rack request needs to pass the requesting player’s body through to `RemoveMag`. Live MP hasn’t been tested yet.
+            */
+            if (manual && prop.removeMagazineOnRack)
+                RemoveMag(null);
             if (Plugin.togetherMpEnabled)
             {
                 if (manual)
@@ -397,6 +404,7 @@ namespace NewFirearms
         public bool CanFitMag(MagJson newMag)
         {
             if (prop == null || newMag == null) return false;
+            if (newMag.pseudoMagazine && !racked) return false;
             if (1 != prop.feedType)
                 return false;
             if (null != mag && "" != mag)
@@ -524,38 +532,51 @@ namespace NewFirearms
             }
        else if (!string.IsNullOrEmpty(mag))
             {
+                string magazineId = mag;
+                var magazineRounds = rounds.Skip(1).ToList();
+                bool discard = Plugin.MagazineDefinitions.TryGetValue(magazineId, out var definition) &&
+                    definition.pseudoMagazine && !magazineRounds.Any(round => round >= 0);
+                // Detach immediately so repeated requests cannot eject the same magazine twice.
+                rounds = new List<sbyte> { rounds[0] };
+                spentAmmoTypes = spentAmmoTypes.Where(entry => entry.Key == 0)
+                    .ToDictionary(entry => entry.Key, entry => entry.Value);
+                mag = "";
+                Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                UpdateSprite();
+                if (Plugin.togetherMpEnabled)
+                    SyncIfHost();
+                if (discard) return;
+
                 if (null == body)
                     body = PlayerCamera.main.body;
-                GameObject go = Utils.Create(mag, transform.position, 0f);
+                GameObject go = Utils.Create(magazineId, transform.position, 0f);
                 MagazineCreated?.Invoke(go);
                 // CUCoreLib installs custom components as the item starts up.
-                var _ = RemoveMagPart2WhenCuCore(body, go);
+                var _ = RemoveMagPart2WhenCuCore(body, go, magazineRounds);
             }
         }
 
-        public async Task RemoveMagPart2WhenCuCore(Body body, GameObject go)
+        private async Task RemoveMagPart2WhenCuCore(Body body, GameObject go, List<sbyte> magazineRounds)
         {
             RshMag rshMag = null;
             for (int i = 0; i < 100 && null == rshMag; i++)
             {
                 await Task.Delay(100);
+                if (go == null) return;
                 rshMag = go.GetComponent<RshMag>();
             }
-            sbyte chamber = rounds[0];
-            rounds.RemoveAt(0);
-            rshMag.rounds = rounds;
-            rshMag.existed = true;
-            rounds = new List<sbyte> { chamber };
-            mag = "";
-            Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-            body.AutoPickUpItem(go.GetComponent<Item>());
-            rshMag.UpdateSprite();
-            UpdateSprite();
-            if (Plugin.togetherMpEnabled)
+            if (rshMag == null)
             {
-                rshMag.SyncIfHost();
-                SyncIfHost();
+                Debug.LogError("[NewFirearms] Ejected magazine did not initialize its RshMag component.");
+                return;
             }
+            rshMag.rounds = magazineRounds;
+            rshMag.existed = true;
+            if (body != null)
+                body.AutoPickUpItem(go.GetComponent<Item>());
+            rshMag.UpdateSprite();
+            if (Plugin.togetherMpEnabled)
+                rshMag.SyncIfHost();
         }
 
         public void ForceReady()

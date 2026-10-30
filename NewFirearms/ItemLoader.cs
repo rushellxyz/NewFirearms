@@ -473,7 +473,7 @@ namespace NewFirearms
             {
                 category = prop.category,
                 slotRotation = prop.slotRotation,
-                usable = true,
+                usable = !prop.pseudoMagazine,
                 usableOnLimb = false,
                 destroyAtZeroCondition = false,
                 combineable = false,

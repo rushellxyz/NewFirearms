@@ -64,7 +64,6 @@ namespace GunMinigame
         public bool frontSliderInvisble;
         public float rackRotationCenterXPosition;
         public float rackRotationCenterYPosition;
-        public bool removeMagazineOnRack;
         public string[] ammos;
         public Sprite[] ammosInHand;
         public Sprite[] ammosInPtr;
@@ -994,8 +993,6 @@ namespace GunMinigame
                 if ((!racked && xPos < info.rackPoint) || (racked && xPos > info.rackPoint))
                 {
                     gun.Rack();
-                    if (info.removeMagazineOnRack)
-                        gun.RemoveMag();
                 }
                 xInertia += (xPos - sliderLastXPos) * 0.5f;
             }
@@ -1010,8 +1007,6 @@ namespace GunMinigame
                 if (racked && xPos > info.rackPoint && xPos != info.unrackedIdlePosition)
                 { // case rack from shoot
                     gun.Rack();
-                    if (info.removeMagazineOnRack)
-                        gun.RemoveMag();
                 }
             }
             sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
@@ -1102,8 +1097,6 @@ namespace GunMinigame
                 if (!rackRequested && progress >= 0.5f)
                 {
                     gun.Rack();
-                    if (info.removeMagazineOnRack)
-                        gun.RemoveMag();
                     rackRequested = true;
                 }
                 yield return null;
@@ -1872,8 +1865,6 @@ namespace GunMinigame
             if ((!racked && currentTrackedAngle < minigame.info.rackPoint) || (racked && currentTrackedAngle > minigame.info.rackPoint))
             {
                 minigame.gun.Rack();
-                if (minigame.info.removeMagazineOnRack)
-                    minigame.gun.RemoveMag();
             }
 
             // 4. Apply the safe, limited angle to the UI element

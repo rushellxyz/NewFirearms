@@ -35,7 +35,8 @@ namespace NewFirearms
                 __result = true;
                 return false;
             }
-        if (it1.TryGetComponent<RshMag>(out var rshMagg) && rshMagg.prop.ammoTypes.Any(ammo => ammo == it2.id))
+        if (it1.TryGetComponent<RshMag>(out var rshMagg) && rshMagg.prop != null &&
+                !rshMagg.prop.pseudoMagazine && rshMagg.prop.ammoTypes.Any(ammo => ammo == it2.id))
             {
                 __result = true;
                 return false;

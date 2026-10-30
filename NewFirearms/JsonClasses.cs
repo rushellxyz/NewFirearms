@@ -48,6 +48,7 @@ namespace NewFirearms
         public List<AmmoInfo> ammoTypes;
         public float desiredGasTime;
         public bool spawnUnracked;
+        public bool removeMagazineOnRack;
         public List<byte> fireModes;
         /*
         * 0 - Safe
@@ -185,6 +186,7 @@ namespace NewFirearms
     // params of mag model
     public class MagJson
     {
+        public bool pseudoMagazine;
         public string nonEmptySpritePath;
         public Sprite nonEmptySprite;
         public Sprite emptySprite;
