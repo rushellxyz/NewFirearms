@@ -145,7 +145,7 @@ namespace NewFirearms
        else if (4 == action)
                 rshGun.ToggleFireMode();
        else if (5 == action)
-                rshGun.shooter = null;
+                rshGun.ReleaseTrigger();
        else if (6 == action)
                 rshGun.ClearJam();
         }

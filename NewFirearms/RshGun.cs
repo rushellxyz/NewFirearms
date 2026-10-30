@@ -108,22 +108,11 @@ namespace NewFirearms
             if (gasTime <= 0f)
             {
                 gasTime = 0f;
-                if (4 == prop.feedType)
+                if (4 == prop.feedType || prop.feedType == 3 && fireMode == BurstFireMode)
                     RotateChambers();
            else if (!(1 < rounds.Count && 0 > rounds[1]))
                     Rack(manual: false);
-                if (3 == fireMode && null != shooter)
-                {
-                    if (shooter == PlayerCamera.main.body)
-                    {
-                        if (!Input.GetKey(KeyBinds.GetBind("attack")) || !Shoot(shooter))
-                            shooter = null;
-                    }
-               else {
-                        if (!Shoot(shooter))
-                            shooter = null;
-                    }
-                }
+                ContinueFiring();
             }
         }
 
@@ -211,13 +200,8 @@ namespace NewFirearms
             return !IsJammed && !racked && 0 != fireMode && rounds.Count > 0 && 0 <= rounds[0] && 0.005f < it.condition;
         }
 
-        public bool Shoot(Body body = null)
+        private bool FireRound(Body body)
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(0))
-            {
-                currentlyShooting = true;
-                return true;
-            }
             if (null == body)
                 body = PlayerCamera.main.body;
             Vector2 barrelPosition = transform.position + transform.up * prop.barrelOffset;
@@ -277,10 +261,10 @@ namespace NewFirearms
                     SyncIfHost();
             }
        else {
-                if (0f < prop.desiredGasTime)
+                if (0f < prop.desiredGasTime || fireMode == BurstFireMode)
                 {
-                    gasTime = prop.desiredGasTime;
-                    if (4 != prop.feedType)
+                    gasTime = fireMode == BurstFireMode ? Mathf.Max(0.05f, prop.desiredGasTime) : prop.desiredGasTime;
+                    if (4 != prop.feedType && !(prop.feedType == 3 && fireMode == BurstFireMode))
                         Rack(manual: false);
                     if (Plugin.togetherMpEnabled)
                         SyncIfHost();
@@ -298,6 +282,11 @@ namespace NewFirearms
         {
             if (manual && Plugin.togetherMpEnabled && RequestHostIfClient(1))
                 return;
+            if (manual)
+            {
+                StopFiring();
+                gasTime = 0f;
+            }
             if (IsJammed) return;
             racked = !racked;
             if (manual)
@@ -524,6 +513,7 @@ namespace NewFirearms
         {
             if (Plugin.togetherMpEnabled && RequestHostIfClient(3))
                 return;
+            StopFiring();
             if (3 <= prop.feedType && racked)
             {
                 Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
@@ -584,6 +574,7 @@ namespace NewFirearms
             if (Plugin.togetherMpEnabled && RequestHostIfClient(4))
                 return;
 
+            StopFiring();
             Sound.Play(prop.toggleFireModeAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             fireMode = prop.fireModes[(prop.fireModes.IndexOf(fireMode) + 1) % prop.fireModes.Count];
             if (Plugin.togetherMpEnabled)

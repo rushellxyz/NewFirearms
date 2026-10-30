@@ -46,11 +46,11 @@
 
             "verticalSpread": 0.001,
             "loudness": 6.0,
-            "conditionLoss": 0.0025,
+            "conditionLoss": 0.002,
 
         },
     ],
-    "desiredGasTime": 0.1,
+    "desiredGasTime": 0.11,
     "spawnUnracked": true,
     "fireModes": [ 0, 2, 3, ],
     "magazineType": [ "rifflemagazine", ],

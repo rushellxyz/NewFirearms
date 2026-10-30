@@ -48,7 +48,7 @@
 
             "verticalSpread": 0.001,
             "loudness": 6.0,
-            "conditionLoss": 0.0025,
+            "conditionLoss": 0.002,
 
         },
         {
@@ -82,14 +82,13 @@
 
             "verticalSpread": 0.001,
             "loudness": 6.0,
-            "conditionLoss": 0.0025,
+            "conditionLoss": 0.002,
             "piercing": true,
 
         },
     ],
-    "desiredGasTime": 0.1,
-    "spawnUnracked": true,
-    "fireModes": [ 0, 2, 3, ],
+    "desiredGasTime": 0.08,
+    "fireModes": [ 0, 2, 4, ],
     "magazineType": [ "rifflemagazine", ],
     "barrelOffset": 0.8,
 
@@ -123,7 +122,7 @@
         "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
-        "sliderHandFollowOffset": -0.05,
+        "sliderHandFollowOffset": -0.16,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagReleaseTrigger",
         "magazinePaths": { "riflemagazine": "uiRiflemagazine" },
@@ -141,9 +140,8 @@
         "casingsPath": [ "uiEject556roundCasing", "uiEject556round", "uiEject556piercing"],//, "uiEject12gaugeslug" ],
         "fitMainSprite": true,
         "resizeMagazine": true,
-//        "chargingHandle": true,
-//        "fireTogglePath": "uiFireToggleTrigger",
-//        "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi", "uiFireModeFull" ],
+        "fireTogglePath": "uiFireToggleTrigger",
+        "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi", "", "uiFireModeBurst" ],
     }
 
 }

@@ -23,8 +23,7 @@ namespace NewFirearms
             jamAmmo = ammo;
             racked = true;
             gasTime = 0f;
-            shooter = null;
-            currentlyShooting = false;
+            StopFiring();
             Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             UpdateSprite();
             if (Plugin.togetherMpEnabled) SyncIfHost(3);
@@ -59,8 +58,7 @@ namespace NewFirearms
             jam = GunJam.None;
             jamAmmo = -1;
             gasTime = 0f;
-            shooter = null;
-            currentlyShooting = false;
+            StopFiring();
             // Only remove the obstruction; duplicate requests cannot eject the next round.
             if (chamber < rounds.Count &&
                 (previousJam == GunJam.Ejection ? rounds[chamber] == -1 : rounds[chamber] >= 0))

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-// Ой страшно, я не понимаю как это работает
+// Ой страшно, я почти не понимаю как это работает
 
 namespace NewFirearms
 {
@@ -102,7 +102,7 @@ namespace NewFirearms
             if (gun.fireModes != null)
                 for (int i = 0; i < gun.fireModes.Count; i++)
                 {
-                    Require(gun.fireModes[i] <= 3, $"fireModes[{i}]", "expected 0 (safe), 1 (manual), 2 (semi-auto), or 3 (full-auto).");
+                    Require(gun.fireModes[i] <= 4, $"fireModes[{i}]", "expected 0 (safe), 1 (manual), 2 (semi-auto), 3 (full-auto), or 4 (three-round burst).");
                     lastMode = Math.Max(lastMode, gun.fireModes[i]);
                 }
             Require(gun.feedType != 1 || gun.magazineType != null, "magazineType", "an array is required for magazine-fed guns.");

@@ -54,6 +54,7 @@ namespace NewFirearms
         * 1 - Pump action
         * 2 - Semi auto
         * 3 - Full auto
+        * 4 - Three-round burst
         */
         public List<string> magazineType;
         public float barrelOffset;

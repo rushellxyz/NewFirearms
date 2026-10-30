@@ -101,6 +101,7 @@ namespace NewFirearms
                 LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/firePump"),
                 LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/fireSemi"),
                 LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/fireFull"),
+                LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/fireBurst"),
             };
             bulletsSpritesFallback = new Sprite[]
             {

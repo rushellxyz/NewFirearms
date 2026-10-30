@@ -69,7 +69,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     ],
     "desiredGasTime": 0.0, // Must always stay at 0 for barrel feed
     "spawnUnracked": false, // If true, newly spawned guns start with the slide unracked
-    "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full
+    "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full, 4 - three-round burst
     "magazineType": [ "string", ], // If it inresects with "magazineType" in at least one entry, mag is considered compataible
     "barrelOffset": 0.0, // Vertical offset of barrel from model
     "hasLaser": false, // Laser
@@ -160,7 +160,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "frontSliderInvisble": false, // Set the front slider image alpha to zero
     "fireTogglePath": "string", // Optional fire-mode toggle hit area; enables manual fire-mode selection
     // With fireTogglePath set, fire mode starts normally and this hit area cycles the available modes.
-    "fireModePaths": [ "safe", "", "semi", "full" ], // Optional sprites indexed by fire mode; empty entries hide the indicator for that mode
+    "fireModePaths": [ "safe", "", "semi", "full", "burst" ], // Optional sprites indexed by fire mode; empty entries hide the indicator for that mode
     "sliderFireToggle": false, // Move the fire-mode indicator and toggle hit area with the slider; hide the hit area while racked
     "magazineRotation": 0.0, // Optional inserted-magazine rotation in degrees
     "p90reload": false, // Stage the magazine with its right end tilted up and left end anchored; grab the right half and drag down to insert. Closing the minigame cancels staging.
