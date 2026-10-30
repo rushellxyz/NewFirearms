@@ -18,6 +18,7 @@ namespace NewFirearms
         public const string MSGID_SHOOT = "NewFirearms_Shoot";
         public const string MSGID_SHOOT_VISUALS = "NewFirearms_ShootVisuals";
         public const string MSGID_EJECT_VISUALS = "NewFirearms_EjectVisuals";
+        internal const byte SilentMagazineRemoval = 0x80;
 
         public GunJson prop;
         internal event Action<GameObject> MagazineCreated; // :hmm:
@@ -313,11 +314,11 @@ namespace NewFirearms
              The rack request needs to pass the requesting player’s body through to `RemoveMag`. Live MP hasn’t been tested yet.
             */
             if (manual && prop.removeMagazineOnRack)
-                RemoveMag(null);
+                RemoveMag(null, playSound: false);
             if (Plugin.togetherMpEnabled)
             {
                 if (manual)
-                    SyncIfHost(5);
+                    SyncIfHost((byte)(5 | (prop.removeMagazineOnRack ? SilentMagazineRemoval : 0)));
            else     SyncIfHost();
             }
             UpdateSprite();
@@ -518,17 +519,21 @@ namespace NewFirearms
         }
 
         public void RemoveMag(Body body=null)
+            => RemoveMag(body, playSound: true);
+
+        private void RemoveMag(Body body, bool playSound)
         {
             if (Plugin.togetherMpEnabled && RequestHostIfClient(3))
                 return;
             StopFiring();
             if (3 <= prop.feedType && racked)
             {
-                Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                if (playSound)
+                    Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 for (int i = 0; i < rounds.Count(); i++)
                     EjectRound(i);
                 if (Plugin.togetherMpEnabled)
-                    SyncIfHost(1);
+                    SyncIfHost(playSound ? (byte)1 : SilentMagazineRemoval);
             }
        else if (!string.IsNullOrEmpty(mag))
             {
@@ -541,10 +546,11 @@ namespace NewFirearms
                 spentAmmoTypes = spentAmmoTypes.Where(entry => entry.Key == 0)
                     .ToDictionary(entry => entry.Key, entry => entry.Value);
                 mag = "";
-                Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                if (playSound)
+                    Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 UpdateSprite();
                 if (Plugin.togetherMpEnabled)
-                    SyncIfHost();
+                    SyncIfHost(playSound ? (byte)0 : SilentMagazineRemoval);
                 if (discard) return;
 
                 if (null == body)
@@ -671,6 +677,7 @@ namespace NewFirearms
         * 3 - Play jam audio
         * 4 - Play load round audio
         * 5 - Play rack audio
+        * High bit - Suppress magazine removal audio
         */
         public override void SyncIfHost(byte extraData=0, bool reliable=true)
         {

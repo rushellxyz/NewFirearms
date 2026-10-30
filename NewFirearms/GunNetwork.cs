@@ -38,10 +38,10 @@ namespace NewFirearms
             reader.Get(out bool haveMag);
             if (haveMag)
                 Together.MyLiteNetLibExtensions.Get(reader, out newMag, oneByteChars: true);
-            if (string.IsNullOrEmpty(newMag) && !string.IsNullOrEmpty(rshGun.mag))
+            bool magazineRemoved = string.IsNullOrEmpty(newMag) && !string.IsNullOrEmpty(rshGun.mag);
+            if (magazineRemoved)
             {
                 shouldUpdateSprite = true;
-                Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             }
             else if (!string.IsNullOrEmpty(newMag) && string.IsNullOrEmpty(rshGun.mag))
             {
@@ -63,9 +63,11 @@ namespace NewFirearms
 
             reader.Get(out byte extraData);
             ReadJamState(rshGun, reader);
-            if (1 == extraData)
+            bool silentMagazineRemoval = (extraData & RshGun.SilentMagazineRemoval) != 0;
+            extraData = (byte)(extraData & ~RshGun.SilentMagazineRemoval);
+            if (!silentMagazineRemoval && (magazineRemoved || 1 == extraData))
                 Sound.Play(rshGun.prop.removeMagAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-       else if (2 == extraData)
+            if (2 == extraData)
                 Sound.Play(rshGun.prop.unshootAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
        else if (3 == extraData)
                 Sound.Play(rshGun.prop.jamAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
