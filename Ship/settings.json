@@ -10,4 +10,5 @@
     "strictSync": true, // If false, allows some illegal actions from clients, W.I.P.. Default true
     "gunSyncRate": 1.0, // If you have performence isseuse, try to increase this value. Default 1.0
     "magSyncRate": 1.0, // If you have performence isseuse, try to increase this value. Default 1.0
+    "projectileSyncRate": 0.1, // Seconds between host projectile snapshots. Must be finite and greater than zero. Default 0.1
 }

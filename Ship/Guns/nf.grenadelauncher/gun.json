@@ -19,7 +19,10 @@
     [
         {
             "round": "nf.grenade",
-            "explosionParams": { },
+            "explosionParams": {
+                "projectileVelocity": 40,
+                "minimumTravelDistance": 5
+            },
 
             "knockback": 0,
             "muzzleRise": 1,

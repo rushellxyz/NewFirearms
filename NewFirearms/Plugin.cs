@@ -100,6 +100,11 @@ namespace NewFirearms
                 UnityEngine.Debug.LogError($"Error parsing settings!:\n{e}\nSettings would fallback to default.");
                 sett = new SettingsJson();
             }
+            if (sett.projectileSyncRate <= 0f || float.IsNaN(sett.projectileSyncRate) || float.IsInfinity(sett.projectileSyncRate))
+            {
+                UnityEngine.Debug.LogWarning("[NewFirearms] projectileSyncRate must be finite and greater than zero; using 0.1 seconds.");
+                sett.projectileSyncRate = 0.1f;
+            }
         }
 
 
@@ -229,6 +234,7 @@ namespace NewFirearms
             Together.Multiplayer.RegisterCustomClientReceiver(RshGun.MSGID_EJECT_VISUALS, GunNetwork.ReceiveEjectionVisual);
             Together.Multiplayer.RegisterCustomClientReceiver(RshMag.MSGID_SYNC, MagazineNetwork.ClientSync);
             Together.Multiplayer.RegisterCustomClientReceiver(CasingAppearance.MessageId, CasingNetwork.ClientSync);
+            Together.Multiplayer.RegisterCustomClientReceiver(ExplosiveProjectileNetwork.MessageId, ExplosiveProjectileNetwork.Receive);
             Together.Multiplayer.RegisterCustomServerReceiver(RshMag.MSGID_ACTION, MagazineNetwork.ServerReceiver);
         }
 

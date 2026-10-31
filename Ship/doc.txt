@@ -32,11 +32,29 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
         {
             "round": "string", // ID of item this ammo refereing to, highly recomended to be mirrored with mags "ammoTypes"
             "structureDamage": 0.0, // Damage to tiles
-            "piercing": false, // Pass through two terrain blocks; damage and stop at the third. Explosive rounds still detonate on first impact.
+            "piercing": false, // Ordinary bullets pass through two terrain blocks; damage and stop at the third
             "casingSprite": "string", // Optional changes sprite of casing for this
             "minigameCasingSprite": "uiCasing556", // Optional spent casing sprite inside the minigame
             "animalDamage": 0.0, // Damage to anything else
-            "stopAtFirstHit": false, // If true, raycast would stop at first hit
+            "explosionParams": // Optional: fires a travelling explosive projectile instead of a hitscan bullet. Leave blank for regular ammo
+            {
+                "projectileVelocity": 40.0, // Initial speed in world units/second
+                "minimumTravelDistance": 5.0, // Distance along flight path before impact can explode 
+
+                "muscleDamage": { "min": 0.0, "max": 60.0 }, // Muscle damage range
+                "skinDamage": { "min": 0.0, "max": 75.0 }, // Skin damage range
+                "skinDamageChance": 0.2, // Chance to apply skin damage
+                "boneBreakChance": 0.06, // Bone fracture chance
+                "dislocationChance": 0.135, // Joint dislocation chance
+                "disfigureChance": 0.34, // Disfigurement chance
+                "bleedChance": 0.15, // Chance to cause bleeding
+                "bleedAmount": { "min": 4.0, "max": 30.0 }, // Bleeding amount range
+                "structuralDamage": 500.0, // Damage to structures and terrain
+                "range": 12.0, // Explosion radius in world units0
+                "velocity": 60.0, // Explosion impulse strength; separate from projectileVelocity
+                "shrapnelChance": 0.4, // Chance to embed shrapnel
+                "sound": "explosion", // Game sound ID, does NOT loaded
+            }
 
             "playerDamage": // All damage applied to player, when it gets shot, have a fallback if you are too lazy to fill it out
             { // All values below are affected by wearable protection, and randomly multiplied by 0.85 to 1.15 in each shot

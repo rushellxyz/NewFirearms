@@ -79,6 +79,11 @@ namespace NewFirearms
         // shooter is null when commiting suicide
         public static void ShootLogic(AmmoInfo info, Vector2 pos, Vector2 dir, Body shooter, ref ShootVisuals visuals)
         {
+            if (info.explosionParams != null)
+            {
+                ExplosiveProjectile.Launch(info, pos, dir, shooter);
+                return;
+            }
             Physics2D.queriesHitTriggers = true;
             RaycastHit2D[] array = Physics2D.RaycastAll(pos, dir, 200f, LayerMask.GetMask("Ground", "Body", "Limb", "Descriptor"));
             Physics2D.queriesHitTriggers = false;
@@ -104,13 +109,6 @@ namespace NewFirearms
                 }
                 if (raycastHit2D.collider.TryGetComponent<BuildingEntity>(out var component) && !component.cantHit)
                 {
-                    if (null != info.explosionParams)
-                    {
-                        info.explosionParams.position = raycastHit2D.point;
-                        WorldGeneration.CreateExplosion(info.explosionParams);
-                        vector = raycastHit2D.point;
-                        break;
-                    }
                     component.SetHealth(component.GetHealth() - (component.animal ? info.animalDamage * num : info.structureDamage * num));
                     if (component.animal)
                     {
@@ -148,13 +146,6 @@ namespace NewFirearms
                 }
                 else if (raycastHit2D.collider.gameObject.layer == 6)
                 {
-                    if (null != info.explosionParams)
-                    {
-                        info.explosionParams.position = raycastHit2D.point;
-                        WorldGeneration.CreateExplosion(info.explosionParams);
-                        vector = raycastHit2D.point;
-                        break;
-                    }
                     WorldGeneration.world.DamageBlock(raycastHit2D.point + dir * 0.5f, info.structureDamage * num);
                     visuals.hitNumbers.Add((raycastHit2D.point, (ushort)(info.structureDamage * num)));
                     if (info.piercing && ++blocksHit <= 2)
@@ -164,13 +155,6 @@ namespace NewFirearms
                 }
                 if ((bool)raycastHit2D.rigidbody)
                 {
-                    if (null != info.explosionParams)
-                    {
-                        info.explosionParams.position = raycastHit2D.point;
-                        WorldGeneration.CreateExplosion(info.explosionParams);
-                        vector = raycastHit2D.point;
-                        break;
-                    }
                     raycastHit2D.rigidbody.AddForceAtPosition(dir * info.structureDamage, raycastHit2D.point, ForceMode2D.Impulse);
                 }
                 PlayerCamera.main.body.CreateCloudSmall(raycastHit2D.point, Vector2.zero);
@@ -198,13 +182,6 @@ namespace NewFirearms
                 if ((Plugin.togetherMpEnabled && CantHitThisPlayer(shooter, victim)) || victim == shooter)
                 {
                     continue;
-                }
-                if (null != info.explosionParams)
-                {
-                    info.explosionParams.position = raycastHit2D.point;
-                    WorldGeneration.CreateExplosion(info.explosionParams);
-                    vector = raycastHit2D.point;
-                    break;
                 }
                 if (list.Contains(victim))
                     break;

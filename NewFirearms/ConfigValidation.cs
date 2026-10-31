@@ -96,6 +96,13 @@ namespace NewFirearms
                 Require(!string.IsNullOrWhiteSpace(ammo.round), $"ammoTypes[{i}].round", "an item ID is required.");
                 Sprite(ammo.casingSprite, $"ammoTypes[{i}].casingSprite");
                 Sprite(ammo.minigameCasingSprite, $"ammoTypes[{i}].minigameCasingSprite");
+                if (ammo.explosionParams != null)
+                {
+                    float speed = ammo.explosionParams.projectileVelocity;
+                    float distance = ammo.explosionParams.minimumTravelDistance;
+                    Require(speed > 0f && !float.IsInfinity(speed), $"ammoTypes[{i}].explosionParams.projectileVelocity", "must be a finite number greater than zero.");
+                    Require(distance >= 0f && !float.IsInfinity(distance), $"ammoTypes[{i}].explosionParams.minimumTravelDistance", "must be a finite number greater than or equal to zero.");
+                }
             }
             Require(gun.fireModes != null && gun.fireModes.Count > 0, "fireModes", "a non-empty array is required.");
             int lastMode = 0;

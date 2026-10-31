@@ -12,6 +12,7 @@ namespace NewFirearms
         public float maxSliderValue = 4f;
         public float gunSyncRate = 0.5f;
         public float magSyncRate = 0.5f;
+        public float projectileSyncRate = 0.1f;
     }
 
     // params of gun model
@@ -144,7 +145,7 @@ namespace NewFirearms
 
         //public ProjectileParams projectileParams;
         public PlayerDamage playerDamage;
-        public ExplosionParams explosionParams;
+        public FirearmExplosionParams explosionParams;
 
         public float knockback;
         public float muzzleRise;
