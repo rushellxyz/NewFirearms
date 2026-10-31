@@ -154,10 +154,10 @@
 
     "minigame":
     {
-        "mainExperimentPath": "uiSprite",
-        "mainMilkyTriggerOnPath": "uiSprite",
-        "mainMilkyTriggerOffPath": "uiSprite",
-        "mainDunePath": "uiSprite",
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteExpie", // TODO Пинать neverlitd
         "sliderFrontPath": "uiSliderFront",
 
 

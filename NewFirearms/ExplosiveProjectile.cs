@@ -67,11 +67,12 @@ namespace NewFirearms
             UpdateVisual();
         }
 
-        private void FixedUpdate()
+        // я сделал его update, hopefully nothing breaks
+        private void Update()
         {
-            float dt = Time.fixedDeltaTime;
+            float dt = Time.deltaTime;
             age += dt;
-            if (age > 30f)
+            if (age > 60f)
             {
                 Finish();
                 return;
@@ -85,12 +86,12 @@ namespace NewFirearms
                     ammo.explosionParams.minimumTravelDistance;
                 rb.position = hit.point;
                 // Finish first, so damage callbacks cannot process this impact twice.
-                Finish();
                 if (armed)
                 {
                     if (hit.collider.TryGetComponent<FirearmCourseTarget>(out var target))
                         target.Hit(shooter, Mathf.Max(ammo.structureDamage, ammo.animalDamage));
                     WorldGeneration.CreateExplosion(ammo.explosionParams.AtPosition(hit.point));
+                    Finish();
                 }
                 return;
             }
