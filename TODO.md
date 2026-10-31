@@ -9,8 +9,6 @@ TODO List - Agents stay away unless stated otherwise
  - Fix gun repairing on reloading in multiplayer
  - And hot reloading!
  - Make mod work when MP enabled but not active
- - Compatability mode, bc some packes refer to newfirearm. items that now replaced with nf.
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
  - The sliderHandFollowOffset !
- - Rebalance gas time of all auto guns

@@ -986,11 +986,8 @@ namespace GunMinigame
             if (holdsSlide)
             {
                 xPos = (handPos.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
-                if (xPos < info.sliderMinimumPosition)
-                    xPos = info.sliderMinimumPosition;
-                else if (xPos > info.sliderMaximumPosition)
-                    xPos = info.sliderMaximumPosition;
-                if ((!racked && xPos < info.rackPoint) || (racked && xPos > info.rackPoint))
+                xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
+                if (SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.rackPoint))
                 {
                     gun.Rack();
                 }
@@ -1004,7 +1001,7 @@ namespace GunMinigame
             }
        else {
                 xPos = Mathf.MoveTowards(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime * Screen.width);
-                if (racked && xPos > info.rackPoint && xPos != info.unrackedIdlePosition)
+                if (racked && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.rackPoint) && xPos != info.unrackedIdlePosition)
                 { // case rack from shoot
                     gun.Rack();
                 }
@@ -1859,10 +1856,10 @@ namespace GunMinigame
 
             // 3. Add that movement to our total tracked angle and clamp it
             currentTrackedAngle += angleDelta;
-            currentTrackedAngle = Mathf.Clamp(currentTrackedAngle, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition);
+            currentTrackedAngle = SliderRange.Clamp(currentTrackedAngle, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition);
 
             bool racked = minigame.gun.IsRacked();
-            if ((!racked && currentTrackedAngle < minigame.info.rackPoint) || (racked && currentTrackedAngle > minigame.info.rackPoint))
+            if (SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.rackPoint))
             {
                 minigame.gun.Rack();
             }

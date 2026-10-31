@@ -159,8 +159,8 @@ namespace NewFirearms
             Sprite(game.laserTogglePath, "minigame.laserTogglePath");
             Sprite(game.laserPath, "minigame.laserPath");
             Sprite(game.fireTogglePath, "minigame.fireTogglePath");
-            Require(game.sliderMinimumPosition <= game.sliderMaximumPosition, "minigame.sliderMinimumPosition", "must not exceed sliderMaximumPosition.");
-            Require(game.rackPoint >= game.sliderMinimumPosition && game.rackPoint <= game.sliderMaximumPosition,
+            Require(game.rackPoint >= Math.Min(game.sliderMinimumPosition, game.sliderMaximumPosition) &&
+                game.rackPoint <= Math.Max(game.sliderMinimumPosition, game.sliderMaximumPosition),
                 "minigame.rackPoint", "must be between sliderMinimumPosition and sliderMaximumPosition.");
             Require(!game.canUseFannyPack || game.magazinePaths != null, "minigame.magazinePaths", "a dictionary is required when canUseFannyPack is true (use {} for no magazines).");
             if (game.magazinePaths != null)

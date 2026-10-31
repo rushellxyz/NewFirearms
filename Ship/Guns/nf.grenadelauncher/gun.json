@@ -41,7 +41,7 @@
     "barrelOffset": 0.0,
 
     "itemSpriteXOffset": 0.0,
-    "itemSpriteYOffset": -1.5,
+    "itemSpriteYOffset": -1.8,
 
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
@@ -57,4 +57,35 @@
 
     "magazineTexturesPath": { },
     //"attachmentTexturesPath: { },
+
+    "minigame":
+    {
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteDune",
+        "sliderFrontPath": "uiSliderFront",
+        "sliderMinimumPosition": 0.03,
+        "sliderMaximumPosition": 0,
+        "unrackedIdlePosition": 0,
+        "rackPoint": 0.015,
+        "rackedIdlePosition": 0.03,
+        "ammosInHandPaths": [ "uiGrenade" ],
+        "receiverPath": "uiReceiver",
+        "ammosInPtrPaths": [ "uiGrenade" ],
+        "sliderHandFollowOffset": -0.145,
+        "canUseFannyPack": true,
+        "magazinePaths": { "nf.grenade": "uiGrenade" },
+        "ammosInMagazinePaths": { "nf.grenade": [ "uiGrenade" ] },
+        "magazineXPosition": -0.028,
+        "magazineYPosition": 0.045,
+        "magazineRotation": 270,
+        "magazineXSpeed": 0,
+        "magazineYSpeed": 0,
+        "resizeMagazine": true,
+        "magazineAnimationTime": 0.2,
+        "magazinesOffset": 0.025,
+        "maximumMagazines": 4,
+        "magazineDragPath": "uiReceiver",
+    }
 }

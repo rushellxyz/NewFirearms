@@ -165,6 +165,13 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
 
 == MINIGAME JSON TEMPLATE ==
 {
+    // work in progress
+    // TODO Rewrite this as current AI Agent generates documentation
+
+    // sliderMinimumPosition and sliderMaximumPosition may be in either numeric order.
+    // Minimum remains the racked endpoint, maximum the unracked/fully-forward endpoint.
+    // rackPoint must lie between them. Reversing the endpoints reverses rack/unrack direction,
+    // including rackByRotation, chargingHandle and mosynStyleRack.
     "mosynStyleRack": false, // Two-position slider: lift/lower only at sliderMaximumPosition (fully forward). Lower to lock (racked -> unracked); pull back past rackPoint while raised for unracked -> racked. Only the front sprite lifts; both slide horizontally. Overrides rackByRotation and chargingHandle.
     "backLayerPath": "uiBackLayer", // Optional sprite below the back slider. Moves with the gun, independently of the slider; omit .png.
     // Breaking change: mainPath has been removed. All four paths are required.
@@ -173,8 +180,6 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "mainMilkyTriggerOnPath": "uiMilkyTriggerOn",
     "mainMilkyTriggerOffPath": "uiMilkyTriggerOff", // Cursor inside the minigame window
     "mainDunePath": "uiDune",
-    // work in progress
-    // TODO Rewrite this as current AI Agent generates documentation
     "fitMainSprite": false, // Fit the main gun image to the screen width
     "fitLaserImage": true, // Fit the laser overlay to the screen width
     "frontSliderInvisble": false, // Set the front slider image alpha to zero
