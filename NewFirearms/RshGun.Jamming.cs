@@ -26,7 +26,7 @@ namespace NewFirearms
             StopFiring();
             Sound.Play(prop.jamAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             UpdateSprite();
-            if (Plugin.togetherMpEnabled) SyncIfHost(3);
+            if (Plugin.MultiplayerActive) SyncIfHost(3);
         }
 
         public bool TryGetJam(out Sprite sprite, out bool liveRound)
@@ -51,7 +51,7 @@ namespace NewFirearms
 
         public void ClearJam()
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(6)) return;
+            if (Plugin.MultiplayerActive && RequestHostIfClient(6)) return;
             if (!IsJammed) return;
             var previousJam = jam;
             int chamber = jamChamber;
@@ -66,7 +66,7 @@ namespace NewFirearms
             racked = true;
             Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             UpdateSprite();
-            if (Plugin.togetherMpEnabled) SyncIfHost(5);
+            if (Plugin.MultiplayerActive) SyncIfHost(5);
         }
 
         internal void GetJamState(out byte kind, out ushort chamber, out sbyte ammo)

@@ -21,12 +21,12 @@ namespace NewFirearms
 
         internal static void Launch(AmmoInfo ammo, Vector2 position, Vector2 direction, Body shooter)
         {
-            if (Plugin.togetherMpEnabled && !Plugin.IsHost()) return;
+            if (Plugin.MultiplayerActive && !Plugin.IsHost()) return;
             var projectile = Create(position, direction.normalized * ammo.explosionParams.projectileVelocity);
             projectile.ammo = ammo;
             projectile.shooter = shooter;
             projectile.authoritative = true;
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
             {
                 ExplosiveProjectileNetwork.Spawn(projectile);
                 float interval = Plugin.sett.projectileSyncRate;
@@ -46,7 +46,7 @@ namespace NewFirearms
             projectile.rb.position = position;
             projectile.rb.velocity = velocity;
             projectile.previousPosition = position;
-            if (!Plugin.togetherMpEnabled || !Plugin.IsDedicated())
+            if (!Plugin.MultiplayerActive || !Plugin.IsDedicated())
             {
                 var visual = (GameObject)Instantiate(Resources.Load("Special/TurretLine"), position, Quaternion.identity);
                 visual.transform.SetParent(projectile.transform);
@@ -102,7 +102,7 @@ namespace NewFirearms
 
         private void Sync()
         {
-            if (enabled && authoritative && Plugin.togetherMpEnabled)
+            if (enabled && authoritative && Plugin.MultiplayerActive)
                 ExplosiveProjectileNetwork.Sync(this, alive: true);
         }
 
@@ -146,7 +146,7 @@ namespace NewFirearms
             CancelInvoke(nameof(Sync));
             enabled = false;
             rb.simulated = false;
-            if (authoritative && Plugin.togetherMpEnabled)
+            if (authoritative && Plugin.MultiplayerActive)
                 ExplosiveProjectileNetwork.Sync(this, alive: false);
             Destroy(gameObject);
         }

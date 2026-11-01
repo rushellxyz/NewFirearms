@@ -39,7 +39,7 @@ namespace NewFirearms
             }
             if (rounds == null) rounds = new List<sbyte>();
             // Only the host creates initial ammunition; clients wait for its snapshot.
-            if (!existed && (!Plugin.togetherMpEnabled || Plugin.IsHost()))
+            if (!existed && (!Plugin.MultiplayerActive || Plugin.IsHost()))
             {
                 if (TryGetComponent<MagazineSpawnContents>(out var contents))
                 {
@@ -56,13 +56,14 @@ namespace NewFirearms
                 it.condition = 1f;
                 existed = true;
             }
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 MpStartOp();
             UpdateSprite();
         }
 
         public void MpStartOp()
         {
+            if (!Plugin.MultiplayerActive) return;
             if (Together.Net.IsServer)
             {
                 InvokeRepeating("SyncIfHostt", Plugin.sett.magSyncRate, Plugin.sett.magSyncRate);
@@ -77,7 +78,7 @@ namespace NewFirearms
             if (-1 == round)
                 return false;
 
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(1, item))
+            if (Plugin.MultiplayerActive && RequestHostIfClient(1, item))
                 return true;
             if (rounds == null || rounds.Count == 0 || -2 != rounds[rounds.Count - 1])
                 return false;
@@ -87,7 +88,7 @@ namespace NewFirearms
             rounds[0] = round;
             UpdateSprite();
             UnityEngine.Object.Destroy(item.gameObject);
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 SyncIfHost(1);
             return true;
         }
@@ -96,14 +97,14 @@ namespace NewFirearms
         {
             // Together forwards inventory use to the host and relays it to clients.
             // Only the host should unload; sending our own request would do it twice.
-            if (Plugin.togetherMpEnabled && !Plugin.IsHost()) return;
+            if (Plugin.MultiplayerActive && !Plugin.IsHost()) return;
             RemoveRound(body);
         }
 
         public void RemoveRound(Body body=null)
         {
             if (prop == null || prop.pseudoMagazine) return;
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(0))
+            if (Plugin.MultiplayerActive && RequestHostIfClient(0))
                 return;
             if (prop == null || rounds == null || rounds.Count == 0 || -2 == rounds[0])
                 return;
@@ -118,7 +119,7 @@ namespace NewFirearms
             rounds[0] = -2;
             Plugin.ShiftLeft(ref rounds);
             UpdateSprite();
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 SyncIfHost(2);
         }
 
@@ -139,7 +140,7 @@ namespace NewFirearms
             rounds = Enumerable.Repeat(type, amount).ToList();
             rounds.AddRange(Enumerable.Repeat((sbyte)-2, prop.capacity - amount));
             UpdateSprite();
-            if (Plugin.togetherMpEnabled && existed)
+            if (Plugin.MultiplayerActive && existed)
                 SyncIfHost();
         }
 
@@ -152,7 +153,7 @@ namespace NewFirearms
           */
         public override void SyncIfHost(byte extraData=0, bool reliable=true)
         {
-            if (!Together.Net.IsServer)
+            if (!Plugin.MultiplayerActive || !Together.Net.IsServer)
                 return;
             if (rounds == null || rounds.Count == 0) return;
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(reliable) as Together.SyncInfoGameObjectTracker);
@@ -178,6 +179,7 @@ namespace NewFirearms
 
         public bool RequestHostIfClient(byte action, Item second=null)
         {
+            if (!Plugin.MultiplayerActive) return false;
             if (Together.Net.IsServer)
                 return false;
             LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_ACTION);

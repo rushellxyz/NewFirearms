@@ -16,13 +16,16 @@ namespace NewFirearms
     [BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("meow.catpatch", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("net.jimmyking.newdescents", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("CasualtiesMP", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         public static SettingsJson sett;
         public static List<Recipe> recipes;
         public static List<string> milkyGuns;
         public static List<string> milkyMags;
-        public static bool togetherMpEnabled;
+        // Availability controls startup wiring; gameplay checks the live session instead.
+        public static bool togetherMpAvailable;
+        public static bool MultiplayerActive => togetherMpAvailable && IsNetworkRunning();
         public static bool catPatchActive;
 
         // There because CUCoreLib overwrites CustomData on multiplayer clients. Блять, а нахуя
@@ -40,8 +43,8 @@ namespace NewFirearms
                 return;
             }
 
-            togetherMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
-            catPatchActive = togetherMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
+            togetherMpAvailable = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
+            catPatchActive = togetherMpAvailable && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
             NewDescentsCompatibility.Enabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("net.jimmyking.newdescents");
 
             var harmony = new Harmony("com.rushellxyz.newfirearms");
@@ -63,7 +66,7 @@ namespace NewFirearms
             RegisterCourse();
             ItemLoader.ClearResourcesDict();
 
-            if (togetherMpEnabled)
+            if (togetherMpAvailable)
                 MpOperations(harmony);
         }
 
@@ -334,13 +337,23 @@ namespace NewFirearms
 
         public static bool IsHost()
         {
-            return Together.Net.IsServer;
+            return MultiplayerActive && IsNetworkHost();
         }
+
+        // Keep optional Together binding out of the availability check's JIT boundary.
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        private static bool IsNetworkRunning() => Together.Net.IsRunning;
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        private static bool IsNetworkHost() => Together.Net.IsServer;
 
         public static bool IsDedicated()
         {
-            return Together.Net.IsServer && Together.Net.IsDedicatedServer;
+            return MultiplayerActive && IsNetworkDedicated();
         }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        private static bool IsNetworkDedicated() => Together.Net.IsServer && Together.Net.IsDedicatedServer;
     }
 
     // patch to add recipes
@@ -396,7 +409,7 @@ namespace NewFirearms
         [HarmonyAfter("net.cucorelib")]
         static void Postfix()
         {
-            if (Plugin.togetherMpEnabled && Locale.currentLang != null)
+            if (Plugin.MultiplayerActive && Locale.currentLang != null)
                 Locale.currentLang.other["runsetnewfirearms.gundmgmultdsc"] =
                     ModLocale.Get("runsetnewfirearms.gundmgmultdsc.mp");
         }
@@ -421,7 +434,7 @@ namespace NewFirearms
                     UnityEngine.Debug.Log(ModLocale.Get("newfirearms.command.suicide.notReady"));
                     return;
                 }
-                if (!Plugin.togetherMpEnabled || Plugin.IsHost())
+                if (!Plugin.MultiplayerActive || Plugin.IsHost())
                 {
                     float oldHappiness = PlayerCamera.main.body.happiness;
                     PlayerCamera.main.body.happiness = -100000f;

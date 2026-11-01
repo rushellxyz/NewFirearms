@@ -94,7 +94,7 @@ namespace NewFirearms
 
         public void Update()
         {
-            if (Plugin.togetherMpEnabled && !Plugin.IsHost())
+            if (Plugin.MultiplayerActive && !Plugin.IsHost())
             {
                 if (currentlyShooting && !Input.GetKey(KeyBinds.GetBind("attack")))
                 {
@@ -119,7 +119,7 @@ namespace NewFirearms
 
         public void FixedUpdate()
         {   // TODO Move that into Update?
-            if (!Plugin.togetherMpEnabled)
+            if (!Plugin.MultiplayerActive)
                 return;
             if (null == transform.parent || !transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) || slot.slot != slot.body.handSlot)
                 return;
@@ -168,13 +168,13 @@ namespace NewFirearms
             {
                 rounds = Enumerable.Repeat((sbyte)-2, prop.internalCapacity).ToList();
                 fireMode = prop.fireModes.Min();
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     MpStartOp();
            else if (!prop.spawnUnracked)
                     Rack(manual: true);
                 existed = true;
             }
-       else if (Plugin.togetherMpEnabled)
+       else if (Plugin.MultiplayerActive)
             {
                 MpStartOp();
             }
@@ -183,6 +183,7 @@ namespace NewFirearms
 
         public void MpStartOp()
         {
+            if (!Plugin.MultiplayerActive) return;
             InvokeRepeating("MpScareCheck", Plugin.sett.gunSyncRate, Plugin.sett.gunSyncRate * 0.2f);
             if (!Together.Net.IsServer)
                 return;
@@ -210,7 +211,7 @@ namespace NewFirearms
             if (!IsReady())
             {
                 Sound.Play(prop.unshootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     SyncIfHost(2);
                 return false;
             }
@@ -227,12 +228,12 @@ namespace NewFirearms
             {
                 ShootManager.ShootLogic(info, barrelPosition, (transform.right + transform.up * (UnityEngine.Random.Range(-1f, 1f) * info.verticalSpread)) * num, shooter, ref visuals);
             }
-            if (!Plugin.togetherMpEnabled || (Plugin.togetherMpEnabled && !Plugin.IsDedicated()))
+            if (!Plugin.MultiplayerActive || (Plugin.MultiplayerActive && !Plugin.IsDedicated()))
             {
                 ShootManager.DrawVisuals(visuals);
                 Sound.Play(prop.shootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it), pitchShift: false);
             }
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 NotifyShoot(visuals, info.knockback, info.muzzleRise, info.ragdollRecoil);
             body.rb.velocity -= (Vector2)base.transform.right * num * info.knockback;
             body.lastTimeStepVelocity -= (Vector2)base.transform.right * num * info.knockback;
@@ -258,7 +259,7 @@ namespace NewFirearms
             if (1 == fireMode)
             {
                 gasTime = 0f;
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     SyncIfHost();
             }
        else {
@@ -267,12 +268,12 @@ namespace NewFirearms
                     gasTime = fireMode == BurstFireMode ? Mathf.Max(0.05f, prop.desiredGasTime) : prop.desiredGasTime;
                     if (4 != prop.feedType && !(prop.feedType == 3 && fireMode == BurstFireMode))
                         Rack(manual: false);
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.MultiplayerActive)
                         SyncIfHost();
                 }
            else {
                     RotateChambers();
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.MultiplayerActive)
                         SyncIfHost();
                 }
             }
@@ -281,7 +282,7 @@ namespace NewFirearms
 
         public void Rack(bool manual)
         {
-            if (manual && Plugin.togetherMpEnabled && RequestHostIfClient(1))
+            if (manual && Plugin.MultiplayerActive && RequestHostIfClient(1))
                 return;
             if (manual)
             {
@@ -315,7 +316,7 @@ namespace NewFirearms
             */
             if (manual && prop.removeMagazineOnRack)
                 RemoveMag(null, playSound: false);
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
             {
                 if (manual)
                     SyncIfHost((byte)(5 | (prop.removeMagazineOnRack ? SilentMagazineRemoval : 0)));
@@ -375,14 +376,14 @@ namespace NewFirearms
         private void NotifyEjectionVisual(sbyte round, sbyte ammoIndex)
         {
             ShowEjectionVisual(round, ammoIndex);
-            if (!Plugin.togetherMpEnabled) return;
+            if (!Plugin.MultiplayerActive) return;
             SendEjectionVisual(round, ammoIndex);
         }
 
         // TODO This also to be rewritten, maybe even combine with casing apperance
         private void SendEjectionVisual(sbyte round, sbyte ammoIndex)
         {
-            if (!Together.Net.IsServer) return;
+            if (!Plugin.MultiplayerActive || !Together.Net.IsServer) return;
             var tracker = GetMpTracker(false) as Together.SyncInfoGameObjectTracker;
             if (tracker == null) return;
             var writer = Together.Multiplayer.CreateNamedWriter(MSGID_EJECT_VISUALS);
@@ -415,7 +416,7 @@ namespace NewFirearms
 
         public void OnInventoryUse()
         {
-            if (Plugin.togetherMpEnabled && !Plugin.IsHost())
+            if (Plugin.MultiplayerActive && !Plugin.IsHost())
                 return;
             RemoveMag(null);
         }
@@ -423,7 +424,7 @@ namespace NewFirearms
         public bool DragOnto(Item item)
         {
             if (IsJammed) return false;
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(2, item))
+            if (Plugin.MultiplayerActive && RequestHostIfClient(2, item))
                 return true;
             if (item.TryGetComponent<RshMag>(out var newMag))
             {
@@ -440,7 +441,7 @@ namespace NewFirearms
                 mag = newMag.it.id;
                 UnityEngine.Object.Destroy(item.gameObject);
                 UpdateSprite();
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     SyncIfHost();
                 return true;
             }
@@ -510,7 +511,7 @@ namespace NewFirearms
                         GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(0.5f, 0.5f);
                     UnityEngine.Object.Destroy(item.gameObject);
                     UpdateSprite();
-                    if (Plugin.togetherMpEnabled)
+                    if (Plugin.MultiplayerActive)
                         SyncIfHost(4);
                     return true;
                 }
@@ -523,7 +524,7 @@ namespace NewFirearms
 
         private void RemoveMag(Body body, bool playSound)
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(3))
+            if (Plugin.MultiplayerActive && RequestHostIfClient(3))
                 return;
             StopFiring();
             if (3 <= prop.feedType && racked)
@@ -532,7 +533,7 @@ namespace NewFirearms
                     Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 for (int i = 0; i < rounds.Count(); i++)
                     EjectRound(i);
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     SyncIfHost(playSound ? (byte)1 : SilentMagazineRemoval);
             }
        else if (!string.IsNullOrEmpty(mag))
@@ -549,7 +550,7 @@ namespace NewFirearms
                 if (playSound)
                     Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 UpdateSprite();
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     SyncIfHost(playSound ? (byte)0 : SilentMagazineRemoval);
                 if (discard) return;
 
@@ -581,7 +582,7 @@ namespace NewFirearms
             if (body != null)
                 body.AutoPickUpItem(go.GetComponent<Item>());
             rshMag.UpdateSprite();
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 rshMag.SyncIfHost();
         }
 
@@ -592,19 +593,19 @@ namespace NewFirearms
             fireMode = prop.fireModes.Max();
             it.condition = Mathf.Max(0.014f, it.condition);
             UpdateSprite();
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 SyncIfHost();
         }
 
         public void ToggleFireMode()
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(4))
+            if (Plugin.MultiplayerActive && RequestHostIfClient(4))
                 return;
 
             StopFiring();
             Sound.Play(prop.toggleFireModeAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             fireMode = prop.fireModes[(prop.fireModes.IndexOf(fireMode) + 1) % prop.fireModes.Count];
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 SyncIfHost();
         }
 
@@ -656,6 +657,7 @@ namespace NewFirearms
         */
         public bool RequestHostIfClient(byte action, Item second=null)
         {
+            if (!Plugin.MultiplayerActive) return false;
             if (Together.Net.IsServer)
                 return false;
             LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_ACTION);
@@ -681,7 +683,7 @@ namespace NewFirearms
         */
         public override void SyncIfHost(byte extraData=0, bool reliable=true)
         {
-            if (!Together.Net.IsServer)
+            if (!Plugin.MultiplayerActive || !Together.Net.IsServer)
                 return;
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(reliable) as Together.SyncInfoGameObjectTracker);
             if (null == tracker)
@@ -718,6 +720,7 @@ namespace NewFirearms
 
         void MpScareCheck()
         {
+            if (!Plugin.MultiplayerActive) return;
             if (!Together.Multiplayer.rules.PVP)
                 return;
             if (null == transform.parent || !transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) || slot.slot != slot.body.handSlot)
@@ -753,7 +756,7 @@ namespace NewFirearms
 
         public void NotifyShoot(ShootVisuals visuals, float knockback, float muzzleRise, bool ragdollRecoil)
         {
-            if (!Together.Net.IsServer)
+            if (!Plugin.MultiplayerActive || !Together.Net.IsServer)
                 return;
             LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_SHOOT_VISUALS);
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(false) as Together.SyncInfoGameObjectTracker);

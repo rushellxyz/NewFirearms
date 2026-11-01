@@ -113,6 +113,7 @@ namespace NewFirearms
 
         public static void RequestGunSuicide()
         {
+            if (!Plugin.MultiplayerActive || Plugin.IsHost()) return;
             Together.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, Together.Multiplayer.CreateNamedWriter(MSGID_SUICIDE_REQUEST));
         }
     }

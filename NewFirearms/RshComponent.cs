@@ -28,6 +28,7 @@ namespace NewFirearms
         // instead return monobehaviour and convert it on caller
         public MonoBehaviour GetMpTracker(bool mustHave)
         {
+            if (!Plugin.MultiplayerActive) return null;
             if (null != mpTracker)
                 return mpTracker;
             mpTracker = GetComponent<Together.SyncInfoGameObjectTracker>();
@@ -41,7 +42,7 @@ namespace NewFirearms
 
         public static bool IsClient()
         {
-            return Together.Net.IsClient;
+            return Plugin.MultiplayerActive && !Plugin.IsHost();
         }
 
         /*public static void DestroyEverything()

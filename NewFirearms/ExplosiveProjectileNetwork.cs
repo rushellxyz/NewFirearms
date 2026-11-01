@@ -18,7 +18,7 @@ namespace NewFirearms
 
         internal static void Sync(ExplosiveProjectile projectile, bool alive)
         {
-            if (!Together.Net.IsServer) return;
+            if (!Plugin.MultiplayerActive || !Together.Net.IsServer) return;
             var writer = Together.Multiplayer.CreateNamedWriter(MessageId);
             writer.Put(projectile.NetworkId);
             writer.Put(alive);

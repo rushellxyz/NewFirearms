@@ -8,7 +8,6 @@ TODO List - Agents stay away unless stated otherwise
  - Integration with New Descents: add Gun tag to custom guns
  - Fix gun repairing on reloading in multiplayer
  - And hot reloading!
- - Make mod work when MP enabled but not active
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
  - The sliderHandFollowOffset !

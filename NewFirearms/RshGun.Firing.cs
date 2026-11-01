@@ -9,7 +9,7 @@ namespace NewFirearms
 
         public bool Shoot(Body body = null)
         {
-            if (Plugin.togetherMpEnabled && RequestHostIfClient(0))
+            if (Plugin.MultiplayerActive && RequestHostIfClient(0))
             {
                 currentlyShooting = true;
                 return true;

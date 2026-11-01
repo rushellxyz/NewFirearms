@@ -158,7 +158,7 @@ namespace NewFirearms
                     raycastHit2D.rigidbody.AddForceAtPosition(dir * info.structureDamage, raycastHit2D.point, ForceMode2D.Impulse);
                 }
                 PlayerCamera.main.body.CreateCloudSmall(raycastHit2D.point, Vector2.zero);
-                if (!Plugin.togetherMpEnabled || !IsPvpEnabled())
+                if (!Plugin.MultiplayerActive || !IsPvpEnabled())
                 {
                     continue;
                 }
@@ -179,7 +179,7 @@ namespace NewFirearms
                 if (victim == shooter)
                     continue;
 
-                if ((Plugin.togetherMpEnabled && CantHitThisPlayer(shooter, victim)) || victim == shooter)
+                if ((Plugin.MultiplayerActive && CantHitThisPlayer(shooter, victim)) || victim == shooter)
                 {
                     continue;
                 }
@@ -187,7 +187,7 @@ namespace NewFirearms
                     break;
                 list.Add(victim);
                 Vector2 impulse = dir * info.knockback;
-                if (Plugin.togetherMpEnabled)
+                if (Plugin.MultiplayerActive)
                     RecordShootKnockback(victim, impulse, visuals);
            else     ApplyShootKnockback(victim, impulse);
                 InduceDamage(limb, info.playerDamage, num * PvpDamageMult() / limb.GetArmorReduction());
@@ -274,7 +274,7 @@ namespace NewFirearms
        else if (limb.isHead && 0f > limb.muscleHealth)
                 limb.body.brainHealth += limb.muscleHealth;
 
-            if (Plugin.togetherMpEnabled && PvpDismemberAllowed())
+            if (Plugin.MultiplayerActive && PvpDismemberAllowed())
                 DismemberCheck(limb);
         }
 
@@ -330,7 +330,7 @@ namespace NewFirearms
             {
                 WorldGeneration.CreateDamageNumber(hitNumber.Item1, hitNumber.Item2);
             }
-            if (!Plugin.togetherMpEnabled)
+            if (!Plugin.MultiplayerActive)
                 return;
             foreach ((ushort netId, Vector2 impulse) in visual.knockbacks)
             {

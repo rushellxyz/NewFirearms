@@ -29,7 +29,7 @@ namespace NewFirearms
         private void Start()
         {
             ResolveSprite();
-            if (Plugin.togetherMpEnabled)
+            if (Plugin.MultiplayerActive)
                 StartSync();
         }
 
@@ -59,13 +59,13 @@ namespace NewFirearms
         private void StartSync()
         {
             // Ngl, i actually hate how we handle late joiners
-            if (Together.Net.IsServer)
+            if (Plugin.MultiplayerActive && Together.Net.IsServer)
                 InvokeRepeating(nameof(Sync), 0.1f, 1f);
         }
 
         private void Sync()
         {
-            if (!Together.Net.IsRunning || !Together.Net.IsServer || string.IsNullOrEmpty(gunId) ||
+            if (!Plugin.MultiplayerActive || !Together.Net.IsServer || string.IsNullOrEmpty(gunId) ||
                 !TryGetComponent<Together.SyncInfoGameObjectTracker>(out var tracker) || !tracker.isVisible)
                 return;
             var writer = Together.Multiplayer.CreateNamedWriter(MessageId);

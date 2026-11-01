@@ -33,7 +33,7 @@ namespace NewFirearms
         {
             if (!CanLoad(target, source)) return;
             var magazine = source.GetComponent<RshMag>();
-            if (Plugin.togetherMpEnabled && magazine.RequestHostIfClient(2, target)) return;
+            if (Plugin.MultiplayerActive && magazine.RequestHostIfClient(2, target)) return;
             var gun = target.GetComponent<GunScript>();
             var adapter = source.GetComponent<AmmoScript>() ?? source.gameObject.AddComponent<AmmoScript>();
             adapter.ammoType = source.id == "smallmagazine" ? GunScript.AmmoType.Pistol : GunScript.AmmoType.Rifle;
@@ -69,7 +69,7 @@ namespace NewFirearms
                 if (!Enabled || !__instance.TryGetComponent<Item>(out var item) || item.id != "thornslinger")
                     return true;
                 // Together owns native gun requests; a client must never create ammunition here.
-                if (Plugin.togetherMpEnabled && !Plugin.IsHost()) return true;
+                if (Plugin.MultiplayerActive && !Plugin.IsHost()) return true;
                 if (!__instance.hasMag) return true;
                 string id = AmmoScript.AmmoTypeToMagazine(__instance.ammoType);
                 if (!Plugin.MagazineDefinitions.TryGetValue(id, out var definition)) return true;
@@ -97,7 +97,7 @@ namespace NewFirearms
                     magazine.existed = true;
                     magazine.rounds = rounds;
                     magazine.UpdateSprite();
-                    if (Plugin.togetherMpEnabled) magazine.SyncIfHost();
+                    if (Plugin.MultiplayerActive) magazine.SyncIfHost();
                 }
                 else
                 {

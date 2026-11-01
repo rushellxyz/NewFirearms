@@ -4,3 +4,7 @@ B03: Rejected, the target mod is abandoned
 B04: Rejected, the target mod is abandoned
 B05: New Descents fixed
 
+
+
+
+B10: Fixed
