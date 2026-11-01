@@ -49,6 +49,38 @@
             "conditionLoss": 0.005,
 
         },
+        {
+            "round": "nf.556piercing",
+            "structureDamage": 240,
+            "animalDamage": 160,
+            "playerDamage":
+            {
+                "traumaAmount": 11,
+                "pain": 150,
+                "adrenaline": 75,
+                "skinDamage": 53,
+                "muscleDamage": 162,
+                "bleedAmount": 40,
+                "wearableDamage": 1.26,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.54,
+                "internalBleed": 20,
+                "brainDamage": 40,
+                "disfigureChance": 1.8,
+
+            },
+
+            "knockback": 6,
+            "muzzleRise": 8,
+
+            "verticalSpread": 0.01,
+            "loudness": 7,
+            "conditionLoss": 0.005,
+
+        },
     ],
     "desiredGasTime": 0.1,
     "fireModes": [ 0, 3, ],
@@ -78,33 +110,33 @@
         "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",
         "sliderBackPath": "uiSliderBack",
+        "backLayerPath": "uiBackLayer",
         "frontSliderInvisble": true,
-        "sliderMinimumPosition": -0.02,
+        "sliderMinimumPosition": -0.03,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "rackPoint": -0.01,
-        "rackedIdlePosition": -0.02,
-        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "rackPoint": -0.015,
+        "rackedIdlePosition": -0.03,
+        "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
-        "sliderHandFollowOffset": -0.15,
+        "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
+        "sliderHandFollowOffset": -0.12,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
-        "magazinePaths": { "nf.smgmag": "uiSmgmag" },
-        "ammosInMagazinePaths": { "nf.smgmag": [ "uiSmgmag9mmround", "uiSmgmag9mmhollow", "uiSmgmag9mmvenomus" ] },
-        "magazineXPosition": -0.032,
-        "magazineYPosition": -0.034,
-        "magazineRotation": 10,
-        "magazineXSpeed": 0.05,
+        "magazinePaths": { "riflemagazine": "uiRiflemag" },
+        "ammosInMagazinePaths": { "riflemagazine": [ "uiRiflemag556round", "uiRiflemag556piercing" ] },
+        "magazineXPosition": -0.036,
+        "magazineYPosition": -0.024,
+        "magazineRotation": 0,
+        "magazineXSpeed": 0.00,
         "magazineYSpeed": -0.525,
         "magazineAnimationTime": 0.2,
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.048,
-        "casingYPosition": 0.067,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
+        "casingXPosition": -0.041,
+        "casingYPosition": 0.07,
+        "casingsPath": [ "uiEject556roundCasing", "uiEject556round", "uiEject556piercing"],//, "uiEject12gaugeslug" ],
         "resizeMagazine": true,
-        "fitMainSprite": true,
     }
 }
