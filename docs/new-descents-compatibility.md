@@ -1,0 +1,7 @@
+When `net.jimmyking.newdescents` is loaded, registered NewFirearms guns receive CUCoreLib's `gun` crafting quality, displayed as “Gun.” This is the quality New Descents recipes require; the ordinary `gun` item tag alone does not satisfy those recipes.
+
+The thornslinger accepts NewFirearms' `smallmagazine` and `riflemagazine` items. The bridge supplies a temporary vanilla `AmmoScript` to `GunScript.LoadMag`, allowing New Descents' existing prefix to adopt the caliber and weapon stats. The exact remaining round count is transferred. Unloading or switching calibers creates an equivalent NewFirearms magazine with the remaining ammunition, including zero rounds.
+
+Custom and mixed ammunition are accepted. Firing retains the thornslinger's native caliber-specific behavior; NewFirearms ammunition-specific damage and venom effects are not applied by New Descents' firing code. The host stores the original magazine contents, including across saves, so rounds still inside the magazine retain their custom types and order when unloaded or when switching calibers. As with the native weapon, chambered rounds are handled separately by GunScript.
+
+Clients request loading through the existing magazine action channel. The host checks reach for both items and performs the transfer. The bridge uses only game and CUCoreLib APIs, with a soft plugin dependency for load order; New Descents is not an assembly reference. Without that plugin, the bridge and its targeted native unload patch are disabled.

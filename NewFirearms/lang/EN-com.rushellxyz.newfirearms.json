@@ -3,6 +3,7 @@
     "newfirearms.action.chamber_load": "chamber load",
     "newfirearms.action.clear_jam": "clear jam",
     "newfirearms.action.load_round": "load round",
+    "newfirearms.action.load_mag": "load magazine",
     "newfirearms.action.rack": "rack",
     "newfirearms.action.remove_mag": "remove mag",
     "newfirearms.action.remove_round": "remove round",

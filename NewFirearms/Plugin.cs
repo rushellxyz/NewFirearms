@@ -15,6 +15,7 @@ namespace NewFirearms
     [BepInDependency("com.rushellxyz.gunminigame", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("meow.catpatch", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("net.jimmyking.newdescents", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         public static SettingsJson sett;
@@ -41,6 +42,7 @@ namespace NewFirearms
 
             togetherMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
             catPatchActive = togetherMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
+            NewDescentsCompatibility.Enabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("net.jimmyking.newdescents");
 
             var harmony = new Harmony("com.rushellxyz.newfirearms");
             harmony.PatchAll();
@@ -63,13 +65,6 @@ namespace NewFirearms
 
             if (togetherMpEnabled)
                 MpOperations(harmony);
-        }
-
-        // """Fix""" cant load magazines into Thorn slinger
-        void Start()
-        {
-            if (CUCoreLib.Registries.ItemRegistry.RegisteredItems.ContainsKey("thornslinger"))
-                CUCoreLib.Registries.ItemRegistry.RegisteredItems["thornslinger"].description = ModLocale.Get("newfirearms.thornslinger.description");
         }
 
         void PatchPostfix(Harmony harmony, string targetClass, string targetMethod, string postfixClass)
@@ -174,6 +169,10 @@ namespace NewFirearms
             };
             if (prop.hasLaser)
                 cuInfo.SpawnComponents.Add("NewFirearms.LaserPointer, NewFirearms.dll");
+            if (info.qualities != null)
+                cuInfo.qualities = new List<CraftingQuality>(info.qualities);
+            if (NewDescentsCompatibility.Enabled && !cuInfo.qualities.Any(quality => quality.id == "gun"))
+                cuInfo.qualities.Add(CUCoreLib.Helpers.CUCoreUtils.CreateCraftingQuality("gun", "Gun"));
             cuInfo.SetTags();
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
             if (vanillaItems.Contains(id))

@@ -30,6 +30,11 @@ namespace NewFirearms
     {
         public static bool Prefix(Body __instance, ref bool __result, Item it1, Item it2)
         {
+            if (NewDescentsCompatibility.IsMagazinePair(it1, it2))
+            {
+                __result = NewDescentsCompatibility.CanLoad(it1, it2);
+                return false;
+            }
             if (it1.TryGetComponent<RshGun>(out var rshGun) && ((it2.TryGetComponent<RshMag>(out var rshMag) && rshGun.CanFitMag(rshMag.prop)) || rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)) )
             {
                 __result = true;
@@ -51,6 +56,11 @@ namespace NewFirearms
     {
         public static bool Prefix(Body __instance, Item it1, Item it2)
         {
+            if (NewDescentsCompatibility.IsMagazinePair(it1, it2))
+            {
+                NewDescentsCompatibility.LoadMagazine(it1, it2);
+                return false;
+            }
             if (it1.TryGetComponent<RshGun>(out var rshGun))
             {
                 rshGun.DragOnto(it2);

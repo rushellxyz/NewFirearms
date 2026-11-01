@@ -38,7 +38,7 @@ namespace NewFirearms
             reader.Get(out ushort syncId);
             reader.Get(out byte action);
 
-            if (2 <= action)
+            if (3 <= action)
             {
                 NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.unknown"));
                 return;
@@ -66,7 +66,7 @@ namespace NewFirearms
 
             if (0 == action)
                 rshMag.RemoveRound(pb.body);
-       else if (1 == action)
+       else if (1 == action || 2 == action)
             {
                 reader.Get(out ushort ontoSyncId);
                 if (!Together.ItemSync.TryGetItem(new Together.knetid(ontoSyncId), out var ontoSi, out var ontoItem))
@@ -79,7 +79,10 @@ namespace NewFirearms
                     NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.mag.roundOutOfReach"), canBeFixedWithSwitchingStrictSync:true);
                     return;
                 }
-                rshMag.DragOnto(ontoItem);
+                if (1 == action)
+                    rshMag.DragOnto(ontoItem);
+                else
+                    NewDescentsCompatibility.LoadMagazine(ontoItem, item);
             }
         }
     }

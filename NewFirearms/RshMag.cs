@@ -41,10 +41,18 @@ namespace NewFirearms
             // Only the host creates initial ammunition; clients wait for its snapshot.
             if (!existed && (!Plugin.togetherMpEnabled || Plugin.IsHost()))
             {
-                sbyte ammoType = (sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count);
-                int amount = prop.pseudoMagazine ? prop.capacity
-                    : Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition));
-                Fill(ammoType, amount);
+                if (TryGetComponent<MagazineSpawnContents>(out var contents))
+                {
+                    rounds = new List<sbyte>(contents.Rounds);
+                    UnityEngine.Object.Destroy(contents);
+                }
+                else
+                {
+                    sbyte ammoType = (sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count);
+                    int amount = prop.pseudoMagazine ? prop.capacity
+                        : Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition));
+                    Fill(ammoType, amount);
+                }
                 it.condition = 1f;
                 existed = true;
             }
@@ -191,6 +199,7 @@ namespace NewFirearms
         {
             {0, "newfirearms.action.remove_round"},
             {1, "newfirearms.action.load_round"},
+            {2, "newfirearms.action.load_mag"},
         };
     }
 }

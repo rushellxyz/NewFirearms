@@ -2,6 +2,5 @@ B01: Added a warning on nexus pages
 B02: Fixed
 B03: Rejected, the target mod is abandoned
 B04: Rejected, the target mod is abandoned
-B05: Already fixed, but, not really, guns still dont accept magazines but controls work
-
+B05: New Descents fixed
 
