@@ -122,8 +122,7 @@ namespace NewFirearms
         public void UpdateSprite()
         {
             if (prop == null || prop.nonEmptySprite == null) return;
-            if (TryGetComponent<SpriteRenderer>(out var renderer))
-                renderer.sprite = TotalRounds() > 0 ? prop.nonEmptySprite : prop.emptySprite;
+            CUCoreLib.Helpers.CUCoreUtils.SetItemSprite(it, TotalRounds() > 0 ? prop.nonEmptySprite : prop.emptySprite);
         }
 
         public void Fill(sbyte type, int amount)

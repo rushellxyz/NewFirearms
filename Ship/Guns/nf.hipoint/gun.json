@@ -36,6 +36,8 @@
     [
         {
             "round": "9mmround",
+            "casingSprite": "9mmroundCasing",
+            "minigameCasingSprite": "uiEject9mmroundCasing",
             "structureDamage": 81,
             "animalDamage": 108,
 
@@ -67,6 +69,8 @@
         },
         {
             "round": "nf.9mmhollow",
+            "casingSprite": "9mmhollowCasing",
+            "minigameCasingSprite": "uiEject9mmhollowCasing",
             "structureDamage": 54,
             "animalDamage": 135,
 
@@ -98,6 +102,8 @@
         },
         {
             "round": "nf.9mmvenomus",
+            "casingSprite": "9mmvenomusCasing",
+            "minigameCasingSprite": "uiEject9mmvenomusCasing",
             "structureDamage": 45,
             "animalDamage": 135,
 
@@ -149,7 +155,7 @@
 
     "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "", "unsafe", ],
 
-    "magazineTexturesPath": { "nf.m1911mag": "blank", },
+    "magazineTexturesPath": { "nf.hipointmag": "blank", },
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
 
     "minigame":
@@ -168,27 +174,25 @@
         "unrackedIdlePosition": 0,
         "rackPoint": -0.025,
         "rackedIdlePosition": -0.02,
-        "casingsPath": [ ],
-        "casingDelay": 0.2,
-        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
+        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
         "sliderHandFollowOffset": -0.125,
         "canUseFannyPack": true,
         "magReleasePath": "uiReleaseTrigger",
-        "magazinePaths": { "nf.m1911mag": "uiM1911mag" },
-        "ammosInMagazinePaths": { "nf.m1911mag": [ "uiM1911mag9mmround", "uiM1911mag9mmhollow", "uiM1911mag9mmvenomus" ] },
+        "magazinePaths": { "nf.hipointmag": "uiHipointmag" },
+        "ammosInMagazinePaths": { "nf.hipointmag": [ "uiHipointmag9mmround", "uiHipointmag9mmhollow", "uiHipointmag9mmvenomus" ] },
         "magazineXPosition": -0.0859375,
-        "magazineYPosition": 0.01388888888888889,
-        "magazineXSpeed": -0.175,
+        "magazineYPosition": 0.012,
+        "magazineXSpeed": -0.15,
         "magazineYSpeed": -0.55,
         "magazineAnimationTime": 0.2,
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.075,
-        "casingYPosition": 0.0725,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
+        "casingXPosition": -0.07,
+        "casingYPosition": 0.065,
+        "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
     }
 
 }
