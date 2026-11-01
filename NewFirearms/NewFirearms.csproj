@@ -87,5 +87,8 @@
       <HintPath>$(GameDirectory)/BepInEx/plugins/Together/LiteEntitySystem.dll</HintPath>
     </Reference>
     <ProjectReference Include="../GunMinigame/GunMinigame.csproj" />
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -42,9 +42,6 @@ namespace NewFirearms
             togetherMpEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
             catPatchActive = togetherMpEnabled && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
 
-            if (catPatchActive)
-                Logger.LogInfo("Cat patch detected - cancelling some of our patches to prevent conflict (try to not kill yourself)");
-
             var harmony = new Harmony("com.rushellxyz.newfirearms");
             harmony.PatchAll();
 

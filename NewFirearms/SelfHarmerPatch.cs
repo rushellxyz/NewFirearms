@@ -171,4 +171,33 @@ namespace NewFirearms
             plr.body.happiness = oldHappiness;
         }
     }
+
+    // compat with catpatch suicide, hopefully works
+    [HarmonyPatch(typeof(SelfHarmer), "Suicide")]
+    [HarmonyBefore("meow.catpatch")]
+    class CatPatchCompat
+    {
+        static bool Prepare()
+         => Plugin.catPatchActive;
+
+        static void Prefix(SelfHarmer __instance, ref IEnumerator __result)
+        {
+            if (!__instance.body.FindByTagThorough("gun", out Item it))
+                return;
+
+            if (it.TryGetComponent<GunScript>(out var _))
+                return;
+
+            SpriteRenderer sr = it.GetComponent<SpriteRenderer>();
+            GunScript gs = it.gameObject.AddComponent<GunScript>();
+            gs.normalSprite = sr.sprite;
+            gs.normalSpriteNoMag = sr.sprite;
+            gs.rackedSprite = sr.sprite;
+            gs.rackedSpriteNoMag = sr.sprite;
+            gs.muzzleParticle = UnityEngine.Object.FindAnyObjectByType<ParticleSystem>(); // Стащим случайный ParticleSystem :troll:
+            gs.shotsPerFire = 1;
+
+            UnityEngine.Object.Destroy(gs, 15f);
+        }
+    }
 }
