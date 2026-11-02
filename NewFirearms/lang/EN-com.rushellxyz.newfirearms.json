@@ -1,5 +1,6 @@
 {
   "other": {
+    "newfirearms.magazine.charge": "Battery charge: {0:0}%",
     "newfirearms.action.chamber_load": "chamber load",
     "newfirearms.action.clear_jam": "clear jam",
     "newfirearms.action.load_round": "load round",
@@ -13,30 +14,11 @@
     "newfirearms.command.suicide.description": "You must have a loaded gun. Prevents last stand.",
     "newfirearms.command.suicide.noGun": "you dont have a gun. you are gonna suffer.",
     "newfirearms.command.suicide.notReady": "Gun is not ready. Try remove safety?",
-
-    "newfirearms.cou-JUST A NOTE FOR TRANSLATORS": "The course is currently broken, all other lines will change, dont even bother translating them. Флойда, хз, всегда хотел как-то отрегировать на то что ты переводишь мой мод",
-    "newfirearms.course.dialogue.intro": "Welcome to firearm handling. First of all, lets pin first aid knowledge",
-    "newfirearms.course.dialogue.medical": "You know how to treat it.",
-    "newfirearms.course.dialogue.medicalComplete": "Good job Experiment #{0}, now, lets move on to when you are the one firing",
-    "newfirearms.course.dialogue.combat": "Live practice: three waves. Clear each wave before the next. Ammo is replenished, but there is no automatic healing between waves.",
-    "newfirearms.course.dialogue.eject": "Now eject the magazine using the magazine-release area, or your configured eject control. A chambered round can remain after the magazine is removed.",
-    "newfirearms.course.dialogue.insert": "A loaded magazine is in your front pouch or beside you. Drag it onto the weapon. Close the slide to chamber a round. Loose rounds belong in the bandolier; spare magazines belong in the front pouch.",
-    "newfirearms.course.dialogue.looseRound": "An empty spare magazine and loose 9mm rounds are supplied. Drag a round from the bandolier onto that magazine, or combine them in inventory. Load at least one round to continue.",
-    "newfirearms.course.dialogue.rack": "Pick up the M1911. Open the slide by dragging its handle in the gun window. With the minigame disabled, use the configured rack control. An open slide is not a loaded chamber.",
-    "newfirearms.course.dialogue.range": "Moving to the firing range. Training ammunition will be replenished during targets and live practice. Injuries carry through training; you receive one full recovery immediately before survival.",
-    "newfirearms.course.dialogue.reinsert": "Reinsert a magazine. If the slide is locked open, close it. If it is closed on an empty chamber, cycle it. Check the fire selector: safe will prevent firing.",
-    "newfirearms.course.dialogue.survival": "Training complete. You will receive one full recovery and a finite stock of guns and ammunition. No resupply, automatic healing, or medical equipment after that. Enemies keep arriving. Your score is active survival time; pauses do not count. Leave the course whenever you wish.",
-    "newfirearms.course.dialogue.survivalStart": "Survival begins now. Good luck.",
-    "newfirearms.course.dialogue.targets": "Practice with {0}. Load, chamber, select a firing mode, then destroy all three targets to your right. Other weapons do not count for this drill. Reload whenever necessary.",
-    "newfirearms.course.dialogue.waveCleared": "Wave {0} cleared. Reload and prepare.",
-    "newfirearms.course.result.died": "Died",
-    "newfirearms.course.result.leftCourse": "Left course",
     "newfirearms.course.ui.best": "Personal best: {0}",
     "newfirearms.course.ui.dismiss": "Dismiss",
     "newfirearms.course.ui.result": "{0}\nSurvived: {1}",
     "newfirearms.course.ui.resultsTitle": "Firearm handling — survival results",
     "newfirearms.course.ui.return": "Return to menu",
-
     "newfirearms.denied.gun.invalid": "Denied {0}\nThis is not a gun?!",
     "newfirearms.denied.gun.noBody": "Denied {0}\nYou dont have a body, whaaa??!!",
     "newfirearms.denied.gun.outOfReach": "Denied {0}\nYou can't reach that gun.",
@@ -63,6 +45,23 @@
     "runsetnewfirearms.gunjamming": "Gun jamming",
     "runsetnewfirearms.gunjammingdsc": "Do guns jam?",
     "runsetnewfirearms.stunhitbox": "Stun hitbox size",
-    "runsetnewfirearms.stunhitboxdsc": "Shots passing just above or below an enemy can still stun it. Sets the size of the stun hitbox."
+    "runsetnewfirearms.stunhitboxdsc": "Shots passing just above or below an enemy can still stun it. Sets the size of the stun hitbox.",
+    "newfirearms.course.dialogue.intro": "Welcome to firearm handling. First of all, lets pin first aid knowledge",
+    "newfirearms.course.dialogue.medical": "You know how to treat it.",
+    "newfirearms.course.dialogue.medicalComplete": "Good job Experiment #{0}, now, lets move on to when you are the one firing",
+
+    "newfirearms.course.dialogue.combat": "Live practice: three waves. Clear each wave before the next. Ammo is replenished, but there is no automatic healing between waves.",
+    "newfirearms.course.dialogue.eject": "Now eject the magazine using the magazine-release area, or your configured eject control. A chambered round can remain after the magazine is removed.",
+    "newfirearms.course.dialogue.insert": "A loaded magazine is in your front pouch or beside you. Drag it onto the weapon. Close the slide to chamber a round. Loose rounds belong in the bandolier; spare magazines belong in the front pouch.",
+    "newfirearms.course.dialogue.looseRound": "An empty spare magazine and loose 9mm rounds are supplied. Drag a round from the bandolier onto that magazine, or combine them in inventory. Load at least one round to continue.",
+    "newfirearms.course.dialogue.rack": "Pick up the M1911. Open the slide by dragging its handle in the gun window. With the minigame disabled, use the configured rack control. An open slide is not a loaded chamber.",
+    "newfirearms.course.dialogue.range": "Moving to the firing range. Training ammunition will be replenished during targets and live practice. Injuries carry through training; you receive one full recovery immediately before survival.",
+    "newfirearms.course.dialogue.reinsert": "Reinsert a magazine. If the slide is locked open, close it. If it is closed on an empty chamber, cycle it. Check the fire selector: safe will prevent firing.",
+    "newfirearms.course.dialogue.survival": "Training complete. You will receive one full recovery and a finite stock of guns and ammunition. No resupply, automatic healing, or medical equipment after that. Enemies keep arriving. Your score is active survival time; pauses do not count. Leave the course whenever you wish.",
+    "newfirearms.course.dialogue.survivalStart": "Survival begins now. Good luck.",
+    "newfirearms.course.dialogue.targets": "Practice with {0}. Load, chamber, select a firing mode, then destroy all three targets to your right. Other weapons do not count for this drill. Reload whenever necessary.",
+    "newfirearms.course.dialogue.waveCleared": "Wave {0} cleared. Reload and prepare.",
+    "newfirearms.course.result.died": "Died",
+    "newfirearms.course.result.leftCourse": "Left course"
   }
 }

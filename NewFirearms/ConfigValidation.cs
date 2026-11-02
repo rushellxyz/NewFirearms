@@ -82,9 +82,14 @@ namespace NewFirearms
         internal void Gun(GunJson gun)
         {
             if (gun == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
-            Require(gun.feedType >= 1 && gun.feedType <= 4, "feedType", "expected 1 (magazine), 2 (tube), 3 (barrel), or 4 (revolver).");
+            Require(gun.feedType >= 1 && gun.feedType <= 5, "feedType", "expected 1 (magazine), 2 (tube), 3 (barrel), 4 (revolver), or 5 (battery magazine).");
             Require(gun.internalCapacity > 0, "internalCapacity", "must be greater than zero.");
-            Require(gun.feedType != 1 || gun.internalCapacity == 1, "internalCapacity", "must be 1 for magazine-fed guns.");
+            Require(gun.feedType != 1 && gun.feedType != 5 || gun.internalCapacity == 1, "internalCapacity", "must be 1 for magazine-fed and battery-fed guns.");
+            if (gun.feedType == 5)
+            {
+                Require(gun.batteryDrainPerShot > 0f && gun.batteryDrainPerShot <= 1f, "batteryDrainPerShot", "must be greater than zero and at most 1 (fraction of full charge per shot).");
+                Require(gun.ammoTypes?.Count == 1, "ammoTypes", "battery-fed guns require exactly one firing profile.");
+            }
             Require(gun.ppu > 0 && !float.IsInfinity(gun.ppu), "ppu", "must be a finite number greater than zero.");
             int count = gun.ammoTypes?.Count ?? 0;
             Require(count > 0 && count <= 127, "ammoTypes", $"has {count} entries; expected 1 to 127.");
@@ -112,7 +117,7 @@ namespace NewFirearms
                     Require(gun.fireModes[i] <= 4, $"fireModes[{i}]", "expected 0 (safe), 1 (manual), 2 (semi-auto), 3 (full-auto), or 4 (three-round burst).");
                     lastMode = Math.Max(lastMode, gun.fireModes[i]);
                 }
-            Require(gun.feedType != 1 || gun.magazineType != null, "magazineType", "an array is required for magazine-fed guns.");
+            Require(gun.feedType != 1 && gun.feedType != 5 || gun.magazineType != null, "magazineType", "an array is required for magazine-fed and battery-fed guns.");
             Ids(gun.magazineType, "magazineType", false);
             Recipe(gun.craftable, gun.recipe);
             Texture(gun.normalTexturePath, "normalTexturePath", true);
@@ -178,7 +183,8 @@ namespace NewFirearms
         internal void Magazine(MagJson mag)
         {
             if (mag == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
-            Require(mag.capacity > 0 && mag.capacity <= ushort.MaxValue, "capacity", "must be between 1 and 65535.");
+            Require(Enum.IsDefined(typeof(MagazineKind), mag.type), "type", "expected regular, pseudo, or battery.");
+            Require(mag.capacity > 0 && mag.capacity <= ushort.MaxValue, "capacity", "must be between 1 and 65535 (battery slots for battery magazines).");
             Ids(mag.ammoTypes, "ammoTypes", true);
             Require(mag.ammoTypes == null || mag.ammoTypes.Count <= 127, "ammoTypes", "cannot contain more than 127 ammo types.");
             Require(mag.magazineType != null, "magazineType", "an array is required; use [] for ammo boxes that cannot be inserted into guns.");

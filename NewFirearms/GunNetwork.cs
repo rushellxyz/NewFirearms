@@ -63,6 +63,7 @@ namespace NewFirearms
 
             reader.Get(out byte extraData);
             ReadJamState(rshGun, reader);
+            rshGun.SetBatteryState(BatteryNetwork.Read(reader));
             bool silentMagazineRemoval = (extraData & RshGun.SilentMagazineRemoval) != 0;
             extraData = (byte)(extraData & ~RshGun.SilentMagazineRemoval);
             if (!silentMagazineRemoval && (magazineRemoved || 1 == extraData))

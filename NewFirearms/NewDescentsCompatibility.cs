@@ -21,7 +21,7 @@ namespace NewFirearms
             if (!IsMagazinePair(target, source)) return false;
             var gun = target.GetComponent<GunScript>();
             var magazine = source.GetComponent<RshMag>();
-            if (magazine.prop == null || !magazine.existed || magazine.rounds == null || magazine.rounds.Count == 0)
+            if (magazine.prop == null || magazine.prop.type == MagazineKind.Battery || !magazine.existed || magazine.rounds == null || magazine.rounds.Count == 0)
                 return false;
             var caliber = source.id == "smallmagazine" ? GunScript.AmmoType.Pistol : GunScript.AmmoType.Rifle;
             if (gun.hasMag && gun.ammoType == caliber) return false;

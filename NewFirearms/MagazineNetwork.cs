@@ -19,6 +19,7 @@ namespace NewFirearms
                 snapshot.Add(newRound);
             }
             reader.Get(out byte extraData);
+            var batteries = BatteryNetwork.Read(reader);
             // Periodic packets can race item spawn/despawn. A later snapshot retries.
             if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var _, out Item it) || it == null ||
                 !it.TryGetComponent<RshMag>(out var rshMag)) return;
@@ -26,6 +27,8 @@ namespace NewFirearms
             rshMag.existed = true;
             if (rshMag.prop == null) rshMag.LoadDefinition();
             if (rshMag.prop == null) return;
+            rshMag.batteries = batteries;
+            rshMag.UpdateBatteryCondition();
             rshMag.UpdateSprite();
             if (1 == extraData)
                 Sound.Play(rshMag.prop.loadRoundAudio, rshMag.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));

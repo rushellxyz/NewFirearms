@@ -109,10 +109,13 @@ namespace NewFirearms
             if (gasTime <= 0f)
             {
                 gasTime = 0f;
-                if (4 == prop.feedType || prop.feedType == 3 && fireMode == BurstFireMode)
-                    RotateChambers();
-           else if (!(1 < rounds.Count && 0 > rounds[1]))
-                    Rack(manual: false);
+                if (prop.feedType != BatteryFeed)
+                {
+                    if (4 == prop.feedType || prop.feedType == 3 && fireMode == BurstFireMode)
+                        RotateChambers();
+                    else if (!(1 < rounds.Count && 0 > rounds[1]))
+                        Rack(manual: false);
+                }
                 ContinueFiring();
             }
         }
@@ -199,7 +202,8 @@ namespace NewFirearms
 
         public bool IsReady()
         {
-            return !IsJammed && !racked && 0 != fireMode && rounds.Count > 0 && 0 <= rounds[0] && 0.005f < it.condition;
+            return !IsJammed && !racked && 0 != fireMode && rounds.Count > 0 &&
+                (prop.feedType == BatteryFeed ? HasBatteryPower : 0 <= rounds[0]) && 0.005f < it.condition;
         }
 
         private bool FireRound(Body body)
@@ -215,7 +219,7 @@ namespace NewFirearms
                     SyncIfHost(2);
                 return false;
             }
-            AmmoInfo info = prop.ammoTypes[rounds[0]];
+            AmmoInfo info = prop.ammoTypes[prop.feedType == BatteryFeed ? 0 : rounds[0]];
             float num = (body.isRight ? 1f : (-1f));
             ShootVisuals visuals = new ShootVisuals
             {
@@ -246,6 +250,11 @@ namespace NewFirearms
             body.armsAnimator.SetFloat("gunangle", body.armsAnimator.GetFloat("gunangle") + info.muzzleRise * MUZZLE_RISE_MODIFIER);
             if (PlayerCamera.main.body == shooter && GunMinigame.Plugin.useMinigame)
                 GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(info.knockback, info.muzzleRise);
+            if (prop.feedType == BatteryFeed)
+            {
+                FinishBatteryShot();
+                return true;
+            }
             if (info.caseless || !WorldGeneration.GetRunSettingBool("newfirearms.gunejectcasing"))
             {
                 rounds[0] = -2;
@@ -406,8 +415,9 @@ namespace NewFirearms
         public bool CanFitMag(MagJson newMag)
         {
             if (prop == null || newMag == null) return false;
-            if (newMag.pseudoMagazine && !racked) return false;
-            if (1 != prop.feedType)
+            if (newMag.type == MagazineKind.Pseudo && !racked) return false;
+            if (prop.feedType == BatteryFeed ? newMag.type != MagazineKind.Battery
+                : prop.feedType != 1 || newMag.type == MagazineKind.Battery)
                 return false;
             if (null != mag && "" != mag)
                 return false;
@@ -437,8 +447,11 @@ namespace NewFirearms
                     GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(1f, 1f);
 
                 Sound.Play(prop.loadMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-                rounds.AddRange(newMag.rounds);
                 mag = newMag.it.id;
+                if (prop.feedType == BatteryFeed)
+                    SetBatteryState(newMag.batteries);
+                else
+                    rounds.AddRange(newMag.rounds);
                 UnityEngine.Object.Destroy(item.gameObject);
                 UpdateSprite();
                 if (Plugin.MultiplayerActive)
@@ -446,6 +459,7 @@ namespace NewFirearms
                 return true;
             }
        else {
+                if (prop.feedType == BatteryFeed) return false;
                 for (sbyte i = 0; i < prop.ammoTypes.Count(); i++)
                 {
                     AmmoInfo ammo = prop.ammoTypes[i];
@@ -527,7 +541,7 @@ namespace NewFirearms
             if (Plugin.MultiplayerActive && RequestHostIfClient(3))
                 return;
             StopFiring();
-            if (3 <= prop.feedType && racked)
+            if ((prop.feedType == 3 || prop.feedType == 4) && racked)
             {
                 if (playSound)
                     Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
@@ -539,14 +553,16 @@ namespace NewFirearms
        else if (!string.IsNullOrEmpty(mag))
             {
                 string magazineId = mag;
+                var removedBatteries = BatteryCells.Copy(magazineBatteries);
                 var magazineRounds = rounds.Skip(1).ToList();
                 bool discard = Plugin.MagazineDefinitions.TryGetValue(magazineId, out var definition) &&
-                    definition.pseudoMagazine && !magazineRounds.Any(round => round >= 0);
+                    definition.type == MagazineKind.Pseudo && !magazineRounds.Any(round => round >= 0);
                 // Detach immediately so repeated requests cannot eject the same magazine twice.
                 rounds = new List<sbyte> { rounds[0] };
                 spentAmmoTypes = spentAmmoTypes.Where(entry => entry.Key == 0)
                     .ToDictionary(entry => entry.Key, entry => entry.Value);
                 mag = "";
+                SetBatteryState(null);
                 if (playSound)
                     Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 UpdateSprite();
@@ -559,11 +575,11 @@ namespace NewFirearms
                 GameObject go = Utils.Create(magazineId, transform.position, 0f);
                 MagazineCreated?.Invoke(go);
                 // CUCoreLib installs custom components as the item starts up.
-                var _ = RemoveMagPart2WhenCuCore(body, go, magazineRounds);
+                var _ = RemoveMagPart2WhenCuCore(body, go, magazineRounds, removedBatteries);
             }
         }
 
-        private async Task RemoveMagPart2WhenCuCore(Body body, GameObject go, List<sbyte> magazineRounds)
+        private async Task RemoveMagPart2WhenCuCore(Body body, GameObject go, List<sbyte> magazineRounds, List<BatteryCell> batteries)
         {
             RshMag rshMag = null;
             for (int i = 0; i < 100 && null == rshMag; i++)
@@ -577,7 +593,11 @@ namespace NewFirearms
                 Debug.LogError("[NewFirearms] Ejected magazine did not initialize its RshMag component.");
                 return;
             }
-            rshMag.rounds = magazineRounds;
+            if (rshMag.prop == null) rshMag.LoadDefinition();
+            bool battery = rshMag.prop?.type == MagazineKind.Battery;
+            rshMag.rounds = battery ? new List<sbyte> { -2 } : magazineRounds;
+            rshMag.batteries = battery ? BatteryCells.Copy(batteries) : new List<BatteryCell>();
+            rshMag.UpdateBatteryCondition();
             rshMag.existed = true;
             if (body != null)
                 body.AutoPickUpItem(go.GetComponent<Item>());
@@ -710,6 +730,7 @@ namespace NewFirearms
 
             writer.Put((byte)extraData);
             GunNetwork.WriteJamState(this, writer);
+            BatteryNetwork.Write(writer, prop.feedType == BatteryFeed ? magazineBatteries : null);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)

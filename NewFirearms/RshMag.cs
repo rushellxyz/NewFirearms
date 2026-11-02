@@ -20,6 +20,8 @@ namespace NewFirearms
         public List<sbyte> rounds = new List<sbyte>();
         [JsonProperty("existed")]
         public bool existed;
+        [JsonProperty("batteries")]
+        public List<BatteryCell> batteries = new List<BatteryCell>();
 
         public override void LoadDefinition()
         {
@@ -32,16 +34,27 @@ namespace NewFirearms
         private void Start()
         {
             if (prop == null) LoadDefinition();
-            if (prop == null || prop.capacity <= 0 || prop.ammoTypes == null || prop.ammoTypes.Count == 0)
+            if (prop == null || (prop.type != MagazineKind.Battery && prop.capacity <= 0) || prop.ammoTypes == null || prop.ammoTypes.Count == 0)
             {
                 Debug.LogError($"[NewFirearms] Magazine '{it?.id}' has no valid local definition; magazine initialization stopped.");
                 return;
             }
             if (rounds == null) rounds = new List<sbyte>();
+            if (prop.type == MagazineKind.Battery)
+            {
+                batteries = BatteryCells.Copy(batteries);
+                if (existed) UpdateBatteryCondition();
+            }
             // Only the host creates initial ammunition; clients wait for its snapshot.
             if (!existed && (!Plugin.MultiplayerActive || Plugin.IsHost()))
             {
-                if (TryGetComponent<MagazineSpawnContents>(out var contents))
+                if (prop.type == MagazineKind.Battery)
+                {
+                    rounds = new List<sbyte> { -2 };
+                    batteries = new List<BatteryCell>();
+                    it.condition = 0f;
+                }
+                else if (TryGetComponent<MagazineSpawnContents>(out var contents))
                 {
                     rounds = new List<sbyte>(contents.Rounds);
                     UnityEngine.Object.Destroy(contents);
@@ -49,11 +62,11 @@ namespace NewFirearms
                 else
                 {
                     sbyte ammoType = (sbyte)UnityEngine.Random.Range(0, prop.ammoTypes.Count);
-                    int amount = prop.pseudoMagazine ? prop.capacity
+                    int amount = prop.type == MagazineKind.Pseudo ? prop.capacity
                         : Mathf.RoundToInt(prop.capacity * Mathf.Clamp01(it.condition));
                     Fill(ammoType, amount);
                 }
-                it.condition = 1f;
+                if (prop.type != MagazineKind.Battery) it.condition = 1f;
                 existed = true;
             }
             if (Plugin.MultiplayerActive)
@@ -72,7 +85,7 @@ namespace NewFirearms
 
         public bool DragOnto(Item item)
         {
-            if (item == null || prop == null || prop.pseudoMagazine) return false;
+            if (!CanAccept(item)) return false;
 
             sbyte round = (sbyte)prop.ammoTypes.IndexOf(item.id);
             if (-1 == round)
@@ -80,6 +93,16 @@ namespace NewFirearms
 
             if (Plugin.MultiplayerActive && RequestHostIfClient(1, item))
                 return true;
+            if (prop.type == MagazineKind.Battery)
+            {
+                batteries.Add(new BatteryCell { id = item.id, charge = Mathf.Clamp01(item.condition) });
+                UpdateBatteryCondition();
+                Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                UpdateSprite();
+                UnityEngine.Object.Destroy(item.gameObject);
+                if (Plugin.MultiplayerActive) SyncIfHost(1);
+                return true;
+            }
             if (rounds == null || rounds.Count == 0 || -2 != rounds[rounds.Count - 1])
                 return false;
 
@@ -93,6 +116,14 @@ namespace NewFirearms
             return true;
         }
 
+        public bool CanAccept(Item item)
+        {
+            if (item == null || prop == null || prop.type == MagazineKind.Pseudo || !prop.ammoTypes.Contains(item.id))
+                return false;
+            return prop.type == MagazineKind.Battery ? batteries != null && batteries.Count < prop.capacity
+                : rounds != null && rounds.Count > 0 && rounds[rounds.Count - 1] == -2;
+        }
+
         public void OnInventoryUse(Body body)
         {
             // Together forwards inventory use to the host and relays it to clients.
@@ -103,9 +134,23 @@ namespace NewFirearms
 
         public void RemoveRound(Body body=null)
         {
-            if (prop == null || prop.pseudoMagazine) return;
+            if (prop == null || prop.type == MagazineKind.Pseudo) return;
             if (Plugin.MultiplayerActive && RequestHostIfClient(0))
                 return;
+            if (prop.type == MagazineKind.Battery)
+            {
+                if (batteries == null || batteries.Count == 0) return;
+                var cell = batteries[0];
+                var battery = Utils.Create(cell.id, transform.position, 0f).GetComponent<Item>();
+                battery.condition = Mathf.Clamp01(cell.charge);
+                batteries.RemoveAt(0);
+                UpdateBatteryCondition();
+                (body ?? PlayerCamera.main.body).AutoPickUpItem(battery);
+                Sound.Play(prop.unloadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                UpdateSprite();
+                if (Plugin.MultiplayerActive) SyncIfHost(2);
+                return;
+            }
             if (prop == null || rounds == null || rounds.Count == 0 || -2 == rounds[0])
                 return;
             Sound.Play(prop.unloadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
@@ -128,14 +173,22 @@ namespace NewFirearms
             return rounds == null ? 0 : rounds.Count(round => 0 <= round);
         }
 
+        internal void UpdateBatteryCondition()
+        {
+            if (prop?.type == MagazineKind.Battery)
+                it.condition = BatteryCells.Condition(batteries, prop.capacity);
+        }
+
         public void UpdateSprite()
         {
             if (prop == null || prop.nonEmptySprite == null) return;
-            CUCoreLib.Helpers.CUCoreUtils.SetItemSprite(it, TotalRounds() > 0 ? prop.nonEmptySprite : prop.emptySprite);
+            bool filled = prop.type == MagazineKind.Battery ? BatteryCells.Charge(batteries) > 0f : TotalRounds() > 0;
+            CUCoreLib.Helpers.CUCoreUtils.SetItemSprite(it, filled ? prop.nonEmptySprite : prop.emptySprite);
         }
 
         public void Fill(sbyte type, int amount)
         {
+            if (prop.type == MagazineKind.Battery) return;
             amount = Mathf.Clamp(amount, 0, prop.capacity);
             rounds = Enumerable.Repeat(type, amount).ToList();
             rounds.AddRange(Enumerable.Repeat((sbyte)-2, prop.capacity - amount));
@@ -169,6 +222,7 @@ namespace NewFirearms
                 writer.Put((sbyte)rounds[i]);
 
             writer.Put((byte)extraData);
+            BatteryNetwork.Write(writer, prop.type == MagazineKind.Battery ? batteries : null);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)

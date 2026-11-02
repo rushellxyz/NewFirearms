@@ -26,5 +26,5 @@
     [
         "nf.grenade"
     ],
-    "pseudoMagazine": true,
+    "type": "pseudo",
 }

@@ -473,12 +473,12 @@ namespace NewFirearms
             {
                 category = prop.category,
                 slotRotation = prop.slotRotation,
-                usable = !prop.pseudoMagazine,
+                usable = prop.type != MagazineKind.Pseudo,
                 usableOnLimb = false,
                 destroyAtZeroCondition = false,
                 combineable = false,
                 weight = prop.weight,
-                scaleWeightWithCondition = true,
+                scaleWeightWithCondition = prop.type != MagazineKind.Battery,
                 useAction = delegate(Body body, Item item)
                 {
                     item.GetComponent<RshMag>().OnInventoryUse(body);

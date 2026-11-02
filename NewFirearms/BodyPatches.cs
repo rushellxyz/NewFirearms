@@ -35,13 +35,12 @@ namespace NewFirearms
                 __result = NewDescentsCompatibility.CanLoad(it1, it2);
                 return false;
             }
-            if (it1.TryGetComponent<RshGun>(out var rshGun) && ((it2.TryGetComponent<RshMag>(out var rshMag) && rshGun.CanFitMag(rshMag.prop)) || rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)) )
+            if (it1.TryGetComponent<RshGun>(out var rshGun) && ((it2.TryGetComponent<RshMag>(out var rshMag) && rshGun.CanFitMag(rshMag.prop)) || rshGun.prop.feedType != RshGun.BatteryFeed && rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)) )
             {
                 __result = true;
                 return false;
             }
-        if (it1.TryGetComponent<RshMag>(out var rshMagg) && rshMagg.prop != null &&
-                !rshMagg.prop.pseudoMagazine && rshMagg.prop.ammoTypes.Any(ammo => ammo == it2.id))
+        if (it1.TryGetComponent<RshMag>(out var rshMagg) && rshMagg.CanAccept(it2))
             {
                 __result = true;
                 return false;

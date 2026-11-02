@@ -1,0 +1,71 @@
+{
+    "fullName": "Taizer",
+    "description": "",
+
+    "weight": 0.6,
+    "value": 35,
+    "recognition": 11,
+    "milkyCanSell": true,
+    "craftable": false,
+
+
+
+
+
+    "feedType": 5,
+
+    "ammoTypes":
+    [
+        {
+            "round": "smallbattery",
+            "structureDamage": 90,
+            "animalDamage": 120,
+
+            "playerDamage":
+            {
+                "traumaAmount": 4,
+                "pain": 60,
+                "adrenaline": 30,
+                "skinDamage": 60,
+                "muscleDamage": 40,
+                "bleedAmount": 30,
+                "wearableDamage": 0.8,
+
+                "shrapnelChance": 0.7,
+
+
+                "fractureChance": 0.2,
+                "internalBleed": 15,
+                "brainDamage": 30,
+                "disfigureChance": 0.6,
+            },
+
+            "knockback": 3.5,
+            "muzzleRise": 3.5,
+
+            "verticalSpread": 0.005,
+            "loudness": 2,
+            "conditionLoss": 0.001,
+        }
+    ],
+    "batteryDrainPerShot": 0.1,
+    "desiredGasTime": 0.1,
+    "fireModes": [ 0, 2, ],
+    "magazineType": [ "taizer", ],
+
+    "normalTexturePath": "default",
+    "rackedTexturePath": "default"
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

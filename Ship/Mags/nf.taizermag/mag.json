@@ -1,0 +1,20 @@
+{
+    "fullName": "Taizer magazine",
+    "description": "TODO",
+
+
+    "weight": 0.2,
+    "value": 10,
+    "recognition": 11,
+
+    "craftable": false,
+
+    "capacity": 2,
+    "magazineType": [ "taizer", ],
+    "ammoTypes":
+    [
+        "smallbattery"
+    ],
+
+    "type": "battery",
+}

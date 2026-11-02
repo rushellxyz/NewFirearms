@@ -211,11 +211,17 @@ namespace NewFirearms
         static void Postfix(ref (string, string) __result, Item item)
         {
             if ((!Input.GetKey(KeyBinds.GetBind("expanddesc")) && !PlayerCamera.alwaysExpandDescriptions) ||
-                !item.TryGetComponent<RshMag>(out var rshMag) || rshMag.prop?.pseudoMagazine == true)
+                !item.TryGetComponent<RshMag>(out var rshMag) || rshMag.prop?.type == MagazineKind.Pseudo)
                 return;
 
             if (!item.Stats.rec.recognizable)
                 return;
+
+            if (rshMag.prop?.type == MagazineKind.Battery)
+            {
+                __result.Item2 += ModLocale.Get("newfirearms.magazine.charge", Mathf.Clamp01(item.condition) * 100f) + "\n";
+                return;
+            }
 
             __result.Item2 += "<color=#ff8fb0><sprite index=8 tint=1>" + rshMag.TotalRounds() + "/" + (rshMag.prop?.capacity ?? rshMag.rounds?.Count ?? 0) + " " + Locale.GetOther("magazinerounds") + "\n";
         }

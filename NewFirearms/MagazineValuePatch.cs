@@ -9,7 +9,7 @@ namespace NewFirearms
     {
         static void Postfix(ItemInfo __instance, ref int __result, Item item)
         {
-            if (item != null && item.TryGetComponent<RshMag>(out var rshMag) && rshMag.prop != null && rshMag.prop.capacity > 0)
+            if (item != null && item.TryGetComponent<RshMag>(out var rshMag) && rshMag.prop != null && rshMag.prop.type != MagazineKind.Battery && rshMag.prop.capacity > 0)
             {
                 __result = Mathf.RoundToInt((float)__result * ((float)rshMag.TotalRounds() / (float)rshMag.prop.capacity));
             }

@@ -44,12 +44,14 @@ namespace NewFirearms
         * 2 - Tube
         * 3 - Barrel
         * 4 - Revolver
+        * 5 - Battery magazine
         */
         public int internalCapacity = 1;
         public List<AmmoInfo> ammoTypes;
         public float desiredGasTime;
         public bool spawnUnracked;
         public bool removeMagazineOnRack;
+        public float batteryDrainPerShot;
         public List<byte> fireModes;
         /*
         * 0 - Safe
@@ -184,10 +186,13 @@ namespace NewFirearms
         public float
     }*/
 
+    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+    public enum MagazineKind { Regular, Pseudo, Battery }
+
     // params of mag model
     public class MagJson
     {
-        public bool pseudoMagazine;
+        public MagazineKind type;
         public string nonEmptySpritePath;
         public Sprite nonEmptySprite;
         public Sprite emptySprite;
@@ -208,7 +213,7 @@ namespace NewFirearms
         public float craftHammering;
         public int craftInt;
 
-        public int capacity;
+        public int capacity = 1;
         public List<string> magazineType;
         public List<string> ammoTypes;
 

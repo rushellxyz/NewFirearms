@@ -12,3 +12,4 @@ TODO List - Agents stay away unless stated otherwise
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
  - The sliderHandFollowOffset !
  - Magazine sprite doesnt persist, cucorelib overwrites it?
+ - Move feedType to use enum too

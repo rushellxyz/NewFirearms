@@ -25,7 +25,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "craftHammering": 0.0,
     "craftInt": 0,
 
-    "feedType": 0, // 1 - mag, 2 - tube, 3 - barrel, 4 - revolver
+    "feedType": 0, // 1 - mag, 2 - tube, 3 - barrel, 4 - revolver, 5 - battery magazine
     "internalCapacity": 1, // must always be 1 for mag feed
     "ammoTypes":
     [
@@ -86,6 +86,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
         },
     ],
     "desiredGasTime": 0.0, // Must always stay at 0 for barrel feed
+    "batteryDrainPerShot": 0.0, // feedType 5: fraction of one full battery cell consumed per shot (0 < value <= 1)
     "spawnUnracked": false, // If true, newly spawned guns start with the slide unracked
     "removeMagazineOnRack": false, // Ejects the magazine when manually cycling the gun, with or without the minigame. Automatic firing cycles do not eject it.
     "fireModes": [ 0, ], // All fire modes gun can be putted into, 0 - safe, 1 - pump, 2 - semi, 3 - full, 4 - three-round burst
@@ -138,7 +139,9 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "craftInt": 0,
 
     "capacity" 0, // Total amounts of rounds can be held
-    "pseudoMagazine": false, // Hides round count, blocks loose-round loading/unloading, spawns full regardless of condition. Requires a racked gun to insert; discarded when ejected without live rounds (the chamber is excluded).
+    "type": "regular", // regular, pseudo, or battery (also numeric 0, 1, 2)
+    // pseudo: spawns full, no loose-round loading/unloading, requires a racked gun; discarded on empty ejection.
+    // battery: ammoTypes lists accepted battery item IDs; starts empty. Capacity is battery slots (default 1); condition is total cell charge / capacity. Use only with feedType 5.
     "magazineType": [ "string", ], // If intersect with gun's "magazineType" in at least one entry, gun is considered compatabile
     "ammoTypes": [ "string", ], // ID of all rounds can be putted into, highly recomended to be mirrored with gun's "ammoTypes"
     "nonEmptySpritePath": "string", // Optional sprite path relative to this magazine's folder (omit .png). Used when at least one round remains; empty magazines use item.png.
