@@ -20,6 +20,7 @@ namespace NewFirearms
     public class Plugin : BaseUnityPlugin
     {
         public static SettingsJson sett;
+        internal static KeyCode fireBothKey = KeyCode.Mouse4;
         public static List<Recipe> recipes;
         public static List<string> milkyGuns;
         public static List<string> milkyMags;

@@ -1,5 +1,7 @@
 {
   "other": {
+    "gamesetnewfirearms.fireboth": "Fire both guns",
+    "gamesetnewfirearms.firebothdsc": "Hold to fire both guns",
     "newfirearms.magazine.charge": "Battery charge: {0:0}%",
     "newfirearms.action.chamber_load": "chamber load",
     "newfirearms.action.clear_jam": "clear jam",

@@ -18,8 +18,14 @@ namespace NewFirearms
             RshGun rshGun = it.GetComponent<RshGun>();
             if (null == rshGun)
                 return true;
+            if (!__instance.conscious) return false;
             if ((!GunMinigame.Plugin.useMinigame || null == rshGun.prop.minigame || GunMinigame.MinigameManager.GetOrAddInstance().handFaded) && Input.GetKeyDown(KeyBinds.GetBind("attack")))
-                rshGun.Shoot();
+            {
+                if (GunMinigame.MinigameManager.IsAnyGameUIOpen()) return false;
+                rshGun.Shoot(__instance);
+                if (__instance == PlayerCamera.main.body && Input.GetKey(Plugin.fireBothKey))
+                    __instance.GetItem(1 - __instance.handSlot)?.GetComponent<RshGun>()?.Shoot(__instance);
+            }
             return false;
         }
     }

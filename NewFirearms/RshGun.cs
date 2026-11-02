@@ -96,7 +96,9 @@ namespace NewFirearms
         {
             if (Plugin.MultiplayerActive && !Plugin.IsHost())
             {
-                if (currentlyShooting && !Input.GetKey(KeyBinds.GetBind("attack")))
+                if (currentlyShooting && (!Input.GetKey(KeyBinds.GetBind("attack")) ||
+                    PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot) != it &&
+                    (!Input.GetKey(Plugin.fireBothKey) || PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot)?.GetComponent<RshGun>() == null)))
                 {
                     RequestHostIfClient(5);
                     currentlyShooting = false;
@@ -692,7 +694,8 @@ namespace NewFirearms
                     throw new Exception("[NewFirearms] Attempt to gun action on drag onto without ScavMultiGameObjectNetworkTracker :hmm:");
                 writer.Put((ushort)ksmgont2.syncId);
             }
-            Together.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableUnordered, in writer);
+            // Preserve trigger/release ordering, including when two guns are fired together.
+            Together.Net.Client_Send(LiteNetLib.DeliveryMethod.ReliableOrdered, in writer);
             return true;
         }
         /*

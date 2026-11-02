@@ -29,7 +29,7 @@ namespace NewFirearms
         private void ContinueFiring()
         {
             if (shooter == null || IsJammed || !shooter.conscious ||
-                shooter.GetItem(shooter.handSlot) != it)
+                (shooter.GetItem(0) != it && shooter.GetItem(1) != it))
             {
                 StopFiring();
                 return;
@@ -46,7 +46,9 @@ namespace NewFirearms
                 StopFiring();
                 return;
             }
-            if (shooter == PlayerCamera.main.body && !Input.GetKey(KeyBinds.GetBind("attack")))
+            if (shooter == PlayerCamera.main.body && (!Input.GetKey(KeyBinds.GetBind("attack")) ||
+                shooter.GetItem(shooter.handSlot) != it && (!Input.GetKey(Plugin.fireBothKey) ||
+                    shooter.GetItem(shooter.handSlot)?.GetComponent<RshGun>() == null)))
             {
                 StopFiring();
                 return;

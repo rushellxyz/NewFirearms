@@ -126,7 +126,11 @@ namespace NewFirearms
             }
 
             if (0 == action)
+            {
+                // надеюсь эта проверка ничего не сломала
+                if (pb.body.GetItem(0) != it && pb.body.GetItem(1) != it) return;
                 rshGun.Shoot(pb.body);
+            }
        else if (1 == action)
                 rshGun.Rack(manual: true);
        else if (2 == action)
