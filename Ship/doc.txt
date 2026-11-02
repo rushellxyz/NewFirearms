@@ -168,6 +168,8 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
 
 == MINIGAME JSON TEMPLATE ==
 {
+    "ammosInHandPaths": [], // Optional; omit, null, [] or entirely blank entries to disable the bandolier.
+    "ammosInPtrPaths": [], // Bandolier and ammo selector require both arrays, with one entry per ammo type.
     // work in progress
     // TODO Rewrite this as current AI Agent generates documentation
 

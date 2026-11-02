@@ -148,8 +148,10 @@ namespace NewFirearms
             Require(game.ammos == null || game.ammos.Length == count, "minigame.ammos", $"must have {count} entries to match ammoTypes, or be omitted to generate automatically.");
             Require(game.dCurrentAmmo < count, "minigame.dCurrentAmmo", "must index ammoTypes; omit this runtime field to start at the first ammo type.");
             Require(!game.initialized, "minigame.initialized", "must be omitted or false; this is runtime state, not a config option.");
-            SpriteArray(game.ammosInHandPaths, "minigame.ammosInHandPaths", count, true);
-            SpriteArray(game.ammosInPtrPaths, "minigame.ammosInPtrPaths", count, true);
+            if (game.ammosInHandPaths?.Any(path => !string.IsNullOrWhiteSpace(path)) == true)
+                SpriteArray(game.ammosInHandPaths, "minigame.ammosInHandPaths", count);
+            if (game.ammosInPtrPaths?.Any(path => !string.IsNullOrWhiteSpace(path)) == true)
+                SpriteArray(game.ammosInPtrPaths, "minigame.ammosInPtrPaths", count);
             if (game.casingsPath?.Length > 0) SpriteArray(game.casingsPath, "minigame.casingsPath", count + 1);
             if (game.fireModePaths?.Length > 0) SpriteArray(game.fireModePaths, "minigame.fireModePaths", lastMode + 1);
             SpriteArray(game.coverAnimationPaths, "minigame.coverAnimationPaths");

@@ -67,6 +67,10 @@ namespace GunMinigame
         public string[] ammos;
         public Sprite[] ammosInHand;
         public Sprite[] ammosInPtr;
+        internal bool HasBandolier => ammos != null && ammos.Length > 0 &&
+            ammosInHand != null && ammosInHand.Length >= ammos.Length &&
+            ammosInPtr != null && ammosInPtr.Length >= ammos.Length &&
+            Array.Exists(ammosInHand, sprite => sprite != null) && Array.Exists(ammosInPtr, sprite => sprite != null);
         public Sprite receiverTrigger;
         public Sprite[] ammosIcons;
         public float sliderHandFollowOffset;
@@ -384,6 +388,7 @@ namespace GunMinigame
             PlayerCamera.main.gunMenu.SetActive(false);
 
             info = newInfo;
+            if (!info.HasBandolier) HideBandolier();
             if (!info.initialized)
             {
                 if (!info.rackByRotation || info.mosynStyleRack)
@@ -934,7 +939,7 @@ namespace GunMinigame
                     }
                     else if (null != holdingInMinigame)
                     {
-                        ptrs[1].sprite = info.ammosInPtr[info.dCurrentAmmo];
+                        ptrs[1].sprite = info.HasBandolier ? info.ammosInPtr[info.dCurrentAmmo] : ptrBlank;
                         UnityEngine.Object.Destroy(holdingInMinigame);
                     };
                     handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
@@ -1241,19 +1246,15 @@ namespace GunMinigame
 
         private void HandleBandolier()
         {
+            if (!info.HasBandolier)
+            {
+                HideBandolier();
+                return;
+            }
             Item tmp = body.GetWearableBySlotID("bandolier");
             if (null == tmp || !tmp.TryGetComponent<Container>(out bandolier))
             {
-                if (ammoSelector.gameObject.activeSelf)
-                {
-                    ammoSelector.gameObject.SetActive(false);
-                    bandolierBase.gameObject.SetActive(false);
-                    ammoSelectWindow.gameObject.SetActive(false);
-                    holding = null;
-                    if (null != holdingInMinigame)
-                        UnityEngine.Object.Destroy(holdingInMinigame);
-                }
-                shouldntRefreshBandolierCount = false;
+                HideBandolier();
                 return;
             }
             ammoSelector.gameObject.SetActive(true);
@@ -1272,6 +1273,21 @@ namespace GunMinigame
                else     ptrs[i].sprite = info.ammosInPtr[info.dCurrentAmmo];
                 }
             }
+        }
+
+        private void HideBandolier()
+        {
+            ammoSelector.gameObject.SetActive(false);
+            bandolierBase.gameObject.SetActive(false);
+            ammoSelectWindow.gameObject.SetActive(false);
+            receiverTrigger.gameObject.SetActive(false);
+            bandolier = null;
+            handIsInBandolier = false;
+            pointerOverAmmoSelectionArea = false;
+            shouldntRefreshBandolierCount = false;
+            holding = null;
+            if (holdingInMinigame != null)
+                UnityEngine.Object.Destroy(holdingInMinigame);
         }
 
         void HandleFannyPack()
@@ -1424,6 +1440,7 @@ namespace GunMinigame
 
         public void BandolierClickDown()
         {
+            if (!info.HasBandolier || bandolier == null || !bandolierBase.gameObject.activeSelf) return;
             if (Input.GetKeyDown(KeyCode.Mouse1))
                 return;
             holding = TryGetItemFromContianerById(bandolier.transform, info.ammos[info.dCurrentAmmo]);
@@ -1452,7 +1469,7 @@ namespace GunMinigame
 
         public void BandolierEnterPtr()
         {
-            handIsInBandolier = true;
+            handIsInBandolier = info.HasBandolier && bandolier != null && bandolierBase.gameObject.activeSelf;
         }
 
         public static Item TryGetItemFromContianerById(Transform cont, string target)

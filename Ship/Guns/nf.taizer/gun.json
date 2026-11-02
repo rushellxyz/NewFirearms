@@ -52,20 +52,19 @@
     "desiredGasTime": 0.1,
     "fireModes": [ 0, 2, ],
     "magazineType": [ "taizer", ],
-
+    "magazineTexturesPath": { "nf.taizermag": "taizermag", },
     "normalTexturePath": "default",
-    "rackedTexturePath": "default"
+    "rackedTexturePath": "default",
 
-
-
-
-
-
-
-
-
-
-
-
-
+    "minigame":
+    {
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteExpie",
+        "canUseFannyPack": false,
+        "magazinePaths": { "nf.taizermag": "uiTaizermag" },
+        "magazineXPosition": -0.086,
+        "magazineYPosition": -0.01,
+    }
 }

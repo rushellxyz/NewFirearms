@@ -4,7 +4,7 @@ Array requirements:
 
 - `ammoTypes` must contain non-null entries with a `round` ID.
 - `bulletsSpritesPath`, when supplied, needs at least `ammoTypes.Count + 2` entries: empty, spent casing, then one icon per ammo type. Omission uses generic round icons for every ammo type.
-- `minigame.ammosInHandPaths` and `minigame.ammosInPtrPaths` need an entry per ammo type.
+- `minigame.ammosInHandPaths` and `minigame.ammosInPtrPaths` are optional. Omitted, null, empty, or entirely blank arrays disable the bandolier and ammo selector. To enable them, both arrays must provide sprites and an entry per ammo type; partial non-empty arrays still produce a field-specific error.
 - `minigame.casingsPath`, when supplied, needs a spent-casing entry followed by one live-round entry per ammo type.
 - `minigame.ammosInMagazinePaths`, when supplied, needs a matching key for every magazine in `minigame.magazinePaths`, with an array covering every ammo type.
 - Fire-mode sprite arrays are indexed by the numeric mode, including unused slots between modes.

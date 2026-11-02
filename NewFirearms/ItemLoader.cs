@@ -300,6 +300,7 @@ namespace NewFirearms
                     for (int i = 0; i < prop.minigame.ammosInHandPaths.Length; i++)
                         prop.minigame.ammosInHand[i] = LoadConfigSprite(folder, prop.minigame.ammosInHandPaths[i], $"minigame.ammosInHandPaths[{i}]");
                 }
+                else prop.minigame.ammosInHand = null;
 
                 if (null != prop.minigame.ammosInPtrPaths && 0 != prop.minigame.ammosInPtrPaths.Length)
                 {
@@ -307,6 +308,7 @@ namespace NewFirearms
                     for (int i = 0; i < prop.minigame.ammosInPtrPaths.Length; i++)
                         prop.minigame.ammosInPtr[i] = LoadConfigSprite(folder, prop.minigame.ammosInPtrPaths[i], $"minigame.ammosInPtrPaths[{i}]");
                 }
+                else prop.minigame.ammosInPtr = null;
 
                 if (!string.IsNullOrEmpty(prop.minigame.receiverPath))
                     prop.minigame.receiverTrigger = LoadConfigSprite(folder, prop.minigame.receiverPath, "minigame.receiverPath");
