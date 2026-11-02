@@ -19,7 +19,7 @@ namespace GunMinigame
     public class Plugin : BaseUnityPlugin
     {
         public static bool standalone = false;
-        public static bool useMinigame;
+        public static bool useMinigame = true;
 
         static bool ggEnabled;
         static bool speciesIntegrationFailed;
@@ -142,7 +142,7 @@ namespace GunMinigame
             __result.Add(new SettingBool
             {
                 name = "gunminigame.useminigame",
-                value = false,
+                value = true,
                 apply = delegate
                 {
                     Plugin.useMinigame = Settings.Get<SettingBool>("gunminigame.useminigame").value;
