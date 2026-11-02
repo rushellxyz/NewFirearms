@@ -56,6 +56,9 @@
     "normalTexturePath": "default",
     "rackedTexturePath": "default",
 
+    "itemSpriteXOffset": 0.0,
+    "itemSpriteYOffset": -0.3,
+
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",

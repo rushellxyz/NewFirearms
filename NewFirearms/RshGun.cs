@@ -69,7 +69,7 @@ namespace NewFirearms
           => RemoveMag(null);
 
         public bool IsRacked()
-         => racked;
+         => prop?.feedType != BatteryFeed && racked;
 
         public byte CurrentFireMode()
          => fireMode;
@@ -167,13 +167,14 @@ namespace NewFirearms
             if (TryGetComponent<LaserPointer>(out var laser))
                 laser.enabled = laserEnabled;
             jamming = WorldGeneration.GetRunSettingBool("newfirearms.gunjamming");
+            if (prop.feedType == BatteryFeed) racked = false;
             if (!existed)
             {
                 rounds = Enumerable.Repeat((sbyte)-2, prop.internalCapacity).ToList();
                 fireMode = prop.fireModes.Min();
                 if (Plugin.MultiplayerActive)
                     MpStartOp();
-           else if (!prop.spawnUnracked)
+           else if (prop.feedType != BatteryFeed && !prop.spawnUnracked)
                     Rack(manual: true);
                 existed = true;
             }
@@ -192,7 +193,7 @@ namespace NewFirearms
                 return;
             if (!existed)
             {
-                racked = !prop.spawnUnracked;
+                racked = prop.feedType != BatteryFeed && !prop.spawnUnracked;
                 if (racked)
                     Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 UpdateSprite();
@@ -202,7 +203,7 @@ namespace NewFirearms
 
         public bool IsReady()
         {
-            return !IsJammed && !racked && 0 != fireMode && rounds.Count > 0 &&
+            return !IsJammed && (prop.feedType == BatteryFeed || !racked) && 0 != fireMode && rounds.Count > 0 &&
                 (prop.feedType == BatteryFeed ? HasBatteryPower : 0 <= rounds[0]) && 0.005f < it.condition;
         }
 
@@ -291,6 +292,7 @@ namespace NewFirearms
 
         public void Rack(bool manual)
         {
+            if (prop.feedType == BatteryFeed) return;
             if (manual && Plugin.MultiplayerActive && RequestHostIfClient(1))
                 return;
             if (manual)
