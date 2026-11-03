@@ -6,8 +6,13 @@ namespace NewFirearms
     {
         public const byte BurstFireMode = 4;
         private int burstShotsRemaining;
+        private Vector2? clientShotPosition;
+        private float nextShotPositionUpdate;
 
         public bool Shoot(Body body = null)
+            => Shoot(body, null);
+
+        internal bool Shoot(Body body, Vector2? clientGunPosition)
         {
             if (Plugin.MultiplayerActive && RequestHostIfClient(0))
             {
@@ -16,6 +21,7 @@ namespace NewFirearms
             }
             // Repeated requests cannot restart or extend a burst already in progress.
             if (burstShotsRemaining > 0 || gasTime > 0f) return false;
+            clientShotPosition = !Plugin.sett.strictSync ? clientGunPosition : null;
             if (!FireRound(body))
             {
                 StopFiring();
@@ -65,9 +71,30 @@ namespace NewFirearms
 
         private void StopFiring()
         {
+            clientShotPosition = null;
             burstShotsRemaining = 0;
             shooter = null;
             currentlyShooting = false;
+        }
+
+        private Vector2 GetShotPosition()
+        {
+            Vector2 position = Plugin.MultiplayerActive && !Plugin.sett.strictSync && clientShotPosition.HasValue
+                ? clientShotPosition.Value : (Vector2)transform.position;
+            return position + (Vector2)transform.up * prop.barrelOffset;
+        }
+
+        internal void UpdateClientShotPosition(Body body, Vector2 position)
+        {
+            if (shooter == body && !Plugin.sett.strictSync) clientShotPosition = position;
+        }
+
+        private void SendShotPositionUpdate()
+        {
+            if (Plugin.sett.strictSync || !currentlyShooting || fireMode != 3 && fireMode != BurstFireMode ||
+                Time.unscaledTime < nextShotPositionUpdate) return;
+            nextShotPositionUpdate = Time.unscaledTime + 0.05f;
+            RequestHostIfClient(8);
         }
     }
 }

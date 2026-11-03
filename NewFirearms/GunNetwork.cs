@@ -106,7 +106,7 @@ namespace NewFirearms
             reader.Get(out ushort syncId);
             reader.Get(out byte action);
 
-            if (8 <= action)
+            if (9 <= action)
             {
                 NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.unknown"));
                 return;
@@ -132,11 +132,25 @@ namespace NewFirearms
                 return;
             }
 
-            if (0 == action)
+            if (0 == action || 8 == action)
             {
                 // надеюсь эта проверка ничего не сломала
                 if (pb.body.GetItem(0) != it && pb.body.GetItem(1) != it) return;
-                rshGun.Shoot(pb.body);
+                Vector2? clientGunPosition = null;
+                // Older clients send only the gun ID and action; use the host position for those.
+                if (reader.AvailableBytes >= 8)
+                {
+                    Vector2 position = new Vector2(reader.GetFloat(), reader.GetFloat());
+                    if (float.IsNaN(position.x) || float.IsInfinity(position.x) ||
+                        float.IsNaN(position.y) || float.IsInfinity(position.y))
+                    {
+                        NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.invalidShotPosition"));
+                        return;
+                    }
+                    if (!Plugin.sett.strictSync) clientGunPosition = position;
+                }
+                if (action == 0) rshGun.Shoot(pb.body, clientGunPosition);
+                else if (clientGunPosition.HasValue) rshGun.UpdateClientShotPosition(pb.body, clientGunPosition.Value);
             }
        else if (1 == action)
                 rshGun.Rack(manual: true);

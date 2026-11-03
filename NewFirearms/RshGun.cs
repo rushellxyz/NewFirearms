@@ -104,6 +104,8 @@ namespace NewFirearms
                     RequestHostIfClient(5);
                     currentlyShooting = false;
                 }
+                // не уверен насколько хорошая идея каждый кадр ебать хоста
+                SendShotPositionUpdate();
                 return;
             }
             if (IsJammed) return;
@@ -215,7 +217,7 @@ namespace NewFirearms
         {
             if (null == body)
                 body = PlayerCamera.main.body;
-            Vector2 barrelPosition = transform.position + transform.up * prop.barrelOffset;
+            Vector2 barrelPosition = GetShotPosition();
             shooter = body;
             if (!IsReady())
             {
@@ -712,6 +714,11 @@ namespace NewFirearms
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(true) as Together.SyncInfoGameObjectTracker);
             writer.Put(tracker.syncId);
             writer.Put((byte)action);
+            if (action == 0 || action == 8)
+            {
+                writer.Put(transform.position.x);
+                writer.Put(transform.position.y);
+            }
             if (null != second)
             {
                 if (!second.TryGetComponent<Together.SyncInfoGameObjectTracker>(out var ksmgont2))
@@ -834,6 +841,7 @@ namespace NewFirearms
             {5, "newfirearms.action.stop_shooting"},
             {6, "newfirearms.action.clear_jam"},
             {7, "newfirearms.action.toggle_flashlight"},
+            {8, "newfirearms.action.shoot"}, // Shot-origin update during host-driven burst/automatic fire.
         };
     }
 }

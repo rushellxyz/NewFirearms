@@ -11,6 +11,7 @@
     "newfirearms.action.remove_mag": "remove mag",
     "newfirearms.action.remove_round": "remove round",
     "newfirearms.action.shoot": "shoot",
+    "newfirearms.denied.gun.invalidShotPosition": "Invalid gun position in shoot request.",
     "newfirearms.action.stop_shooting": "stop shooting",
     "newfirearms.action.toggle_fire_mode": "toggle fire mode",
     "newfirearms.action.toggle_flashlight": "toggle flashlight",
