@@ -57,6 +57,7 @@ namespace NewFirearms
 
     // patch to make rounds/mag draggable onto gun pt.2
     [HarmonyPatch(typeof(Body), "CombineItems")]
+    [HarmonyBefore("CasualtiesMP")]
     public class BodyPatch3
     {
         public static bool Prefix(Body __instance, Item it1, Item it2)
