@@ -4,7 +4,6 @@
     // SP / MP
     "compatabilityMode": true, // Helps with packs from pre-2.0.0
     "maxSliderValue": 4.0, // How far can a gun jam/dmg slider go. Default 4.0
-    "useLegacyGunUi": false, // W.I.P.. Default true
 
     // MP only, Host only
     "strictSync": true, // If false, allows some illegal actions from clients, W.I.P.. Default true
