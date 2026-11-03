@@ -92,7 +92,13 @@ namespace NewFirearms
                     ammo.explosionParams.minimumTravelDistance;
                 rb.position = hit.point;
                 if (tetherGun != null && tetherGun.needsRetraction && tetherGun.TetherTarget == transform)
-                    tetherGun.ApplyTetherState(true, hit.point, hit.transform);
+                {
+                    if (hit.collider.gameObject.layer == 6)
+                        tetherGun.ApplyTetherState(true, hit.point, null,
+                            WorldGeneration.world.WorldToBlockPos(hit.point - hit.normal * 0.05f));
+                    else
+                        tetherGun.ApplyTetherState(true, hit.point, hit.transform);
+                }
                 // Finish first, so damage callbacks cannot process this impact twice.
                 if (armed)
                 {

@@ -303,8 +303,17 @@ namespace NewFirearms
                 if (!manual || !prop.needRetract) return;
                 if (Plugin.MultiplayerActive && RequestHostIfClient(1)) return;
                 if (!needsRetraction) return;
+                if (!HasBatteryCharge(prop.batteryDrainPerRetract))
+                {
+                    Sound.Play(prop.unshootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                    if (Plugin.MultiplayerActive) SyncIfHost(2);
+                    return;
+                }
+                BatteryCells.Drain(magazineBatteries, prop.batteryDrainPerRetract);
+                UpdateBatteryRound();
                 StopFiring();
                 ApplyTetherState(false, Vector2.zero);
+                UpdateSprite();
                 Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 if (Plugin.MultiplayerActive) SyncIfHost(6);
                 return;

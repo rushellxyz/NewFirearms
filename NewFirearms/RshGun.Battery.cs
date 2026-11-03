@@ -11,14 +11,13 @@ namespace NewFirearms
         [JsonProperty("magazineBatteries")]
         internal List<BatteryCell> magazineBatteries = new List<BatteryCell>();
 
-        private bool HasBatteryPower
+        private bool HasBatteryPower => HasBatteryCharge(prop.batteryDrainPerShot);
+
+        private bool HasBatteryCharge(float amount)
         {
-            get
-            {
-                float charge = BatteryCells.Charge(magazineBatteries);
-                return !string.IsNullOrEmpty(mag) && charge > 0f &&
-                    charge + prop.batteryDrainPerShot * 0.00001f >= prop.batteryDrainPerShot;
-            }
+            if (amount <= 0f) return true;
+            float charge = BatteryCells.Charge(magazineBatteries);
+            return !string.IsNullOrEmpty(mag) && charge > 0f && charge + amount * 0.00001f >= amount;
         }
 
         [System.Runtime.Serialization.OnDeserialized]

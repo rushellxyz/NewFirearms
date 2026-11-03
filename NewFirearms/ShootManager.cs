@@ -152,7 +152,8 @@ namespace NewFirearms
                 }
                 else if (raycastHit2D.collider.gameObject.layer == 6)
                 {
-                    tetherGun?.AttachTether(null, raycastHit2D.point);
+                    tetherGun?.AttachTether(null, raycastHit2D.point,
+                        WorldGeneration.world.WorldToBlockPos(raycastHit2D.point - raycastHit2D.normal * 0.05f));
                     WorldGeneration.world.DamageBlock(raycastHit2D.point + dir * 0.5f, info.structureDamage * num);
                     visuals.hitNumbers.Add((raycastHit2D.point, (ushort)(info.structureDamage * num)));
                     if (info.piercing && ++blocksHit <= 2)

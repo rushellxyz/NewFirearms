@@ -52,6 +52,7 @@ namespace NewFirearms
         public bool spawnUnracked;
         public bool removeMagazineOnRack;
         public float batteryDrainPerShot;
+        public float batteryDrainPerRetract;
         public bool needRetract;
         public List<byte> fireModes;
         /*

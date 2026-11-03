@@ -84,6 +84,10 @@ namespace NewFirearms
             if (gun == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
             Require(gun.feedType >= 1 && gun.feedType <= 5, "feedType", "expected 1 (magazine), 2 (tube), 3 (barrel), 4 (revolver), or 5 (battery magazine).");
             Require(!gun.needRetract || gun.feedType == 5, "needRetract", "requires feedType 5 (battery magazine).");
+            Require(gun.batteryDrainPerRetract >= 0f && gun.batteryDrainPerRetract <= 1f,
+                "batteryDrainPerRetract", "must be between 0 and 1 (fraction of full cell charge per manual retraction).");
+            Require(gun.batteryDrainPerRetract == 0f || gun.feedType == 5 && gun.needRetract,
+                "batteryDrainPerRetract", "requires feedType 5 and needRetract when greater than zero.");
             Require(!gun.hasFlashlight || gun.feedType == 5, "hasFlashlight", "requires feedType 5 (battery magazine).");
             Require(!gun.hasFlashlight || gun.minigame != null, "minigame", "is required when hasFlashlight is true.");
             Require(!gun.hasFlashlight || !string.IsNullOrWhiteSpace(gun.minigame?.flashlightTogglePath),

@@ -50,6 +50,7 @@
         }
     ],
     "batteryDrainPerShot": 0.225,
+    "batteryDrainPerRetract": 0.025,
     "needRetract": true,
     "desiredGasTime": 0.1,
     "fireModes": [ 0, 2, ],
@@ -77,6 +78,6 @@
         "magazineYSpeed": -0.525,
         "magazineAnimationTime": 0.2,
         "rackTriggerPath": "uiRetractTrigger",
-        "flashlightTogglePath": "uiFlashlightToggle"
+        "flashlightTogglePath": "uiFlashlightToggle",
     }
 }

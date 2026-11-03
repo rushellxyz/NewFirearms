@@ -88,6 +88,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     ],
     "desiredGasTime": 0.0, // Must always stay at 0 for barrel feed
     "batteryDrainPerShot": 0.0, // feedType 5: fraction of one full battery cell consumed per shot (0 < value <= 1)
+    "batteryDrainPerRetract": 0.0, // Cost per manual retraction (0..1 full cell); needs feedType 5 and needRetract. Insufficient charge blocks retraction. Automatic retraction is free.
     "needRetract": false, // feedType 5: keep a tether after each shot; press rack to retract before firing again
     "hasFlashlight": false, // feedType 5: emergency-light beam at low brightness, powered by magazine cells; starts off. Requires minigame.flashlightTogglePath.
     "spawnUnracked": false, // If true, newly spawned guns start with the slide unracked

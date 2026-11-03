@@ -7,6 +7,8 @@ namespace NewFirearms
     {
         internal bool needsRetraction;
         private Vector2 tetherPoint;
+        private Vector2Int? tetherBlock;
+        private ushort tetherBlockId;
 
         internal Transform TetherTarget;
         internal Vector2 TetherLocalPoint;
@@ -34,17 +36,19 @@ namespace NewFirearms
             }
         }
 
-        internal void AttachTether(Transform target, Vector2 point)
+        internal void AttachTether(Transform target, Vector2 point, Vector2Int? block = null)
         {
             if (needsRetraction) return;
-            ApplyTetherState(true, point, target);
+            ApplyTetherState(true, point, target, block);
         }
 
-        internal void ApplyTetherState(bool active, Vector2 point, Transform target = null)
+        internal void ApplyTetherState(bool active, Vector2 point, Transform target = null, Vector2Int? block = null)
         {
             needsRetraction = active;
             tetherPoint = point;
             TetherTarget = active ? target : null;
+            tetherBlock = active ? block : null;
+            tetherBlockId = tetherBlock.HasValue ? WorldGeneration.world.GetBlock(tetherBlock.Value) : (ushort)0;
             TetherLocalPoint = target != null ? (Vector2)target.InverseTransformPoint(point) : Vector2.zero;
             if (!active) DestroyTetherVisual();
         }
@@ -54,7 +58,11 @@ namespace NewFirearms
             UpdateFlashlightVisual();
             if (!needsRetraction) return;
             // Unity compares destroyed objects equal to null, while their managed reference remains.
-            if (TetherTarget == null && !ReferenceEquals(TetherTarget, null) &&
+            bool targetDestroyed = TetherTarget == null && !ReferenceEquals(TetherTarget, null);
+            if (tetherBlock.HasValue)
+                targetDestroyed = WorldGeneration.world == null || tetherBlockId == 0 ||
+                    WorldGeneration.world.GetBlock(tetherBlock.Value) != tetherBlockId;
+            if (targetDestroyed &&
                 (!Plugin.MultiplayerActive || Plugin.IsHost()))
             {
                 StopFiring();
