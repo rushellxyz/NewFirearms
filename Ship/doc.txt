@@ -36,6 +36,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
             "casingSprite": "string", // Optional changes sprite of casing for this
             "minigameCasingSprite": "uiCasing556", // Optional spent casing sprite inside the minigame
             "animalDamage": 0.0, // Damage to anything else
+            "additionalStun": 0.0, // Extra stun seconds on direct spider body hits, including armed projectile impacts. Not applied to StunHitbox or scaled by damage/stunMult
             "explosionParams": // Optional: fires a travelling explosive projectile instead of a hitscan bullet. Leave blank for regular ammo
             {
                 "projectileVelocity": 40.0, // Initial speed in world units/second

@@ -88,6 +88,7 @@ namespace NewFirearms
                 // Finish first, so damage callbacks cannot process this impact twice.
                 if (armed)
                 {
+                    ShootManager.ApplyAdditionalStun(ammo, hit.collider);
                     if (hit.collider.TryGetComponent<FirearmCourseTarget>(out var target))
                         target.Hit(shooter, Mathf.Max(ammo.structureDamage, ammo.animalDamage));
                     WorldGeneration.CreateExplosion(ammo.explosionParams.AtPosition(hit.point));

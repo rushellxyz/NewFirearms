@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <GameDirectory Condition="'$(GameDirectory)' == '' and '$(CU_PATH)' != ''">$(GAME_PATH)</GameDirectory>
+    <GameDirectory Condition="'$(GameDirectory)' == '' and '$(CU_PATH)' != ''">$(CU_PATH)</GameDirectory>
     <GameDirectory Condition="'$(GameDirectory)' == '' and Exists('/home/rushell/Documents/CU/CasualtiesUnknown_Data/Managed/Assembly-CSharp.dll')">/home/rushell/Documents/CU/</GameDirectory>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AddImplicitlyTypedReferences>false</AddImplicitlyTypedReferences>

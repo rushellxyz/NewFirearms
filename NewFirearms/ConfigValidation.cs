@@ -99,6 +99,8 @@ namespace NewFirearms
                 Require(ammo != null, $"ammoTypes[{i}]", "expected an ammo object, got null.");
                 if (ammo == null) continue;
                 Require(!string.IsNullOrWhiteSpace(ammo.round), $"ammoTypes[{i}].round", "an item ID is required.");
+                Require(ammo.additionalStun >= 0f && !float.IsInfinity(ammo.additionalStun),
+                    $"ammoTypes[{i}].additionalStun", "must be finite and greater than or equal to zero (seconds).");
                 Sprite(ammo.casingSprite, $"ammoTypes[{i}].casingSprite");
                 Sprite(ammo.minigameCasingSprite, $"ammoTypes[{i}].minigameCasingSprite");
                 if (ammo.explosionParams != null)

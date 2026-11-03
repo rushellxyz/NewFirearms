@@ -18,26 +18,27 @@
     [
         {
             "round": "smallbattery",
-            "structureDamage": 90,
-            "animalDamage": 120,
+            "structureDamage": 5,
+            "animalDamage": 20,
+            "additionalStun": 5,
 
             "playerDamage":
             {
-                "traumaAmount": 4,
-                "pain": 60,
-                "adrenaline": 30,
-                "skinDamage": 60,
-                "muscleDamage": 40,
-                "bleedAmount": 30,
-                "wearableDamage": 0.8,
+                "traumaAmount": 3,
+                "pain": 120,
+                "adrenaline": 50,
+                "skinDamage": 30,
+                "muscleDamage": 10,
+                "bleedAmount": 10,
+                "wearableDamage": 0.5,
 
-                "shrapnelChance": 0.7,
+                "shrapnelChance": 0.0,
 
 
-                "fractureChance": 0.2,
-                "internalBleed": 15,
-                "brainDamage": 30,
-                "disfigureChance": 0.6,
+                "fractureChance": 0.0,
+                "internalBleed": 1,
+                "brainDamage": 15,
+                "disfigureChance": 0.3,
             },
 
             "knockback": 3.5,
@@ -48,7 +49,7 @@
             "conditionLoss": 0.001,
         }
     ],
-    "batteryDrainPerShot": 0.1,
+    "batteryDrainPerShot": 0.225,
     "desiredGasTime": 0.1,
     "fireModes": [ 0, 2, ],
     "magazineType": [ "taizer", ],

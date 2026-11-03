@@ -144,6 +144,7 @@ namespace NewFirearms
         public string round;
         public float structureDamage;
         public float animalDamage;
+        public float additionalStun;
 
         //public ProjectileParams projectileParams;
         public PlayerDamage playerDamage;

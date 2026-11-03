@@ -109,6 +109,7 @@ namespace NewFirearms
                 }
                 if (raycastHit2D.collider.TryGetComponent<BuildingEntity>(out var component) && !component.cantHit)
                 {
+                    ApplyAdditionalStun(info, raycastHit2D.collider);
                     component.SetHealth(component.GetHealth() - (component.animal ? info.animalDamage * num : info.structureDamage * num));
                     if (component.animal)
                     {
@@ -198,6 +199,14 @@ namespace NewFirearms
                 }
             }
             visuals.ends.Add(vector);
+        }
+
+        internal static void ApplyAdditionalStun(AmmoInfo info, Collider2D collider)
+        {
+            if (info.additionalStun <= 0f || collider.gameObject.name.StartsWith("StunHitbox") ||
+                Plugin.MultiplayerActive && !Plugin.IsHost()) return;
+            if (collider.TryGetComponent<SpiderHandler>(out var spider))
+                spider.stunTime += info.additionalStun;
         }
 
         public static void ApplyShootKnockback(Body victim, Vector2 impulse)
