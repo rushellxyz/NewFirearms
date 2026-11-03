@@ -170,6 +170,7 @@ namespace NewFirearms
                 laser.enabled = laserEnabled;
             jamming = WorldGeneration.GetRunSettingBool("newfirearms.gunjamming");
             if (prop.feedType == BatteryFeed) racked = false;
+            if (!UsesRetraction()) ApplyTetherState(false, Vector2.zero);
             if (!existed)
             {
                 rounds = Enumerable.Repeat((sbyte)-2, prop.internalCapacity).ToList();
@@ -205,7 +206,7 @@ namespace NewFirearms
 
         public bool IsReady()
         {
-            return !IsJammed && (prop.feedType == BatteryFeed || !racked) && 0 != fireMode && rounds.Count > 0 &&
+            return !needsRetraction && !IsJammed && (prop.feedType == BatteryFeed || !racked) && 0 != fireMode && rounds.Count > 0 &&
                 (prop.feedType == BatteryFeed ? HasBatteryPower : 0 <= rounds[0]) && 0.005f < it.condition;
         }
 
@@ -233,7 +234,8 @@ namespace NewFirearms
             };
             for (int i = 0; i < info.pellets; i++)
             {
-                ShootManager.ShootLogic(info, barrelPosition, (transform.right + transform.up * (UnityEngine.Random.Range(-1f, 1f) * info.verticalSpread)) * num, shooter, ref visuals);
+                ShootManager.ShootLogic(info, barrelPosition, (transform.right + transform.up * (UnityEngine.Random.Range(-1f, 1f) * info.verticalSpread)) * num, shooter, ref visuals,
+                    prop.feedType == BatteryFeed && prop.needRetract ? this : null);
             }
             if (!Plugin.MultiplayerActive || (Plugin.MultiplayerActive && !Plugin.IsDedicated()))
             {
@@ -256,6 +258,7 @@ namespace NewFirearms
             if (prop.feedType == BatteryFeed)
             {
                 FinishBatteryShot();
+                if (needsRetraction) StopFiring();
                 return true;
             }
             if (info.caseless || !WorldGeneration.GetRunSettingBool("newfirearms.gunejectcasing"))
@@ -294,7 +297,17 @@ namespace NewFirearms
 
         public void Rack(bool manual)
         {
-            if (prop.feedType == BatteryFeed) return;
+            if (prop.feedType == BatteryFeed)
+            {
+                if (!manual || !prop.needRetract) return;
+                if (Plugin.MultiplayerActive && RequestHostIfClient(1)) return;
+                if (!needsRetraction) return;
+                StopFiring();
+                ApplyTetherState(false, Vector2.zero);
+                Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+                if (Plugin.MultiplayerActive) SyncIfHost(6);
+                return;
+            }
             if (manual && Plugin.MultiplayerActive && RequestHostIfClient(1))
                 return;
             if (manual)
@@ -663,6 +676,7 @@ namespace NewFirearms
 
         void OnDestroy()
         {
+            DestroyTetherVisual();
             DestroyComposedSprite();
         }
 
@@ -736,6 +750,7 @@ namespace NewFirearms
             writer.Put((byte)extraData);
             GunNetwork.WriteJamState(this, writer);
             BatteryNetwork.Write(writer, prop.feedType == BatteryFeed ? magazineBatteries : null);
+            GunNetwork.WriteTetherState(this, writer);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)

@@ -21,7 +21,7 @@ namespace NewFirearms
                 StopFiring();
                 return false;
             }
-            if (fireMode == BurstFireMode && !IsJammed)
+            if (fireMode == BurstFireMode && !IsJammed && !needsRetraction)
                 burstShotsRemaining = 2; // The trigger pull already fired the first round.
             return true;
         }

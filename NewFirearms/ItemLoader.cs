@@ -327,6 +327,9 @@ namespace NewFirearms
                     prop.minigame.magReleaseTrigger = LoadConfigSprite(folder, prop.minigame.magReleasePath, "minigame.magReleasePath");
                 else prop.minigame.magReleaseTrigger = emptySprite;
 
+                prop.minigame.rackTrigger = string.IsNullOrWhiteSpace(prop.minigame.rackTriggerPath)
+                    ? null : LoadConfigSprite(folder, prop.minigame.rackTriggerPath, "minigame.rackTriggerPath");
+
                 if (null != prop.minigame.magazinePaths)
                 {
                     prop.minigame.magazineSprites = prop.minigame.magazinePaths.ToDictionary(

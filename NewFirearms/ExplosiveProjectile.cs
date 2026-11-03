@@ -18,14 +18,20 @@ namespace NewFirearms
         private bool authoritative;
         private float age;
         private LineRenderer trail;
+        private RshGun tetherGun;
 
-        internal static void Launch(AmmoInfo ammo, Vector2 position, Vector2 direction, Body shooter)
+        internal static void Launch(AmmoInfo ammo, Vector2 position, Vector2 direction, Body shooter, RshGun tetherGun = null)
         {
             if (Plugin.MultiplayerActive && !Plugin.IsHost()) return;
             var projectile = Create(position, direction.normalized * ammo.explosionParams.projectileVelocity);
             projectile.ammo = ammo;
             projectile.shooter = shooter;
             projectile.authoritative = true;
+            if (tetherGun != null && !tetherGun.needsRetraction)
+            {
+                projectile.tetherGun = tetherGun;
+                tetherGun.AttachTether(projectile.transform, position);
+            }
             if (Plugin.MultiplayerActive)
             {
                 ExplosiveProjectileNetwork.Spawn(projectile);
@@ -85,6 +91,8 @@ namespace NewFirearms
                 bool armed = distance + Vector2.Distance(previousPosition, hit.point) >=
                     ammo.explosionParams.minimumTravelDistance;
                 rb.position = hit.point;
+                if (tetherGun != null && tetherGun.needsRetraction && tetherGun.TetherTarget == transform)
+                    tetherGun.ApplyTetherState(true, hit.point, hit.transform);
                 // Finish first, so damage callbacks cannot process this impact twice.
                 if (armed)
                 {
@@ -144,6 +152,8 @@ namespace NewFirearms
 
         private void Finish()
         {
+            if (tetherGun != null && tetherGun.needsRetraction && tetherGun.TetherTarget == transform)
+                tetherGun.ApplyTetherState(true, Position);
             CancelInvoke(nameof(Sync));
             enabled = false;
             rb.simulated = false;

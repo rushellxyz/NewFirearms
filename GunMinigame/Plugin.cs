@@ -181,6 +181,11 @@ namespace GunMinigame
 
             MinigameManager manager = MinigameManager.instance;
             IMinigameGun heldGun = item.GetComponent(typeof(IMinigameGun)) as IMinigameGun;
+            if (rackPressed && heldGun is IMinigameRetractableGun retractable && retractable.UsesRetraction())
+            {
+                if (__instance.body.conscious) heldGun.Rack();
+                return;
+            }
             if (null != manager && manager.active)
             {
                 if (ReferenceEquals(heldGun, manager.gun) && !manager.hiden)

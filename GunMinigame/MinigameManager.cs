@@ -76,6 +76,7 @@ namespace GunMinigame
         public float sliderHandFollowOffset;
         public bool canUseFannyPack;
         public Sprite magReleaseTrigger;
+        public Sprite rackTrigger;
         public Dictionary<string, Sprite> magazineSprites;
         public Dictionary<string, Sprite[]> ammosInMagazine;
         public string[] magazines;
@@ -293,6 +294,7 @@ namespace GunMinigame
         public float fannyPackZipInertia;
 
         public Image magReleaseTrigger;
+        public Image rackTrigger;
 
         public bool handIsInBandolier;
 
@@ -425,6 +427,8 @@ namespace GunMinigame
             backLayerImage.enabled = info.backLayerSprite != null;
             receiverTrigger.sprite = info.receiverTrigger;
             magReleaseTrigger.sprite = info.magReleaseTrigger;
+            rackTrigger.sprite = info.rackTrigger;
+            rackTrigger.gameObject.SetActive(info.rackTrigger != null);
             magazineDragTrigger.sprite = info.magazineDragTrigger;
             laserToggleTrigger.sprite = info.laserToggleTrigger;
             laserImage.sprite = info.laserImage;
@@ -586,6 +590,22 @@ namespace GunMinigame
             magReleaseTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
             magReleaseTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => MagRemoveButton());
             magReleaseTrigger.color = new Color(1f, 1f, 1f, 0f);
+
+            rackTrigger = new GameObject("MinigameRackTrigger").AddComponent<Image>();
+            rackTrigger.transform.SetParent(gunBase.transform);
+            rackTrigger.transform.localPosition = Vector3.zero;
+            rackTrigger.transform.localScale = Vector3.one;
+            rackTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            rackTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            rackTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            rackTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() =>
+            {
+                if (!active || hiden || automatedHandAction || IsAnyGameUIOpen() || !PlayerCamera.main.body.conscious) return;
+                gun.Rack();
+                EventSystem.current.SetSelectedGameObject(null);
+            });
+            rackTrigger.color = new Color(1f, 1f, 1f, 0f);
+            rackTrigger.gameObject.SetActive(false);
 
             laserToggleTrigger = new GameObject("LaserToggleTrigger").AddComponent<Image>();
             laserToggleTrigger.transform.SetParent(gunBase.transform);

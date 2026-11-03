@@ -65,6 +65,7 @@ namespace NewFirearms
             reader.Get(out byte extraData);
             ReadJamState(rshGun, reader);
             rshGun.SetBatteryState(BatteryNetwork.Read(reader));
+            ReadTetherState(rshGun, reader);
             bool silentMagazineRemoval = (extraData & RshGun.SilentMagazineRemoval) != 0;
             extraData = (byte)(extraData & ~RshGun.SilentMagazineRemoval);
             if (!silentMagazineRemoval && (magazineRemoved || 1 == extraData))
@@ -75,6 +76,8 @@ namespace NewFirearms
                 Sound.Play(rshGun.prop.jamAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
        else if (4 == extraData)
                 Sound.Play(rshGun.prop.loadRoundAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+       else if (6 == extraData)
+                Sound.Play(rshGun.prop.rackAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
 
             if (newRack && !rshGun.racked)
             {
@@ -187,6 +190,57 @@ namespace NewFirearms
             }
        else     UnityEngine.Debug.LogWarning("[NewFirearms] Host says that gun is being shot, but im unable to find who shoots it, ummm, okay ig???");
             ShootManager.DrawVisuals(ShootVisuals.Deserialize(ref reader));
+        }
+
+        internal static void WriteTetherState(RshGun gun, LiteNetLib.Utils.NetDataWriter writer)
+        {
+            writer.Put(gun.TetherRevision);
+            writer.Put(gun.needsRetraction);
+            if (!gun.needsRetraction) return;
+            Vector2 point = gun.TetherPosition;
+            writer.Put(point.x);
+            writer.Put(point.y);
+            var tracker = gun.TetherTarget != null
+                ? gun.TetherTarget.GetComponentInParent<Together.SyncInfoGameObjectTracker>() : null;
+            writer.Put(tracker != null);
+            if (tracker == null) return;
+            writer.Put((ushort)tracker.syncId);
+            Vector2 local = tracker.transform.InverseTransformPoint(point);
+            writer.Put(local.x);
+            writer.Put(local.y);
+        }
+
+        private static void ReadTetherState(RshGun gun, LiteNetLib.Utils.NetDataReader reader)
+        {
+            // Snapshots from older versions end after the battery cells.
+            if (reader.AvailableBytes == 0)
+            {
+                gun.ApplyTetherState(false, Vector2.zero);
+                return;
+            }
+            uint revision = reader.GetUInt();
+            // Periodic snapshots are unreliable and may arrive after a newer retract/shot.
+            if (unchecked((int)(revision - gun.TetherRevision)) < 0) return;
+            gun.TetherRevision = revision;
+            bool active = reader.GetBool();
+            if (!active)
+            {
+                gun.ApplyTetherState(false, Vector2.zero);
+                return;
+            }
+            Vector2 point = new Vector2(reader.GetFloat(), reader.GetFloat());
+            Transform target = null;
+            if (reader.GetBool())
+            {
+                ushort id = reader.GetUShort();
+                Vector2 local = new Vector2(reader.GetFloat(), reader.GetFloat());
+                if (Together.NetObjectRegistry.TryGetSyncInfo(new Together.knetid(id), out var info) && info.go != null)
+                {
+                    target = info.go.transform;
+                    point = target.TransformPoint(local);
+                }
+            }
+            gun.ApplyTetherState(true, point, target);
         }
 
         internal static void WriteJamState(RshGun gun, LiteNetLib.Utils.NetDataWriter writer)

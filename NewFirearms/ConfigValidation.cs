@@ -83,6 +83,7 @@ namespace NewFirearms
         {
             if (gun == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
             Require(gun.feedType >= 1 && gun.feedType <= 5, "feedType", "expected 1 (magazine), 2 (tube), 3 (barrel), 4 (revolver), or 5 (battery magazine).");
+            Require(!gun.needRetract || gun.feedType == 5, "needRetract", "requires feedType 5 (battery magazine).");
             Require(gun.internalCapacity > 0, "internalCapacity", "must be greater than zero.");
             Require(gun.feedType != 1 && gun.feedType != 5 || gun.internalCapacity == 1, "internalCapacity", "must be 1 for magazine-fed and battery-fed guns.");
             if (gun.feedType == 5)
@@ -164,6 +165,7 @@ namespace NewFirearms
             Sprite(game.unrackedOnlyPath, "minigame.unrackedOnlyPath");
             Sprite(game.receiverPath, "minigame.receiverPath");
             Sprite(game.magReleasePath, "minigame.magReleasePath");
+            Sprite(game.rackTriggerPath, "minigame.rackTriggerPath");
             Sprite(game.magazineDragPath, "minigame.magazineDragPath");
             Sprite(game.laserTogglePath, "minigame.laserTogglePath");
             Sprite(game.laserPath, "minigame.laserPath");

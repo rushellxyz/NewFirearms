@@ -52,6 +52,7 @@ namespace NewFirearms
         public bool spawnUnracked;
         public bool removeMagazineOnRack;
         public float batteryDrainPerShot;
+        public bool needRetract;
         public List<byte> fireModes;
         /*
         * 0 - Safe
@@ -120,6 +121,7 @@ namespace NewFirearms
         public string[] ammosInPtrPaths;
         public string receiverPath;
         public string magReleasePath;
+        public string rackTriggerPath;
         public Dictionary<string, string> magazinePaths;
         public Dictionary<string, string[]> ammosInMagazinePaths;
         public string magazineDragPath;

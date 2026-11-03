@@ -11,6 +11,11 @@ namespace GunMinigame
         public string CurrentMag();
     }
 
+    public interface IMinigameRetractableGun
+    {
+        bool UsesRetraction();
+    }
+
     public interface IMinigameMag
     {
         public bool DragOnto(Item item); // Returns whether the load succeeded or was requested from the host.

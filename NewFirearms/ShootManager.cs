@@ -78,10 +78,13 @@ namespace NewFirearms
     {
         // shooter is null when commiting suicide
         public static void ShootLogic(AmmoInfo info, Vector2 pos, Vector2 dir, Body shooter, ref ShootVisuals visuals)
+            => ShootLogic(info, pos, dir, shooter, ref visuals, null);
+
+        internal static void ShootLogic(AmmoInfo info, Vector2 pos, Vector2 dir, Body shooter, ref ShootVisuals visuals, RshGun tetherGun)
         {
             if (info.explosionParams != null)
             {
-                ExplosiveProjectile.Launch(info, pos, dir, shooter);
+                ExplosiveProjectile.Launch(info, pos, dir, shooter, tetherGun);
                 return;
             }
             Physics2D.queriesHitTriggers = true;
@@ -101,6 +104,7 @@ namespace NewFirearms
 
                 if (raycastHit2D.collider.TryGetComponent<FirearmCourseTarget>(out var courseTarget))
                 {
+                    tetherGun?.AttachTether(raycastHit2D.transform, raycastHit2D.point);
                     float damage = Mathf.Max(info.structureDamage, info.animalDamage) * num;
                     courseTarget.Hit(shooter, damage);
                     visuals.hitNumbers.Add((raycastHit2D.point, (ushort)damage));
@@ -109,6 +113,7 @@ namespace NewFirearms
                 }
                 if (raycastHit2D.collider.TryGetComponent<BuildingEntity>(out var component) && !component.cantHit)
                 {
+                    tetherGun?.AttachTether(raycastHit2D.transform, raycastHit2D.point);
                     ApplyAdditionalStun(info, raycastHit2D.collider);
                     component.SetHealth(component.GetHealth() - (component.animal ? info.animalDamage * num : info.structureDamage * num));
                     if (component.animal)
@@ -147,6 +152,7 @@ namespace NewFirearms
                 }
                 else if (raycastHit2D.collider.gameObject.layer == 6)
                 {
+                    tetherGun?.AttachTether(null, raycastHit2D.point);
                     WorldGeneration.world.DamageBlock(raycastHit2D.point + dir * 0.5f, info.structureDamage * num);
                     visuals.hitNumbers.Add((raycastHit2D.point, (ushort)(info.structureDamage * num)));
                     if (info.piercing && ++blocksHit <= 2)
@@ -187,6 +193,7 @@ namespace NewFirearms
                 if (list.Contains(victim))
                     break;
                 list.Add(victim);
+                tetherGun?.AttachTether(raycastHit2D.transform, raycastHit2D.point);
                 Vector2 impulse = dir * info.knockback;
                 if (Plugin.MultiplayerActive)
                     RecordShootKnockback(victim, impulse, visuals);
@@ -198,6 +205,7 @@ namespace NewFirearms
                     victim.traumaAmount += info.playerDamage.traumaAmount * num * PvpMoodDebuff();
                 }
             }
+            tetherGun?.AttachTether(null, vector);
             visuals.ends.Add(vector);
         }
 

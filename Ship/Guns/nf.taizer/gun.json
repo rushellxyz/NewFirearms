@@ -1,6 +1,6 @@
 {
     "fullName": "Taizer",
-    "description": "",
+    "description": "TODO",
 
     "weight": 0.6,
     "value": 35,
@@ -50,6 +50,7 @@
         }
     ],
     "batteryDrainPerShot": 0.225,
+    "needRetract": true,
     "desiredGasTime": 0.1,
     "fireModes": [ 0, 2, ],
     "magazineType": [ "taizer", ],
@@ -70,5 +71,10 @@
         "magazinePaths": { "nf.taizermag": "uiTaizermag" },
         "magazineXPosition": -0.086,
         "magazineYPosition": -0.01,
+        "magReleasePath": "uiMagRelease",
+        "magazineXSpeed": -0.1,
+        "magazineYSpeed": -0.525,
+        "magazineAnimationTime": 0.2,
+        "rackTriggerPath": "uiRetractTrigger",
     }
 }

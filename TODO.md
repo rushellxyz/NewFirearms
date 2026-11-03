@@ -13,3 +13,4 @@ TODO List - Agents stay away unless stated otherwise
  - The sliderHandFollowOffset !
  - Magazine sprite doesnt persist, cucorelib overwrites it?
  - Move feedType to use enum too
+ - Taizer spring disappears while put into closed container, tho, i think its an edge case
