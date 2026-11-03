@@ -97,6 +97,7 @@ namespace GunMinigame
         public bool fitLaserImage;
         public bool resizeMagazine;
         public Sprite laserToggleTrigger;
+        public Sprite flashlightToggleTrigger;
         public Sprite laserImage;
         public Sprite fireToggleTrigger;
         public Sprite[] fireModeSprites;
@@ -325,6 +326,7 @@ namespace GunMinigame
 
         public ILaser laser;
         public Image laserToggleTrigger;
+        public Image flashlightToggleTrigger;
         public Image laserImage;
         public Image fireToggleTrigger;
         public Image fireModeImage;
@@ -431,6 +433,9 @@ namespace GunMinigame
             rackTrigger.gameObject.SetActive(info.rackTrigger != null);
             magazineDragTrigger.sprite = info.magazineDragTrigger;
             laserToggleTrigger.sprite = info.laserToggleTrigger;
+            flashlightToggleTrigger.sprite = info.flashlightToggleTrigger;
+            flashlightToggleTrigger.gameObject.SetActive(info.flashlightToggleTrigger != null &&
+                newGun is IMinigameFlashlight flashlight && flashlight.HasFlashlight());
             laserImage.sprite = info.laserImage;
             fireToggleTrigger.sprite = info.fireToggleTrigger;
             fireToggleTrigger.gameObject.SetActive(null != info.fireToggleTrigger);
@@ -621,6 +626,22 @@ namespace GunMinigame
                 PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
                 EventSystem.current.SetSelectedGameObject(null);
             });
+
+            flashlightToggleTrigger = new GameObject("FlashlightToggleTrigger").AddComponent<Image>();
+            flashlightToggleTrigger.transform.SetParent(gunBase.transform);
+            flashlightToggleTrigger.transform.localPosition = Vector3.zero;
+            flashlightToggleTrigger.transform.localScale = Vector3.one;
+            flashlightToggleTrigger.alphaHitTestMinimumThreshold = 0.1f;
+            flashlightToggleTrigger.GetComponent<RectTransform>().sizeDelta = size;
+            flashlightToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>();
+            flashlightToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
+            flashlightToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() =>
+            {
+                if (!active || hiden || automatedHandAction || IsAnyGameUIOpen() || !PlayerCamera.main.body.conscious) return;
+                (gun as IMinigameFlashlight)?.ToggleFlashlight();
+                EventSystem.current.SetSelectedGameObject(null);
+            });
+            flashlightToggleTrigger.gameObject.SetActive(false);
 
             fireToggleTrigger = new GameObject("FireToggleTrigger").AddComponent<Image>();
             fireToggleTrigger.transform.SetParent(gunBase.transform);

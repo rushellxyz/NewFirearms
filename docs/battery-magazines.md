@@ -45,6 +45,24 @@ Set `"needRetract": true` on a battery gun to require manual retraction after ev
 
 `minigame.rackTriggerPath` specifies an optional transparent PNG hit-area mask, using the same layout as `magReleasePath` (path relative to the gun folder, without `.png`). For example, `"rackTriggerPath": "uiRackTrigger"` uses `uiRackTrigger.png`; clicking its opaque area calls the gun's normal rack action, or retracts a battery gun. Missing or blank disables the trigger. The `Z` hotkey still requires Marksman, including on retractable guns.
 
-Tethers retract silently before the gun is saved; the firing lock, endpoint, and tether revision are runtime-only and are not saved. In multiplayer, the host performs this retraction and syncs it to clients. Manual retraction uses the existing host-authorized rack action. Gun snapshots append the tether state and, when available, a synchronized target ID/local attachment point so clients follow the moving target. Targets without a synchronized ID use host position updates. Older snapshots without tether data remain readable; older clients ignore the new suffix. A tether revision prevents delayed snapshots from restoring a retracted line.
+Battery guns can add `"hasFlashlight": true` (default `false`) and a `minigame.flashlightTogglePath` PNG hit-area mask. Both a minigame definition and the toggle path are required when enabling this feature. For example:
+
+```json
+{
+    "feedType": 5,
+    "hasFlashlight": true,
+    "minigame": {
+        "flashlightTogglePath": "uiFlashlightToggle"
+    }
+}
+```
+
+This fragment supplements the gun's existing config. Clicking opaque pixels in `uiFlashlightToggle.png` switches the light on/off; there is no hotkey or inventory toggle, and no Marksman requirement. It starts off, including after loading a save. The world light is cloned from the emergency light's light child and uses the normal flashlight's low intensity (0.5). It follows the barrel and faces the firing direction.
+
+While switched on, it drains the inserted magazine's cells in order at the stock flashlight's low-mode rate for a small battery: `flashlight.rotSpeed * 0.005 * globalDecayRate` full-cell fractions per second, with the stock sixfold wet penalty. Shooting and lighting draw from the same cells. The light can use charge below the amount needed for another shot; it switches off when charge runs out or the magazine is removed. Swapping batteries does not automatically switch it back on. Inside a container its beam is hidden while its power drain continues, as with a switched-on normal light. The host authorizes toggles and consumes power; gun snapshots sync charge and light state to clients.
+
+Tethers retract silently before the gun is saved; the firing lock and endpoint are runtime-only and are not saved. In multiplayer, the host performs this retraction and syncs it to clients. Manual retraction uses the existing host-authorized rack action. Gun snapshots append the tether state and, when available, a synchronized target ID/local attachment point so clients follow the moving target. Targets without a synchronized ID use host position updates. A single gun-wide snapshot revision prevents delayed or duplicate packets from overwriting any gun state, including ammunition, battery charge, jams, the tether, and flashlight state. The host increments it for every snapshot, and clients check it before applying state or playing snapshot sounds. It is runtime-only and not saved.
+
+**Multiplayer compatibility break:** gun snapshots now use `NewFirearms_RshGunSync_v2`, with the revision immediately after the gun ID; the old per-subsystem revision fields are removed. Every player must use the updated mod version. Older gun snapshot formats are no longer accepted.
 
 The inserted magazine's cell IDs and individual charges are saved on the gun and restored to the magazine on ejection. This never changes the gun's own condition except for the existing per-shot wear setting. Cell charges and IDs are included in gun and magazine snapshots; clients request changes and the host performs them. Battery data uses a cell count followed by each cell's ID and charge. The previous single-cell save fields and snapshot format are no longer supported.

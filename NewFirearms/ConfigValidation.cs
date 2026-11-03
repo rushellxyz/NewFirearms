@@ -84,6 +84,10 @@ namespace NewFirearms
             if (gun == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
             Require(gun.feedType >= 1 && gun.feedType <= 5, "feedType", "expected 1 (magazine), 2 (tube), 3 (barrel), 4 (revolver), or 5 (battery magazine).");
             Require(!gun.needRetract || gun.feedType == 5, "needRetract", "requires feedType 5 (battery magazine).");
+            Require(!gun.hasFlashlight || gun.feedType == 5, "hasFlashlight", "requires feedType 5 (battery magazine).");
+            Require(!gun.hasFlashlight || gun.minigame != null, "minigame", "is required when hasFlashlight is true.");
+            Require(!gun.hasFlashlight || !string.IsNullOrWhiteSpace(gun.minigame?.flashlightTogglePath),
+                "minigame.flashlightTogglePath", "a toggle hit-area sprite is required when hasFlashlight is true.");
             Require(gun.internalCapacity > 0, "internalCapacity", "must be greater than zero.");
             Require(gun.feedType != 1 && gun.feedType != 5 || gun.internalCapacity == 1, "internalCapacity", "must be 1 for magazine-fed and battery-fed guns.");
             if (gun.feedType == 5)
@@ -168,6 +172,7 @@ namespace NewFirearms
             Sprite(game.rackTriggerPath, "minigame.rackTriggerPath");
             Sprite(game.magazineDragPath, "minigame.magazineDragPath");
             Sprite(game.laserTogglePath, "minigame.laserTogglePath");
+            Sprite(game.flashlightTogglePath, "minigame.flashlightTogglePath");
             Sprite(game.laserPath, "minigame.laserPath");
             Sprite(game.fireTogglePath, "minigame.fireTogglePath");
             Require(game.rackPoint >= Math.Min(game.sliderMinimumPosition, game.sliderMaximumPosition) &&

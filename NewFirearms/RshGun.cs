@@ -13,7 +13,7 @@ namespace NewFirearms
     public partial class RshGun : RshComponent, GunMinigame.IMinigameGun, GunMinigame.IMinigameJammedGun
     {
         public const float MUZZLE_RISE_MODIFIER = 8f;
-        public const string MSGID_SYNC = "NewFirearms_RshGunSync";
+        public const string MSGID_SYNC = "NewFirearms_RshGunSync_v2";
         public const string MSGID_ACTION = "NewFirearms_RshGunAction";
         public const string MSGID_SHOOT = "NewFirearms_Shoot";
         public const string MSGID_SHOOT_VISUALS = "NewFirearms_ShootVisuals";
@@ -94,6 +94,7 @@ namespace NewFirearms
 
         public void Update()
         {
+            UpdateFlashlight();
             if (Plugin.MultiplayerActive && !Plugin.IsHost())
             {
                 if (currentlyShooting && (!Input.GetKey(KeyBinds.GetBind("attack")) ||
@@ -732,6 +733,7 @@ namespace NewFirearms
             LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_SYNC);
 
             writer.Put((ushort)tracker.syncId);
+            writer.Put(unchecked(++SnapshotRevision));
             writer.Put((byte)fireMode);
             writer.Put((bool)racked);
             if (string.IsNullOrEmpty(mag))
@@ -751,6 +753,7 @@ namespace NewFirearms
             GunNetwork.WriteJamState(this, writer);
             BatteryNetwork.Write(writer, prop.feedType == BatteryFeed ? magazineBatteries : null);
             GunNetwork.WriteTetherState(this, writer);
+            writer.Put(FlashlightEnabled);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)
@@ -821,6 +824,7 @@ namespace NewFirearms
             {4, "newfirearms.action.toggle_fire_mode"},
             {5, "newfirearms.action.stop_shooting"},
             {6, "newfirearms.action.clear_jam"},
+            {7, "newfirearms.action.toggle_flashlight"},
         };
     }
 }

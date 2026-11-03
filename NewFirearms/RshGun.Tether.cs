@@ -7,7 +7,6 @@ namespace NewFirearms
     {
         internal bool needsRetraction;
         private Vector2 tetherPoint;
-        internal uint TetherRevision;
 
         internal Transform TetherTarget;
         internal Vector2 TetherLocalPoint;
@@ -43,7 +42,6 @@ namespace NewFirearms
 
         internal void ApplyTetherState(bool active, Vector2 point, Transform target = null)
         {
-            if (!Plugin.MultiplayerActive || Plugin.IsHost()) TetherRevision++;
             needsRetraction = active;
             tetherPoint = point;
             TetherTarget = active ? target : null;
@@ -53,6 +51,7 @@ namespace NewFirearms
 
         private void LateUpdate()
         {
+            UpdateFlashlightVisual();
             if (!needsRetraction) return;
             // Unity compares destroyed objects equal to null, while their managed reference remains.
             if (TetherTarget == null && !ReferenceEquals(TetherTarget, null) &&
@@ -82,6 +81,10 @@ namespace NewFirearms
             tetherLine = null;
         }
 
-        private void OnDisable() => DestroyTetherVisual();
+        private void OnDisable()
+        {
+            DestroyTetherVisual();
+            if (gunFlashlight != null) gunFlashlight.enabled = false;
+        }
     }
 }

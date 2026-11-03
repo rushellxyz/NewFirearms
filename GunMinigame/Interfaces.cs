@@ -29,6 +29,12 @@ namespace GunMinigame
         void ClearJam();
     }
 
+    public interface IMinigameFlashlight
+    {
+        bool HasFlashlight();
+        void ToggleFlashlight();
+    }
+
     public interface ILaser
     {
         public void Toggle();

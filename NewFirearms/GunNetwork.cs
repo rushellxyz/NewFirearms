@@ -24,6 +24,7 @@ namespace NewFirearms
                 throw new Exception("[NewFirearms] Recived gun sync info for non-registred gun!");
             if (!it.TryGetComponent<RshGun>(out var rshGun))
                 throw new Exception("[NewFirearms] Gun sync packet refering to item without RshGun component :tourniqet:");
+            if (!rshGun.AcceptSnapshot(reader.GetUInt())) return;
             rshGun.existed = true;
             bool shouldUpdateSprite = false;
 
@@ -66,6 +67,7 @@ namespace NewFirearms
             ReadJamState(rshGun, reader);
             rshGun.SetBatteryState(BatteryNetwork.Read(reader));
             ReadTetherState(rshGun, reader);
+            rshGun.FlashlightEnabled = reader.GetBool() && rshGun.HasFlashlight();
             bool silentMagazineRemoval = (extraData & RshGun.SilentMagazineRemoval) != 0;
             extraData = (byte)(extraData & ~RshGun.SilentMagazineRemoval);
             if (!silentMagazineRemoval && (magazineRemoved || 1 == extraData))
@@ -78,6 +80,8 @@ namespace NewFirearms
                 Sound.Play(rshGun.prop.loadRoundAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
        else if (6 == extraData)
                 Sound.Play(rshGun.prop.rackAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
+       else if (7 == extraData)
+                Sound.Play("flashlighttoggle", rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
 
             if (newRack && !rshGun.racked)
             {
@@ -102,7 +106,7 @@ namespace NewFirearms
             reader.Get(out ushort syncId);
             reader.Get(out byte action);
 
-            if (7 <= action)
+            if (8 <= action)
             {
                 NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.unknown"));
                 return;
@@ -159,6 +163,8 @@ namespace NewFirearms
                 rshGun.ReleaseTrigger();
        else if (6 == action)
                 rshGun.ClearJam();
+       else if (7 == action)
+                rshGun.ToggleFlashlight();
         }
 
         public static void ReceiveShoot(LiteNetLib.Utils.NetDataReader reader)
@@ -194,7 +200,6 @@ namespace NewFirearms
 
         internal static void WriteTetherState(RshGun gun, LiteNetLib.Utils.NetDataWriter writer)
         {
-            writer.Put(gun.TetherRevision);
             writer.Put(gun.needsRetraction);
             if (!gun.needsRetraction) return;
             Vector2 point = gun.TetherPosition;
@@ -212,16 +217,6 @@ namespace NewFirearms
 
         private static void ReadTetherState(RshGun gun, LiteNetLib.Utils.NetDataReader reader)
         {
-            // Snapshots from older versions end after the battery cells.
-            if (reader.AvailableBytes == 0)
-            {
-                gun.ApplyTetherState(false, Vector2.zero);
-                return;
-            }
-            uint revision = reader.GetUInt();
-            // Periodic snapshots are unreliable and may arrive after a newer retract/shot.
-            if (unchecked((int)(revision - gun.TetherRevision)) < 0) return;
-            gun.TetherRevision = revision;
             bool active = reader.GetBool();
             if (!active)
             {
@@ -253,12 +248,6 @@ namespace NewFirearms
 
         private static void ReadJamState(RshGun gun, LiteNetLib.Utils.NetDataReader reader)
         {
-            // Older gun snapshots end after extraData.
-            if (reader.AvailableBytes < 4)
-            {
-                gun.ApplyJamState(0, 0, -1);
-                return;
-            }
             reader.Get(out byte kind);
             reader.Get(out ushort chamber);
             reader.Get(out sbyte ammo);

@@ -36,7 +36,9 @@ namespace NewFirearms
         private void UpdateBatteryRound()
         {
             // Retain one chamber indicator for the existing minigame and snapshot format.
-            rounds = new List<sbyte> { HasBatteryPower ? (sbyte)0 : (sbyte)-2 };
+            sbyte round = HasBatteryPower ? (sbyte)0 : (sbyte)-2;
+            if (rounds == null || rounds.Count != 1) rounds = new List<sbyte> { round };
+            else rounds[0] = round;
         }
 
         private void FinishBatteryShot()

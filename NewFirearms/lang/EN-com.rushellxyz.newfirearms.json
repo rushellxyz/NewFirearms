@@ -13,6 +13,7 @@
     "newfirearms.action.shoot": "shoot",
     "newfirearms.action.stop_shooting": "stop shooting",
     "newfirearms.action.toggle_fire_mode": "toggle fire mode",
+    "newfirearms.action.toggle_flashlight": "toggle flashlight",
     "newfirearms.command.suicide.description": "You must have a loaded gun. Prevents last stand.",
     "newfirearms.command.suicide.noGun": "you dont have a gun. you are gonna suffer.",
     "newfirearms.command.suicide.notReady": "Gun is not ready. Try remove safety?",

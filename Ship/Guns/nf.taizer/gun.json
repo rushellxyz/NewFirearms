@@ -61,6 +61,7 @@
     "itemSpriteXOffset": 0.0,
     "itemSpriteYOffset": -0.3,
 
+    "hasFlashlight": true,
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",
@@ -76,5 +77,6 @@
         "magazineYSpeed": -0.525,
         "magazineAnimationTime": 0.2,
         "rackTriggerPath": "uiRetractTrigger",
+        "flashlightTogglePath": "uiFlashlightToggle"
     }
 }

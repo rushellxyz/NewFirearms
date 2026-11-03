@@ -64,6 +64,7 @@ namespace NewFirearms
         public List<string> magazineType;
         public float barrelOffset;
         public bool hasLaser;
+        public bool hasFlashlight;
 
         public string normalTexturePath;
         public string rackedTexturePath;
@@ -127,6 +128,7 @@ namespace NewFirearms
         public string magazineDragPath;
         public string[] casingsPath;
         public string laserTogglePath;
+        public string flashlightTogglePath;
         public string laserPath;
         public string fireTogglePath;
         public string[] fireModePaths;
