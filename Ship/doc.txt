@@ -184,6 +184,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "mosynStyleRack": false, // Two-position slider: lift/lower only at sliderMaximumPosition (fully forward). Lower to lock (racked -> unracked); pull back past rackPoint while raised for unracked -> racked. Only the front sprite lifts; both slide horizontally. Overrides rackByRotation and chargingHandle.
     "backLayerPath": "uiBackLayer", // Optional sprite below the back slider. Moves with the gun, independently of the slider; omit .png.
     "rackTriggerPath": "uiRackTrigger", // Optional rack/retract hit-area mask, like magReleasePath. Click opaque pixels to rack once. Available without Marksman; omit .png. Missing/blank disables it.
+    "onlyUnrackedToRacked": false, // Restrict the rackTriggerPath button to unracked -> racked; clicking while already racked does nothing. Slider and hotkeys are unaffected.
     "flashlightTogglePath": "uiFlashlightToggle", // Flashlight on/off hit-area mask; required with hasFlashlight. Click opaque pixels. No hotkey or inventory toggle; omit .png.
     // Breaking change: mainPath has been removed. All four paths are required.
     // Paths are relative to the gun folder, without .png; paths may share the same image.

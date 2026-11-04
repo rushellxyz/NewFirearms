@@ -77,6 +77,7 @@ namespace GunMinigame
         public bool canUseFannyPack;
         public Sprite magReleaseTrigger;
         public Sprite rackTrigger;
+        public bool onlyUnrackedToRacked;
         public Dictionary<string, Sprite> magazineSprites;
         public Dictionary<string, Sprite[]> ammosInMagazine;
         public string[] magazines;
@@ -606,6 +607,7 @@ namespace GunMinigame
             rackTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() =>
             {
                 if (!active || hiden || automatedHandAction || IsAnyGameUIOpen() || !PlayerCamera.main.body.conscious) return;
+                if (info.onlyUnrackedToRacked && gun.IsRacked()) return;
                 gun.Rack();
                 EventSystem.current.SetSelectedGameObject(null);
             });

@@ -177,5 +177,9 @@
         "casingXPosition": -0.055,
         "casingYPosition": 0.07,
         "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
+        "rackTriggerPath": "uiRackTrigger",
+        "onlyUnrackedToRacked": true,
+        "unrackedOnlyPath": "uiUnrackedOnly",
+        "rackedOnlyPath": "uiRackedOnly",
     }
 }
