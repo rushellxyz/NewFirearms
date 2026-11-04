@@ -31,6 +31,8 @@
     [
         {
             "round": "9mmround",
+            "casingSprite": "9mmroundCasing",
+            "minigameCasingSprite": "uiEject9mmroundCasing",
             "structureDamage": 72,
             "animalDamage": 97,
 
@@ -62,6 +64,8 @@
         },
         {
             "round": "nf.9mmhollow",
+            "casingSprite": "9mmhollowCasing",
+            "minigameCasingSprite": "uiEject9mmhollowCasing",
             "structureDamage": 54,
             "animalDamage": 135,
 
@@ -93,6 +97,8 @@
         },
         {
             "round": "nf.9mmvenomus",
+            "casingSprite": "9mmvenomusCasing",
+            "minigameCasingSprite": "uiEject9mmvenomusCasing",
             "structureDamage": 45,
             "animalDamage": 135,
 
@@ -147,10 +153,10 @@
     "removeMagazineOnRack": true,
     "minigame":
     {
-        "mainExperimentPath": "uiSprite",
-        "mainMilkyTriggerOnPath": "uiSprite",
-        "mainMilkyTriggerOffPath": "uiSprite",
-        "mainDunePath": "uiSprite",
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiBarrel",
         "sliderBackPath": "uiBarrel",
         "frontSliderInvisble": true,
@@ -158,18 +164,18 @@
         "sliderMinimumPosition": -80,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "rackRotationCenterXPosition": -0.048,
-        "rackRotationCenterYPosition": 0.047,
+        "rackRotationCenterXPosition": -0.05,
+        "rackRotationCenterYPosition": 0.05,
         "rackPoint": -40,
         "rackedIdlePosition": -60,
         "rackByRotation": true,
-        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
-        "sliderHandFollowOffset": -0.12,
+        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
+        "sliderHandFollowOffset": -0.125,
         "canUseFannyPack": false,
         "casingXPosition": -0.055,
-        "casingYPosition": 0.0475,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
+        "casingYPosition": 0.07,
+        "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
     }
 }
