@@ -1,6 +1,6 @@
 TODO List - Agents stay away unless stated otherwise
 
- - Move more guns to use copy, compressed audio
+ - Move more guns to use copy
  - Do something about RshGun.RemoveMagPart2WhenCuCore
  - Name for loading order
  - Resize casings, expecially pistols
