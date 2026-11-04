@@ -26,6 +26,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp" Publicize="true">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/Assembly-CSharp.dll</HintPath>
     </Reference>

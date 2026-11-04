@@ -26,6 +26,10 @@ namespace GunMinigame
             overlay.SetAsLastSibling();
             used = 0;
             MinigameInfo info = manager.info;
+            Dot("inertiaHandXPosition / inertiaHandYPosition", new Vector2(
+                info.inertiaHandXPosition * MinigameManager.size.x, info.inertiaHandYPosition * MinigameManager.size.y));
+            Dot("inertiaBarrelXPosition / inertiaBarrelYPosition", new Vector2(
+                info.inertiaBarrelXPosition * MinigameManager.size.x, info.inertiaBarrelYPosition * MinigameManager.size.y));
             // All configured spawn points and gun parts use the moving gun base.
             if (info.casingsSprite != null)
                 Dot("casingXPosition / casingYPosition", new Vector2(info.casingXPosition, info.casingYPosition));

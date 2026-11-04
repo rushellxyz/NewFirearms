@@ -152,6 +152,17 @@ namespace NewFirearms
 
         private void Minigame(JsonMinigameInfo game, int count, int lastMode)
         {
+            var inertiaPoints = new[] { game.inertiaHandXPosition, game.inertiaHandYPosition,
+                game.inertiaBarrelXPosition, game.inertiaBarrelYPosition };
+            var inertiaFields = new[] { "inertiaHandXPosition", "inertiaHandYPosition",
+                "inertiaBarrelXPosition", "inertiaBarrelYPosition" };
+            for (int i = 0; i < inertiaPoints.Length; i++)
+                Require(inertiaPoints[i] >= -0.5f && inertiaPoints[i] <= 0.5f,
+                    "minigame." + inertiaFields[i], "must be between -0.5 and 0.5 (fraction of window width/height from its center).");
+            float inertiaX = game.inertiaBarrelXPosition - game.inertiaHandXPosition;
+            float inertiaY = game.inertiaBarrelYPosition - game.inertiaHandYPosition;
+            Require(inertiaX * inertiaX + inertiaY * inertiaY >= 0.0025f,
+                "minigame.inertiaBarrelXPosition / inertiaBarrelYPosition", "must be at least 0.05 away from the hand anchor.");
             Sprite(game.mainExperimentPath, "minigame.mainExperimentPath", true);
             Sprite(game.mainMilkyTriggerOnPath, "minigame.mainMilkyTriggerOnPath", true);
             Sprite(game.mainMilkyTriggerOffPath, "minigame.mainMilkyTriggerOffPath", true);

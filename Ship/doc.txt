@@ -172,6 +172,12 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
 
 == MINIGAME JSON TEMPLATE ==
 {
+    // Rigid gun inertia: hand/grip and muzzle anchors, fractions of window width/height from center.
+    // Defaults work with existing configs. nf_visualize displays both anchors for adjustment.
+    "inertiaHandXPosition": -0.3,
+    "inertiaHandYPosition": -0.05,
+    "inertiaBarrelXPosition": 0.2,
+    "inertiaBarrelYPosition": 0.1,
     "ammosInHandPaths": [], // Optional; omit, null, [] or entirely blank entries to disable the bandolier.
     "ammosInPtrPaths": [], // Bandolier and ammo selector require both arrays, with one entry per ammo type.
     // work in progress

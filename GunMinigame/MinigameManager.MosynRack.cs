@@ -12,7 +12,7 @@ namespace GunMinigame
         private float mosynRequestTime;
         private float MosynLift => Mathf.Max(0.5f, Screen.height * 0.0175f);
 
-        private Vector2 MosynPointer => gunBase.transform.InverseTransformPoint(handPos);
+        private Vector2 MosynPointer => gunBase.transform.InverseTransformPoint(SliderPointer);
 
         private void EnsureMosynRack()
         {
@@ -67,11 +67,12 @@ namespace GunMinigame
 
             if (holdsSlide)
             {
-                float previousX = mosynMotion.X;
+                Vector2 previousPosition = sliderFrontImage.transform.localPosition;
                 bool? target = mosynMotion.Drag(MosynPointer, racked, info.sliderMinimumPosition,
                     info.sliderMaximumPosition, info.rackPoint, MosynLift);
                 if (target.HasValue) RequestMosynRack(target.Value);
-                xInertia += (mosynMotion.X - previousX) * 0.5f;
+                ApplyMosynPose();
+                AddSliderImpulse((Vector2)sliderFrontImage.transform.localPosition - previousPosition);
             }
             ApplyMosynPose();
         }

@@ -10,7 +10,7 @@ namespace GunMinigame
             if (__instance != PlayerCamera.main.body)
                 return;
 
-            MinigameManager.GetOrAddInstance().AddRecoil((3f/2f) * vol, (5f/3f) * vol);
+            MinigameManager.instance?.AddFootstepImpulse(vol);
         }
     }
 }

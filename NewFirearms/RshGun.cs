@@ -473,7 +473,7 @@ namespace NewFirearms
                     return false;
 
                 if (GunMinigame.Plugin.useMinigame) // TODO MP Sync
-                    GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(1f, 1f);
+                    GunMinigame.MinigameManager.GetOrAddInstance().AddHandlingImpulse(1f, 1f);
 
                 Sound.Play(prop.loadMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 mag = newMag.it.id;
@@ -551,7 +551,7 @@ namespace NewFirearms
                     Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
 
                     if (GunMinigame.Plugin.useMinigame) // TODO MP Sync
-                        GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(0.5f, 0.5f);
+                        GunMinigame.MinigameManager.GetOrAddInstance().AddHandlingImpulse(0.5f, 0.5f);
                     UnityEngine.Object.Destroy(item.gameObject);
                     UpdateSprite();
                     if (Plugin.MultiplayerActive)

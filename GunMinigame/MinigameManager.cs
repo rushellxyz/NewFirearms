@@ -109,6 +109,10 @@ namespace GunMinigame
         public float coverYPosition;
         public bool chargingHandle;
         public bool p90reload;
+        public float inertiaHandXPosition = -0.3f;
+        public float inertiaHandYPosition = -0.05f;
+        public float inertiaBarrelXPosition = 0.2f;
+        public float inertiaBarrelYPosition = 0.1f;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -226,8 +230,6 @@ namespace GunMinigame
         public static Sprite backgroundSprite;
 
         public RectTransform handTransform;
-        public float xInertia;
-        public float rotInertia;
 
         public static Body body => PlayerCamera.main.body;
         public Vector2 handVelocity;
@@ -355,15 +357,15 @@ namespace GunMinigame
                 return;
             }
 
-            xInertia -= knockback * 3f;
             muzzleRise = Mathf.Abs(muzzleRise);
-            rotInertia += muzzleRise * 2f;
+            inertia.ImpulseAtMuzzle(new Vector2(-knockback * 0.12f, muzzleRise * 0.055f));
             if (fannyPack.gameObject.activeSelf)
                 fannyPackZipInertia += muzzleRise;
         }
 
         public void Hide()
         {
+            if (active) ResetInertia();
             mosynInitialized = false;
             ClearStagedMagazine();
             PlayerCamera.main.gunMenu.SetActive(value: false);
@@ -375,6 +377,7 @@ namespace GunMinigame
 
         public void Show(MinigameInfo newInfo, IMinigameGun newGun, ILaser newLaser=null)
         {
+            bool resetInertia = !active || !ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo);
             if (!ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo))
             {
                 if (info != null && info.mosynStyleRack && !newInfo.mosynStyleRack && sliderFrontImage != null)
@@ -478,6 +481,7 @@ namespace GunMinigame
             }
             active = true;
             gun = newGun;
+            if (resetInertia) ResetInertia();
             if (info.mosynStyleRack) EnsureMosynRack();
             laser = newLaser;
             UpdateSliderFireToggle(gun.IsRacked());
@@ -584,7 +588,11 @@ namespace GunMinigame
             sliderFrontImage.gameObject.AddComponent<RotatingSlider>().enabled = false;
             EventTrigger sliderTrigger = sliderFrontImage.gameObject.AddComponent<EventTrigger>();
             EventTrigger.Entry sliderDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-            sliderDownEntry.callback.AddListener((data) => { SliderClickDown(); });
+            sliderDownEntry.callback.AddListener((data) =>
+            {
+                var pointer = (PointerEventData)data;
+                if (pointer.button == PointerEventData.InputButton.Left) SliderClickDown(pointer.position);
+            });
             sliderTrigger.triggers.Add(sliderDownEntry);
 
             magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
@@ -855,9 +863,9 @@ namespace GunMinigame
 
         public Vector2 GetMousePos()
         {
-            return (Vector2)Input.mousePosition +
-            new Vector2(Mathf.PerlinNoise(Time.time * 2.9f, Time.time * 2.7f) - 0.5f, Mathf.PerlinNoise(Time.time * 2.86f, Time.time * 2.2f) - 0.5f)
+            painTremor = new Vector2(Mathf.PerlinNoise(Time.time * 2.9f, Time.time * 2.7f) - 0.5f, Mathf.PerlinNoise(Time.time * 2.86f, Time.time * 2.2f) - 0.5f)
             * body.averagePain * Mathf.Clamp01(1f - body.skills.RESFrom10 * 0.06f) * WorldGeneration.GetRunSettingFloat("minigamehandshake");
+            return (Vector2)Input.mousePosition + painTremor;
         }
 
         private void UpdateMainSprite()
@@ -878,12 +886,9 @@ namespace GunMinigame
                 handIsHovered = false;
                 holdsSlide = false;
                 shouldResetHandSprite = true;
-                xInertia = 0f;
-                rotInertia = 0f;
                 return;
             }
             Item it = PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot);
-            HandleInertia();
             HandleLaser();
             HandleFireModeImage();
 
@@ -902,7 +907,7 @@ namespace GunMinigame
                     shouldUpdateMagazineCount = true;
                     handPos = mousePos;
                 }
-                handFaded = !handIsHovered;
+                handFaded = !handIsHovered && !holdsSlide;
                 windowAlpha = Mathf.Clamp01(windowAlpha + Time.deltaTime * 4f);
             }
 
@@ -990,18 +995,22 @@ namespace GunMinigame
                 ignoreNextMouseKey = false;
             }
 
+            if (!holdsSlide && sliderGripActive) ReleaseSliderPull();
             if (!automatedHandAction)
             {
+                Vector2 pointer = SliderPointer;
                 float num2 = 0.25f;
                 float num3 = 4f + body.skills.STRFrom10 * 0.3f;
                 float num4 = 1.5f;
                 num3 *= body.consciousness * 0.01f;
                 num2 *= body.consciousness * 0.01f;
-                Vector2 b = Vector2.ClampMagnitude((mousePos - handPos) * num2, 75f);
+                Vector2 b = Vector2.ClampMagnitude((mousePos - pointer) * num2, 75f);
                 handVelocity = Vector2.Lerp(handVelocity, b, num3 * Time.deltaTime);
                 handVelocity = Vector2.Lerp(handVelocity, Vector2.zero, Time.deltaTime * num4);
-                handVelocity *= 0.9f; // is this is fps-dependent, i just stole it from keypadminigame
-                handPos += handVelocity * Time.deltaTime * 120f;
+                handVelocity *= Mathf.Pow(0.9f, Time.deltaTime * 60f);
+                pointer += handVelocity * Time.deltaTime * 120f;
+                if (holdsSlide && sliderGripActive) sliderPullTarget = pointer;
+                else handPos = pointer;
             }
 
             // handPos = Vector2.Lerp(Minigame.game.handPos, mousePos, Time.deltaTime * 10f);
@@ -1033,13 +1042,13 @@ namespace GunMinigame
             float xPos;
             if (holdsSlide)
             {
-                xPos = (handPos.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
+                Vector2 pointer = gunBase.transform.InverseTransformPoint(SliderPointer);
+                xPos = (pointer.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
                 if (SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.rackPoint))
                 {
                     gun.Rack();
                 }
-                xInertia += (xPos - sliderLastXPos) * 0.5f;
             }
        else if (!info.chargingHandle)
             {
@@ -1056,12 +1065,16 @@ namespace GunMinigame
             }
             sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
+            if (holdsSlide || info.chargingHandle) AddSliderImpulse(new Vector2(xPos - sliderLastXPos, 0f));
             sliderLastXPos = xPos;
             UpdateSliderFireToggle(gun.IsRacked());
         }
 
         private void LateUpdate()
         {
+            if (!active) return;
+            HandleInertia();
+            AttachHandToSlider();
             if (!active || info == null || !info.rackByRotation || info.mosynStyleRack) return;
             // Run after both RotatingSlider.Update and the automated rack coroutine.
             // Keep the sprites as siblings to preserve their separate render layers.
@@ -1083,7 +1096,7 @@ namespace GunMinigame
 
         public void HandleMarksmanHotkey(KeyCode key)
         {
-            if (!active || hiden || automatedHandAction || handIsHovered || IsAnyGameUIOpen())
+            if (!active || hiden || automatedHandAction || holdsSlide || handIsHovered || IsAnyGameUIOpen())
                 return;
 
             if (key == KeyCode.Z)
@@ -1196,32 +1209,6 @@ namespace GunMinigame
             }
             handPos = target;
             handTransform.position = handPos;
-        }
-
-        private void HandleInertia()
-        {
-            gunBase.transform.localPosition += new Vector3(xInertia * Time.deltaTime * 32f, 0f);
-            gunBase.transform.Rotate(0f, 0f, rotInertia * Time.deltaTime * 16f);
-
-            float offset = 0f;
-            if (holdsSlide && handIsHovered)
-                offset = info.sliderHandFollowOffset * Screen.width + (handPos.x * 0.3f);
-            xInertia = Mathf.MoveTowards(xInertia, -(gunBase.transform.localPosition.x) + offset, Time.deltaTime * 240f);
-            if (100f < Mathf.Abs(gunBase.transform.localPosition.x))
-            {
-                xInertia = 0f;
-                gunBase.transform.localPosition = new Vector3(Mathf.Clamp(gunBase.transform.localPosition.x, -99f, +99f), 0f);
-            }
-            /*if (holdsSlide && Mathf.Abs(gunBase.transform.localPosition.x) < Mathf.Abs(xInertia))
-             *            {
-             *                gunBase.transform.localPosition = Vector3.zero;
-             *                xInertia = 0f;
-        }*/
-
-            // DOnt touch that fix and dont try to use MoveTowardsAngle
-            if (300f < gunBase.transform.eulerAngles.z)
-                gunBase.transform.rotation = Quaternion.identity;
-            rotInertia = Mathf.Clamp(Mathf.MoveTowards(rotInertia, -gunBase.transform.eulerAngles.z, Time.deltaTime * 240f), -16f, +16f);
         }
 
         private void HandleLaser()
@@ -1474,10 +1461,17 @@ namespace GunMinigame
         }
 
         public void SliderClickDown()
+            => SliderClickDown(handPos);
+
+        internal void SliderClickDown(Vector2 grabPosition)
         {
+            handPos = grabPosition;
+            handTransform.position = grabPosition;
+            handVelocity = Vector2.zero;
             holdsSlide = true;
             sliderHoldOffset = sliderFrontImage.transform.localPosition;
-            onBeginHoldSlide = handPos;
+            onBeginHoldSlide = gunBase.transform.InverseTransformPoint(handPos);
+            BeginSliderPull();
             if (info.mosynStyleRack) BeginMosynDrag();
         }
 
@@ -1880,8 +1874,19 @@ namespace GunMinigame
 
         void Update()
         {
-            if (dragged || automated)
+            if (automated)
                 return;
+            if (dragged)
+            {
+                if (!minigame.holdsSlide || MinigameManager.IsAnyGameUIOpen())
+                {
+                    dragged = false;
+                    minigame.ReleaseSliderPull();
+                    return;
+                }
+                UpdateDrag();
+                return;
+            }
 
             bool racked = minigame.gun.IsRacked();
             if (racked)
@@ -1897,19 +1902,34 @@ namespace GunMinigame
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (eventData.button != PointerEventData.InputButton.Left) return;
+            if (!minigame.holdsSlide) minigame.SliderClickDown(eventData.position);
             // Find where the pointer is relative to the center when the drag first starts
-            lastPointerAngle = GetPointerAngle(eventData);
-
+            lastPointerAngle = GetPointerAngle();
+            float idle = minigame.gun.IsRacked() ? minigame.info.rackedIdlePosition : minigame.info.unrackedIdlePosition;
+            currentTrackedAngle = idle + Mathf.DeltaAngle(idle, rectTransform.localEulerAngles.z);
             dragged = true;
         }
 
         public void OnEndDrag(PointerEventData eventData)
-         => dragged = false;
+        {
+            if (eventData.button != PointerEventData.InputButton.Left) return;
+            dragged = false;
+            minigame.holdsSlide = false;
+            minigame.ReleaseSliderPull();
+        }
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (eventData.button != PointerEventData.InputButton.Left) return;
+            if (dragged && minigame.holdsSlide && !MinigameManager.IsAnyGameUIOpen()) UpdateDrag();
+        }
+
+        private void UpdateDrag()
+        {
+            Vector2 previousGrip = minigame.SliderGripPoint;
             // 1. Get the new angle of the pointer
-            float currentPointerAngle = GetPointerAngle(eventData);
+            float currentPointerAngle = GetPointerAngle();
 
             // 2. Find out how much the pointer moved since the last frame
             float angleDelta = Mathf.DeltaAngle(lastPointerAngle, currentPointerAngle);
@@ -1926,21 +1946,29 @@ namespace GunMinigame
 
             // 4. Apply the safe, limited angle to the UI element
             rectTransform.localRotation = Quaternion.Euler(0, 0, currentTrackedAngle);
+            minigame.AddSliderImpulse(minigame.SliderGripPoint - previousGrip);
 
             // 5. Save the current pointer angle for the next frame
             lastPointerAngle = currentPointerAngle;
         }
 
         // Helper method to find the angle between the UI center and the mouse/finger
-        private float GetPointerAngle(PointerEventData eventData)
+        private float GetPointerAngle()
         {
-            Vector2 uiCenterScreenPos = RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, rectTransform.position);
-            Vector2 direction = eventData.position - uiCenterScreenPos;
+            Vector2 pointer = minigame.gunBase.transform.InverseTransformPoint(minigame.SliderPointer);
+            Vector2 direction = pointer - (Vector2)rectTransform.localPosition;
             return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         }
 
         private void OnDisable()
         {
+            dragged = false;
+            automated = false;
+            if (minigame != null)
+            {
+                minigame.holdsSlide = false;
+                minigame.ReleaseSliderPull();
+            }
             currentTrackedAngle = 0f;
             lastPointerAngle = 0f;
             rectTransform.localRotation = Quaternion.identity;
