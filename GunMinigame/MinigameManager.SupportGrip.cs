@@ -10,6 +10,7 @@ namespace GunMinigame
     {
         internal Image grabTriggerImage;
         private Image supportHandImage;
+        private GameObject supportGripInputBlocker;
         private bool supportGripHeld;
         private Vector3 supportGripPoint;
         private float nextSupportGripUpdate;
@@ -32,6 +33,16 @@ namespace GunMinigame
             supportHandImage.raycastTarget = false;
             supportHandImage.preserveAspect = true;
             supportHandImage.gameObject.SetActive(false);
+
+            // Catch left clicks over the entire window before any gun, magazine, or button handler.
+            var blocker = new GameObject("SupportGripInputBlocker").AddComponent<Image>();
+            blocker.transform.SetParent(maskBase.transform, false);
+            blocker.rectTransform.sizeDelta = size;
+            blocker.color = Color.clear;
+            blocker.gameObject.AddComponent<SupportGripInputFilter>();
+            blocker.gameObject.AddComponent<EventTrigger>();
+            supportGripInputBlocker = blocker.gameObject;
+            supportGripInputBlocker.SetActive(false);
         }
 
         private bool CanSupportGrip()
@@ -47,7 +58,7 @@ namespace GunMinigame
 
         internal void BeginSupportGrip(Vector2 pointer)
         {
-            if (supportGripHeld || !CanSupportGrip()) return;
+            if (supportGripHeld || Input.GetMouseButton(0) || !CanSupportGrip()) return;
             Transform anchor = info.grabOnSlider ? sliderFrontImage.transform : gunBase.transform;
             supportHandImage.transform.SetParent(anchor, false);
             supportGripPoint = info.grabOnSlider
@@ -64,6 +75,7 @@ namespace GunMinigame
             supportGripHeld = false;
             if (handImage != null) handImage.enabled = true;
             if (supportHandImage != null) supportHandImage.gameObject.SetActive(false);
+            if (supportGripInputBlocker != null) supportGripInputBlocker.SetActive(false);
         }
 
         private void UpdateSupportGrip()
@@ -80,6 +92,7 @@ namespace GunMinigame
             supportHandImage.color = new Color(1f, 1f - body.averagePain * 0.01f,
                 1f - body.averagePain * 0.01f, windowAlpha);
             supportHandImage.gameObject.SetActive(true);
+            supportGripInputBlocker.SetActive(true);
             handImage.enabled = false;
             if (Time.unscaledTime >= nextSupportGripUpdate)
             {
@@ -87,6 +100,14 @@ namespace GunMinigame
                 ((IMinigameSupportGrip)gun).SetSupportGrip(true);
             }
         }
+    }
+
+    internal sealed class SupportGripInputFilter : MonoBehaviour, ICanvasRaycastFilter
+    {
+        public bool IsRaycastLocationValid(Vector2 point, Camera camera)
+            => Input.GetMouseButton(1) || Input.GetMouseButtonUp(1);
+        // codex, фиксю баги за тобой
+        // интересно, но это в первый раз когда кодес прям оставил опечатку (тут 0 было и захват не работал тк это другая кнопка мыши)
     }
 
     internal sealed class SupportGripTrigger : MonoBehaviour, IPointerDownHandler

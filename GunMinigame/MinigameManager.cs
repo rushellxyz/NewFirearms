@@ -944,7 +944,7 @@ namespace GunMinigame
             HandleFannyPack();
             HandleCover();
 
-            if (automatedHandAction)
+            if (automatedHandAction || supportGripHeld)
             {
                 handImage.color = new Color(1f, 1f - body.averagePain * 0.01f, 1f - body.averagePain * 0.01f, Mathf.Max(handImage.color.a, 0.8f));
             }
@@ -1517,7 +1517,7 @@ namespace GunMinigame
 
         internal void SliderClickDown(Vector2 grabPosition)
         {
-            EndSupportGrip();
+            if (supportGripHeld) return;
             handPos = grabPosition;
             handTransform.position = grabPosition;
             handVelocity = Vector2.zero;
@@ -1639,6 +1639,7 @@ namespace GunMinigame
 
         public void HideShow()
         {
+            if (supportGripHeld) return;
             if (!hiding)
                 StartCoroutine(_HideShow());
             EventSystem.current.SetSelectedGameObject(null);
