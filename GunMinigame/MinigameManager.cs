@@ -57,7 +57,8 @@ namespace GunMinigame
         public float sliderMinimumPosition;
         public float sliderMaximumPosition;
         public float unrackedIdlePosition;
-        public float rackPoint;
+        public float unrackedToRacked;
+        public float rackedToUnracked;
         public float rackedIdlePosition;
         public bool rackByRotation;
         public bool mosynStyleRack;
@@ -216,6 +217,7 @@ namespace GunMinigame
         public Image uiImage;
 
         public Image sliderFrontImage;
+        private Image chamberedRoundImage;
         public Image sliderBackImage;
         private Image backLayerImage;
 
@@ -405,7 +407,8 @@ namespace GunMinigame
                     info.sliderMinimumPosition *= Screen.width;
                     info.unrackedIdlePosition *= Screen.width;
                     info.rackedIdlePosition *= Screen.width;
-                    info.rackPoint *= Screen.width;
+                    info.unrackedToRacked *= Screen.width;
+                    info.rackedToUnracked *= Screen.width;
                 }
            else {
                     info.rackRotationCenterXPosition *= Screen.width;
@@ -427,6 +430,7 @@ namespace GunMinigame
             laserImage.GetComponent<RectTransform>().sizeDelta = info.fitLaserImage ? fitSize : size;
             UpdateMainSprite();
             sliderFrontImage.sprite = info.sliderFrontSprite;
+            chamberedRoundImage.enabled = false;
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.sprite = info.sliderBackSprite;
             backLayerImage.sprite = info.backLayerSprite;
@@ -533,6 +537,13 @@ namespace GunMinigame
             backLayerImage.raycastTarget = false;
             backLayerImage.transform.SetParent(gunBase.transform, false);
             backLayerImage.rectTransform.sizeDelta = size;
+
+            chamberedRoundImage = new GameObject("MinigameChamberedRound").AddComponent<Image>();
+            chamberedRoundImage.transform.SetParent(gunBase.transform, false);
+            chamberedRoundImage.transform.localScale = new Vector3((9f / 2560f) * Screen.width, (9f / 1440f) * Screen.height);
+            chamberedRoundImage.preserveAspect = true;
+            chamberedRoundImage.raycastTarget = false;
+            chamberedRoundImage.enabled = false;
 
             sliderBackImage = new GameObject("MinigameSliderBack").AddComponent<Image>();
             sliderBackImage.raycastTarget = false;
@@ -1045,7 +1056,7 @@ namespace GunMinigame
                 Vector2 pointer = gunBase.transform.InverseTransformPoint(SliderPointer);
                 xPos = (pointer.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
-                if (SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.rackPoint))
+                if (SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
                 {
                     gun.Rack();
                 }
@@ -1058,7 +1069,7 @@ namespace GunMinigame
             }
        else {
                 xPos = Mathf.MoveTowards(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime * Screen.width);
-                if (racked && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.rackPoint) && xPos != info.unrackedIdlePosition)
+                if (racked && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked) && xPos != info.unrackedIdlePosition)
                 { // case rack from shoot
                     gun.Rack();
                 }
@@ -1073,6 +1084,7 @@ namespace GunMinigame
         private void LateUpdate()
         {
             if (!active) return;
+            UpdateChamberVisual();
             HandleInertia();
             AttachHandToSlider();
             if (!active || info == null || !info.rackByRotation || info.mosynStyleRack) return;
@@ -1080,6 +1092,24 @@ namespace GunMinigame
             // Keep the sprites as siblings to preserve their separate render layers.
             sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
             sliderBackImage.transform.localRotation = sliderFrontImage.transform.localRotation;
+        }
+
+        private void UpdateChamberVisual()
+        {
+            if (info.rackByRotation)
+            {
+                chamberedRoundImage.enabled = false;
+                return;
+            }
+            chamberedRoundImage.enabled = gun.TryGetChamberVisual(out Sprite chamberSprite, out bool liveRound);
+            chamberedRoundImage.sprite = chamberSprite;
+            chamberedRoundImage.rectTransform.sizeDelta = liveRound ? new Vector2(12f, 26f) : new Vector2(9f, 19f);
+            chamberedRoundImage.color = new Color(1f, 1f, 1f, windowAlpha);
+            Vector3 casingPosition = new Vector3(info.casingXPosition, info.casingYPosition);
+            Transform slider = sliderFrontImage.transform;
+            Vector3 referencePosition = new Vector3(info.unrackedToRacked, info.mosynStyleRack ? MosynLift : 0f);
+            chamberedRoundImage.transform.localPosition = casingPosition + slider.localPosition - referencePosition;
+            chamberedRoundImage.transform.localRotation = Quaternion.identity;
         }
 
         private void UpdateSliderFireToggle(bool racked)
@@ -1947,7 +1977,7 @@ namespace GunMinigame
             currentTrackedAngle = SliderRange.Clamp(currentTrackedAngle, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition);
 
             bool racked = minigame.gun.IsRacked();
-            if (SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.rackPoint))
+            if (SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.unrackedToRacked, minigame.info.rackedToUnracked))
             {
                 minigame.gun.Rack();
             }

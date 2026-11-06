@@ -110,7 +110,8 @@
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "rackPoint": -0.015,
+        "unrackedToRacked": -0.015,
+        "rackedToUnracked": -0.015,
         "rackedIdlePosition": -0.025,
         "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",

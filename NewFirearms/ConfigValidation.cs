@@ -190,9 +190,16 @@ namespace NewFirearms
             Sprite(game.flashlightTogglePath, "minigame.flashlightTogglePath");
             Sprite(game.laserPath, "minigame.laserPath");
             Sprite(game.fireTogglePath, "minigame.fireTogglePath");
-            Require(game.rackPoint >= Math.Min(game.sliderMinimumPosition, game.sliderMaximumPosition) &&
-                game.rackPoint <= Math.Max(game.sliderMinimumPosition, game.sliderMaximumPosition),
-                "minigame.rackPoint", "must be between sliderMinimumPosition and sliderMaximumPosition.");
+            float minimum = Math.Min(game.sliderMinimumPosition, game.sliderMaximumPosition);
+            float maximum = Math.Max(game.sliderMinimumPosition, game.sliderMaximumPosition);
+            Require(game.unrackedToRacked >= minimum && game.unrackedToRacked <= maximum,
+                "minigame.unrackedToRacked", "must be between sliderMinimumPosition and sliderMaximumPosition.");
+            Require(game.rackedToUnracked >= minimum && game.rackedToUnracked <= maximum,
+                "minigame.rackedToUnracked", "must be between sliderMinimumPosition and sliderMaximumPosition.");
+            Require(game.sliderMinimumPosition <= game.sliderMaximumPosition
+                    ? game.unrackedToRacked <= game.rackedToUnracked
+                    : game.unrackedToRacked >= game.rackedToUnracked,
+                "minigame.rackedToUnracked", "must be at or beyond unrackedToRacked toward sliderMaximumPosition, so the thresholds do not overlap.");
             Require(!game.canUseFannyPack || game.magazinePaths != null, "minigame.magazinePaths", "a dictionary is required when canUseFannyPack is true (use {} for no magazines).");
             if (game.magazinePaths != null)
                 foreach (var pair in game.magazinePaths)

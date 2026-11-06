@@ -23,7 +23,7 @@ namespace GunMinigame
         }
 
         // Return the desired gun state only when the gesture crosses a transition.
-        internal bool? Drag(Vector2 pointer, bool racked, float minimum, float maximum, float rackPoint, float lift)
+        internal bool? Drag(Vector2 pointer, bool racked, float minimum, float maximum, float unrackedToRacked, float rackedToUnracked, float lift)
         {
             Vector2 delta = pointer - dragStart;
             if (LockedDown)
@@ -41,9 +41,10 @@ namespace GunMinigame
             {
                 LockedDown = true;
                 BeginDrag(pointer);
-                return racked ? false : (bool?)null;
+                return racked && SliderRange.ShouldToggle(X, true, minimum, maximum, unrackedToRacked, rackedToUnracked)
+                    ? false : (bool?)null;
             }
-            return !racked && SliderRange.ShouldToggle(X, false, minimum, maximum, rackPoint) ? true : (bool?)null;
+            return !racked && SliderRange.ShouldToggle(X, false, minimum, maximum, unrackedToRacked, rackedToUnracked) ? true : (bool?)null;
         }
     }
 }

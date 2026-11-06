@@ -10,9 +10,10 @@ namespace GunMinigame
         internal static float Clamp(float position, float minimum, float maximum)
             => Mathf.Clamp(position, Mathf.Min(minimum, maximum), Mathf.Max(minimum, maximum));
 
-        internal static bool ShouldToggle(float position, bool racked, float minimum, float maximum, float rackPoint)
+        internal static bool ShouldToggle(float position, bool racked, float minimum, float maximum, float unrackedToRacked, float rackedToUnracked)
         {
-            float offset = (position - rackPoint) * (minimum <= maximum ? 1f : -1f);
+            float threshold = racked ? rackedToUnracked : unrackedToRacked;
+            float offset = (position - threshold) * (minimum <= maximum ? 1f : -1f);
             return racked ? offset > 0f : offset < 0f;
         }
 

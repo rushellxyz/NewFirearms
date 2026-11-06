@@ -69,7 +69,7 @@ namespace GunMinigame
             {
                 Vector2 previousPosition = sliderFrontImage.transform.localPosition;
                 bool? target = mosynMotion.Drag(MosynPointer, racked, info.sliderMinimumPosition,
-                    info.sliderMaximumPosition, info.rackPoint, MosynLift);
+                    info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked, MosynLift);
                 if (target.HasValue) RequestMosynRack(target.Value);
                 ApplyMosynPose();
                 AddSliderImpulse((Vector2)sliderFrontImage.transform.localPosition - previousPosition);

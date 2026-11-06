@@ -185,9 +185,15 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
 
     // sliderMinimumPosition and sliderMaximumPosition may be in either numeric order.
     // Minimum remains the racked endpoint, maximum the unracked/fully-forward endpoint.
-    // rackPoint must lie between them. Reversing the endpoints reverses rack/unrack direction,
+    // Both transition points must lie between them. Reversing the endpoints reverses rack/unrack direction,
     // including rackByRotation, chargingHandle and mosynStyleRack.
-    "mosynStyleRack": false, // Two-position slider: lift/lower only at sliderMaximumPosition (fully forward). Lower to lock (racked -> unracked); pull back past rackPoint while raised for unracked -> racked. Only the front sprite lifts; both slide horizontally. Overrides rackByRotation and chargingHandle.
+    // Breaking change: rackPoint is removed; replace it with both fields below.
+    // Positions use fractions of screen width, or degrees with rackByRotation.
+    // Moving toward minimum past unrackedToRacked racks; toward maximum past rackedToUnracked unracks.
+    // Keep unrackedToRacked nearer minimum and rackedToUnracked nearer maximum (equal is allowed).
+    "unrackedToRacked": -0.025,
+    "rackedToUnracked": -0.01,
+    "mosynStyleRack": false, // Two-position slider: lift/lower only at sliderMaximumPosition (fully forward). Lower to lock (racked -> unracked); pull back past unrackedToRacked while raised for unracked -> racked. Only the front sprite lifts; both slide horizontally. Overrides rackByRotation and chargingHandle.
     "backLayerPath": "uiBackLayer", // Optional sprite below the back slider. Moves with the gun, independently of the slider; omit .png.
     "rackTriggerPath": "uiRackTrigger", // Optional rack/retract hit-area mask, like magReleasePath. Click opaque pixels to rack once. Available without Marksman; omit .png. Missing/blank disables it.
     "onlyUnrackedToRacked": false, // Restrict the rackTriggerPath button to unracked -> racked; clicking while already racked does nothing. Slider and hotkeys are unaffected.
@@ -200,6 +206,10 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "mainDunePath": "uiDune",
     "fitMainSprite": false, // Fit the main gun image to the screen width
     "fitLaserImage": true, // Fit the laser overlay to the screen width
+    // Chamber contents render below the front slider and follow its travel, reaching
+    // casingXPosition/casingYPosition when the slider reaches unrackedToRacked (raised in Mosyn mode).
+    // Live rounds use casingsPath[ammo index + 1]; spent casings use the ammo's minigameCasingSprite,
+    // then casingSprite, then casingsPath[0]. Empty chambers, jams, battery guns, and rackByRotation hide this layer.
     "frontSliderInvisble": false, // Set the front slider image alpha to zero
     "fireTogglePath": "string", // Optional fire-mode toggle hit area; enables manual fire-mode selection
     // With fireTogglePath set, fire mode starts normally and this hit area cycles the available modes.

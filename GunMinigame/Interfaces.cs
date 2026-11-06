@@ -3,6 +3,7 @@ namespace GunMinigame
     public interface IMinigameGun
     {
         public bool IsRacked();
+        public bool TryGetChamberVisual(out UnityEngine.Sprite sprite, out bool liveRound);
         public byte CurrentFireMode();
         public void Rack();
         public void ToggleFireMode();

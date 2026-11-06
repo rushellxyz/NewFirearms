@@ -167,7 +167,8 @@
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "rackPoint": -0.0125,
+        "unrackedToRacked": -0.0125,
+        "rackedToUnracked": -0.0125,
         "rackedIdlePosition": -0.025,
         "ammosInHandPaths": [ "uiHand12gauge", "uiHand12gaugebird", "uiHand12gaugeslug", ],
         "receiverPath": "uiReceiver",// TODO I have suspicion slug and bird are flipped around

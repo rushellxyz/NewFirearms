@@ -21,6 +21,29 @@ namespace NewFirearms
         internal const byte SilentMagazineRemoval = 0x80;
 
         public GunJson prop;
+        public bool TryGetChamberVisual(out Sprite sprite, out bool liveRound)
+        {
+            sprite = null;
+            liveRound = false;
+            if (prop == null || prop.feedType == BatteryFeed || rounds.Count == 0 ||
+                rounds[0] == -2 || IsJammed) return false;
+            liveRound = rounds[0] >= 0;
+            if (liveRound)
+            {
+                int index = rounds[0] + 1;
+                if (prop.minigame?.casingsSprite != null && index < prop.minigame.casingsSprite.Length)
+                    sprite = prop.minigame.casingsSprite[index];
+            }
+            else
+            {
+                if (spentAmmoTypes.TryGetValue(0, out sbyte ammo) && ammo >= 0 && ammo < prop.ammoTypes.Count)
+                    sprite = prop.ammoTypes[ammo].loadedMinigameCasingSprite ?? prop.ammoTypes[ammo].loadedCasingSprite;
+                if (sprite == null && prop.minigame?.casingsSprite?.Length > 0)
+                    sprite = prop.minigame.casingsSprite[0];
+            }
+            return sprite != null;
+        }
+
         internal event Action<GameObject> MagazineCreated; // :hmm:
 
         [JsonProperty("existed")]
@@ -770,6 +793,7 @@ namespace NewFirearms
             BatteryNetwork.Write(writer, prop.feedType == BatteryFeed ? magazineBatteries : null);
             GunNetwork.WriteTetherState(this, writer);
             writer.Put(FlashlightEnabled);
+            writer.Put(ChamberSpentAmmo);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)

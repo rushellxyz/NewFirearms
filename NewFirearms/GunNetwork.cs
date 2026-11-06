@@ -68,6 +68,9 @@ namespace NewFirearms
             rshGun.SetBatteryState(BatteryNetwork.Read(reader));
             ReadTetherState(rshGun, reader);
             rshGun.FlashlightEnabled = reader.GetBool() && rshGun.HasFlashlight();
+            // не они не omit т
+            // Older snapshots omit the chamber's spent-ammo type.
+            rshGun.ChamberSpentAmmo = /*reader.AvailableBytes > 0 ?*/ reader.GetSByte() /*: (sbyte)-1*/;
             bool silentMagazineRemoval = (extraData & RshGun.SilentMagazineRemoval) != 0;
             extraData = (byte)(extraData & ~RshGun.SilentMagazineRemoval);
             if (!silentMagazineRemoval && (magazineRemoved || 1 == extraData))

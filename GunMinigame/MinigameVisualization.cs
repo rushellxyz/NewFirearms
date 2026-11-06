@@ -44,7 +44,8 @@ namespace GunMinigame
             {
                 Dot("sliderMinimumPosition", new Vector2(info.sliderMinimumPosition, 0f));
                 Dot("sliderMaximumPosition", new Vector2(info.sliderMaximumPosition, 0f));
-                Dot("rackPoint", new Vector2(info.rackPoint, 0f));
+                Dot("unrackedToRacked", new Vector2(info.unrackedToRacked, 0f));
+                Dot("rackedToUnracked", new Vector2(info.rackedToUnracked, 0f));
                 Dot("rackedIdlePosition", new Vector2(info.rackedIdlePosition, 0f));
                 Dot("unrackedIdlePosition", new Vector2(info.unrackedIdlePosition, 0f));
             }*/
