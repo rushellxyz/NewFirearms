@@ -176,6 +176,8 @@
         "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
         "resizeMagazine": true,
         "fitMainSprite": true,
+        "grabTrigger": "uiGrabTrigger",
+        "grabType": "Vertical"
     }
 
 }

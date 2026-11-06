@@ -175,7 +175,6 @@
         "casingYPosition": 0.067,
         "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
         "fireTogglePath": "uiFireToggleTrigger",
-        "grabTrigger": "uiGrabTrigger",
         "grabOnSlider": true,
         "pumpOutsideWindow": true,
         "grabType": "Flat"

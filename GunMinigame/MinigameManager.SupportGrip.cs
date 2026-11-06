@@ -53,6 +53,7 @@ namespace GunMinigame
                 !IsAnyGameUIOpen() && body != null && body.conscious &&
                 (body.handSlot == 0 || body.handSlot == 1) && item != null &&
                 body.GetItem(body.handSlot) == item && body.GetItem(1 - body.handSlot) == null &&
+//                0.1f < body.limbs[1 - body.handSlot].totalForce &&
                 info.HasSupportGrip && gun is IMinigameSupportGrip;
         }
 
