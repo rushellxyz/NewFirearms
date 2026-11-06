@@ -117,6 +117,7 @@ namespace NewFirearms
 
         public void Update()
         {
+            UpdateSupportGripState();
             UpdateFlashlight();
             if (Plugin.MultiplayerActive && !Plugin.IsHost())
             {
@@ -128,7 +129,7 @@ namespace NewFirearms
                     currentlyShooting = false;
                 }
                 // не уверен насколько хорошая идея каждый кадр ебать хоста
-                SendShotPositionUpdate();
+                SendShotStateUpdate();
                 return;
             }
             if (IsJammed) return;
@@ -250,6 +251,7 @@ namespace NewFirearms
                 return false;
             }
             AmmoInfo info = prop.ammoTypes[prop.feedType == BatteryFeed ? 0 : rounds[0]];
+            float muzzleRise = GetMuzzleRise(body, info.muzzleRise);
             float num = (body.isRight ? 1f : (-1f));
             ShootVisuals visuals = new ShootVisuals
             {
@@ -269,7 +271,7 @@ namespace NewFirearms
                 Sound.Play(prop.shootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it), pitchShift: false);
             }
             if (Plugin.MultiplayerActive)
-                NotifyShoot(visuals, info.knockback, info.muzzleRise, info.ragdollRecoil);
+                NotifyShoot(visuals, info.knockback, muzzleRise, info.ragdollRecoil);
             body.rb.velocity -= (Vector2)base.transform.right * num * info.knockback;
             body.lastTimeStepVelocity -= (Vector2)base.transform.right * num * info.knockback;
             if (info.ragdollRecoil)
@@ -278,9 +280,9 @@ namespace NewFirearms
             body.eyeScareTime = Mathf.Max(body.eyeScareTime, 1f);
             body.hearingLoss += info.loudness * ((body.hearingLoss > 20f) ? 0.2f : 1f);
             it.condition -= info.conditionLoss;
-            body.armsAnimator.SetFloat("gunangle", body.armsAnimator.GetFloat("gunangle") + info.muzzleRise * MUZZLE_RISE_MODIFIER);
+            body.armsAnimator.SetFloat("gunangle", body.armsAnimator.GetFloat("gunangle") + muzzleRise * MUZZLE_RISE_MODIFIER);
             if (PlayerCamera.main.body == shooter && GunMinigame.Plugin.useMinigame)
-                GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(info.knockback, info.muzzleRise);
+                GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(info.knockback, muzzleRise);
             if (prop.feedType == BatteryFeed)
             {
                 FinishBatteryShot();
@@ -741,6 +743,7 @@ namespace NewFirearms
             {
                 writer.Put(transform.position.x);
                 writer.Put(transform.position.y);
+                writer.Put(IsSupportGripActive(PlayerCamera.main.body));
             }
             if (null != second)
             {
@@ -865,7 +868,7 @@ namespace NewFirearms
             {5, "newfirearms.action.stop_shooting"},
             {6, "newfirearms.action.clear_jam"},
             {7, "newfirearms.action.toggle_flashlight"},
-            {8, "newfirearms.action.shoot"}, // Shot-origin update during host-driven burst/automatic fire.
+            {8, "newfirearms.action.shoot"}, // Position/support update during host-driven burst/automatic fire.
         };
     }
 }

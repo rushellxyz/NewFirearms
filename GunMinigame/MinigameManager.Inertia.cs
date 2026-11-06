@@ -19,6 +19,7 @@ namespace GunMinigame
 
         private void ResetInertia()
         {
+            EndSupportGrip();
             ReleaseSliderPull();
             float aspect = size.x > 0f ? size.y / size.x : 0.5f;
             var component = gun as Component;

@@ -56,6 +56,7 @@ namespace GunMinigame
         {
             if (manager == null) return;
             SetAlpha(manager.magReleaseTrigger, alpha);
+            SetAlpha(manager.grabTriggerImage, alpha);
             SetAlpha(manager.rackTrigger, alpha);
             SetAlpha(manager.laserToggleTrigger, alpha);
             SetAlpha(manager.flashlightToggleTrigger, alpha);

@@ -150,8 +150,8 @@
     {
         "inertiaHandXPosition": -0.33,
         "inertiaHandYPosition": 0,
-        "inertiaBarrelXPosition": 0.09,
-        "inertiaBarrelYPosition": 0.18,
+        "inertiaBarrelXPosition": 0.29,
+        "inertiaBarrelYPosition": 0.21,
         "mainExperimentPath": "uiSpriteExpie",
         "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
@@ -175,5 +175,8 @@
         "casingYPosition": 0.067,
         "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
         "fireTogglePath": "uiFireToggleTrigger",
+        "grabTrigger": "uiGrabTrigger",
+        "grabOnSlider": true,
+        "grabType": "Flat"
     }
 }

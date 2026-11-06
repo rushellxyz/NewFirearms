@@ -152,8 +152,9 @@ namespace NewFirearms
                     }
                     if (!Plugin.sett.strictSync) clientGunPosition = position;
                 }
-                if (action == 0) rshGun.Shoot(pb.body, clientGunPosition);
-                else if (clientGunPosition.HasValue) rshGun.UpdateClientShotPosition(pb.body, clientGunPosition.Value);
+                bool supportGrip = reader.AvailableBytes > 0 && reader.GetBool();
+                if (action == 0) rshGun.Shoot(pb.body, clientGunPosition, supportGrip);
+                else rshGun.UpdateClientShotState(pb.body, clientGunPosition, supportGrip);
             }
        else if (1 == action)
                 rshGun.Rack(manual: true);

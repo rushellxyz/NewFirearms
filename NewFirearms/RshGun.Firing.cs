@@ -7,12 +7,12 @@ namespace NewFirearms
         public const byte BurstFireMode = 4;
         private int burstShotsRemaining;
         private Vector2? clientShotPosition;
-        private float nextShotPositionUpdate;
+        private float nextShotStateUpdate;
 
         public bool Shoot(Body body = null)
             => Shoot(body, null);
 
-        internal bool Shoot(Body body, Vector2? clientGunPosition)
+        internal bool Shoot(Body body, Vector2? clientGunPosition, bool? clientSupportGrip = null)
         {
             if (Plugin.MultiplayerActive && RequestHostIfClient(0))
             {
@@ -21,6 +21,7 @@ namespace NewFirearms
             }
             // Repeated requests cannot restart or extend a burst already in progress.
             if (burstShotsRemaining > 0 || gasTime > 0f) return false;
+            if (clientSupportGrip.HasValue) ApplySupportGrip(body, clientSupportGrip.Value);
             clientShotPosition = !Plugin.sett.strictSync ? clientGunPosition : null;
             if (!FireRound(body))
             {
@@ -84,16 +85,19 @@ namespace NewFirearms
             return position + (Vector2)transform.up * prop.barrelOffset;
         }
 
-        internal void UpdateClientShotPosition(Body body, Vector2 position)
+        internal void UpdateClientShotState(Body body, Vector2? position, bool supportGrip)
         {
-            if (shooter == body && !Plugin.sett.strictSync) clientShotPosition = position;
+            if (shooter != body) return;
+            if (!Plugin.sett.strictSync && position.HasValue) clientShotPosition = position;
+            ApplySupportGrip(body, supportGrip);
         }
 
-        private void SendShotPositionUpdate()
+        private void SendShotStateUpdate()
         {
-            if (Plugin.sett.strictSync || !currentlyShooting || fireMode != 3 && fireMode != BurstFireMode ||
-                Time.unscaledTime < nextShotPositionUpdate) return;
-            nextShotPositionUpdate = Time.unscaledTime + 0.05f;
+            if (Plugin.sett.strictSync && prop?.minigame?.HasSupportGrip != true ||
+                !currentlyShooting || fireMode != 3 && fireMode != BurstFireMode ||
+                Time.unscaledTime < nextShotStateUpdate) return;
+            nextShotStateUpdate = Time.unscaledTime + 0.05f;
             RequestHostIfClient(8);
         }
     }

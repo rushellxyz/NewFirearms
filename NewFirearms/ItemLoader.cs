@@ -276,6 +276,15 @@ namespace NewFirearms
                     prop.minigame.sliderFrontSprite = LoadConfigSprite(folder, prop.minigame.sliderFrontPath, "minigame.sliderFrontPath");
                 else prop.minigame.sliderFrontSprite = emptySprite;
 
+                if (!prop.minigame.grabOnSlider && !string.IsNullOrWhiteSpace(prop.minigame.grabTrigger))
+                    prop.minigame.grabTriggerSprite = LoadConfigSprite(folder, prop.minigame.grabTrigger, "minigame.grabTrigger");
+                if (prop.minigame.grabOnSlider || !string.IsNullOrWhiteSpace(prop.minigame.grabTrigger))
+                {
+                    string handPath = "Resources/minigameGrab" + prop.minigame.grabType;
+                    prop.minigame.grabHandSprite = sprites.TryGetValue("COPY__" + handPath, out Sprite handSprite)
+                        ? handSprite : LoadConfigSprite("BepInEx/plugins/NewFirearms/", handPath, "minigame.grabType");
+                }
+
                 if (!string.IsNullOrEmpty(prop.minigame.sliderBackPath))
                     prop.minigame.sliderBackSprite = LoadConfigSprite(folder, prop.minigame.sliderBackPath, "minigame.sliderBackPath");
                 else prop.minigame.sliderBackSprite = emptySprite;

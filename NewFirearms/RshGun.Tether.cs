@@ -91,6 +91,7 @@ namespace NewFirearms
 
         private void OnDisable()
         {
+            supportGripBody = null;
             DestroyTetherVisual();
             if (gunFlashlight != null) gunFlashlight.enabled = false;
         }

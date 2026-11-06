@@ -12,6 +12,11 @@ namespace GunMinigame
         public string CurrentMag();
     }
 
+    public interface IMinigameSupportGrip
+    {
+        void SetSupportGrip(bool held);
+    }
+
     public interface IMinigameRetractableGun
     {
         bool UsesRetraction();

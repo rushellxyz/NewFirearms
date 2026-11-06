@@ -178,6 +178,11 @@ namespace NewFirearms
             if (game.fireModePaths?.Length > 0) SpriteArray(game.fireModePaths, "minigame.fireModePaths", lastMode + 1);
             SpriteArray(game.coverAnimationPaths, "minigame.coverAnimationPaths");
             Sprite(game.sliderFrontPath, "minigame.sliderFrontPath");
+            if (!game.grabOnSlider) Sprite(game.grabTrigger, "minigame.grabTrigger");
+            Require(!game.grabOnSlider || !string.IsNullOrWhiteSpace(game.sliderFrontPath),
+                "minigame.sliderFrontPath", "is required when grabOnSlider is true.");
+            Require(Enum.IsDefined(typeof(GunMinigame.GrabType), game.grabType),
+                "minigame.grabType", "must be Flat, Curved, or Vertical (0, 1, or 2).");
             Sprite(game.sliderBackPath, "minigame.sliderBackPath");
             Sprite(game.backLayerPath, "minigame.backLayerPath");
             Sprite(game.rackedOnlyPath, "minigame.rackedOnlyPath");

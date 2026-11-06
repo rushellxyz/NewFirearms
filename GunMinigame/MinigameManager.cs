@@ -50,6 +50,12 @@ namespace GunMinigame
             }
         }
         public Sprite sliderFrontSprite;
+        public Sprite grabTriggerSprite;
+        public Sprite grabHandSprite;
+        public GrabType grabType;
+        public bool grabOnSlider;
+        public bool HasSupportGrip => grabHandSprite != null &&
+            (grabOnSlider ? sliderFrontSprite != null : grabTriggerSprite != null);
         public Sprite sliderBackSprite;
         public Sprite backLayerSprite;
         public Sprite rackedOnlySprite;
@@ -367,6 +373,7 @@ namespace GunMinigame
 
         public void Hide()
         {
+            EndSupportGrip();
             if (active) ResetInertia();
             mosynInitialized = false;
             ClearStagedMagazine();
@@ -382,6 +389,7 @@ namespace GunMinigame
             bool resetInertia = !active || !ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo);
             if (!ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo))
             {
+                EndSupportGrip();
                 if (info != null && info.mosynStyleRack && !newInfo.mosynStyleRack && sliderFrontImage != null)
                 {
                     Vector3 position = sliderFrontImage.transform.localPosition;
@@ -436,6 +444,8 @@ namespace GunMinigame
             backLayerImage.sprite = info.backLayerSprite;
             backLayerImage.enabled = info.backLayerSprite != null;
             receiverTrigger.sprite = info.receiverTrigger;
+            grabTriggerImage.sprite = info.grabTriggerSprite;
+            grabTriggerImage.gameObject.SetActive(!info.grabOnSlider && info.HasSupportGrip);
             magReleaseTrigger.sprite = info.magReleaseTrigger;
             rackTrigger.sprite = info.rackTrigger;
             rackTrigger.gameObject.SetActive(info.rackTrigger != null);
@@ -603,6 +613,8 @@ namespace GunMinigame
             {
                 var pointer = (PointerEventData)data;
                 if (pointer.button == PointerEventData.InputButton.Left) SliderClickDown(pointer.position);
+                else if (pointer.button == PointerEventData.InputButton.Right && info.grabOnSlider)
+                    BeginSupportGrip(pointer.position);
             });
             sliderTrigger.triggers.Add(sliderDownEntry);
 
@@ -828,6 +840,7 @@ namespace GunMinigame
             handTransform.SetParent(maskBase.transform);
             handTransform.localScale = new Vector3((0.4f/2560f)*Screen.width, (0.4f/1440f)*Screen.height);
             handImage = handTransform.GetComponent<Image>();
+            PrepareSupportGrip();
 
             placedMagazines = new List<Image>();
         }
@@ -886,6 +899,7 @@ namespace GunMinigame
 
         public void Update()
         {
+            UpdateSupportGrip();
 #if DEBUG
             if (null != hideShowButton)
                 hideShowButton.sprite = hoveringOverReciever ? debugGreen : debugRed;
@@ -1503,6 +1517,7 @@ namespace GunMinigame
 
         internal void SliderClickDown(Vector2 grabPosition)
         {
+            EndSupportGrip();
             handPos = grabPosition;
             handTransform.position = grabPosition;
             handVelocity = Vector2.zero;

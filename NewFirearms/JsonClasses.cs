@@ -115,6 +115,7 @@ namespace NewFirearms
         public string mainMilkyTriggerOffPath;
         public string mainDunePath;
         public string sliderFrontPath;
+        public string grabTrigger;
         public string sliderBackPath;
         public string backLayerPath;
         public string rackedOnlyPath;
