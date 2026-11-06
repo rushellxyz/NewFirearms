@@ -54,6 +54,7 @@ namespace GunMinigame
         public Sprite grabHandSprite;
         public GrabType grabType;
         public bool grabOnSlider;
+        public bool pumpOutsideWindow;
         public bool HasSupportGrip => grabHandSprite != null &&
             (grabOnSlider ? sliderFrontSprite != null : grabTriggerSprite != null);
         public Sprite sliderBackSprite;
@@ -366,6 +367,7 @@ namespace GunMinigame
             }
 
             muzzleRise = Mathf.Abs(muzzleRise);
+            BeginOutsidePumpAfterShot();
             inertia.ImpulseAtMuzzle(new Vector2(-knockback * 0.12f, muzzleRise * 0.055f));
             if (fannyPack.gameObject.activeSelf)
                 fannyPackZipInertia += muzzleRise;
@@ -1048,6 +1050,11 @@ namespace GunMinigame
             if (racked)
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
+            if (HandleOutsidePump())
+            {
+                UpdateSliderFireToggle(gun.IsRacked());
+                return;
+            }
             if (automatedHandAction)
             {
                 UpdateSliderFireToggle(racked);

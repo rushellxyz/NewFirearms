@@ -147,6 +147,8 @@ namespace NewFirearms
             if (gun.magazineTexturesPath != null)
                 foreach (var pair in gun.magazineTexturesPath) Texture(pair.Value, $"magazineTexturesPath['{pair.Key}']");
             if (gun.minigame != null) Minigame(gun.minigame, count, lastMode);
+            Require(gun.minigame?.pumpOutsideWindow != true || gun.feedType == 2,
+                "minigame.pumpOutsideWindow", "requires a tube-fed gun (feedType 2).");
             Finish();
         }
 
@@ -181,6 +183,8 @@ namespace NewFirearms
             if (!game.grabOnSlider) Sprite(game.grabTrigger, "minigame.grabTrigger");
             Require(!game.grabOnSlider || !string.IsNullOrWhiteSpace(game.sliderFrontPath),
                 "minigame.sliderFrontPath", "is required when grabOnSlider is true.");
+            Require(!game.pumpOutsideWindow || game.grabOnSlider && !game.rackByRotation && !game.mosynStyleRack && !game.chargingHandle,
+                "minigame.pumpOutsideWindow", "requires grabOnSlider and a linear, non-charging slider (rackByRotation and mosynStyleRack must be false).");
             Require(Enum.IsDefined(typeof(GunMinigame.GrabType), game.grabType),
                 "minigame.grabType", "must be Flat, Curved, or Vertical (0, 1, or 2).");
             Sprite(game.sliderBackPath, "minigame.sliderBackPath");
@@ -205,6 +209,14 @@ namespace NewFirearms
                     ? game.unrackedToRacked <= game.rackedToUnracked
                     : game.unrackedToRacked >= game.rackedToUnracked,
                 "minigame.rackedToUnracked", "must be at or beyond unrackedToRacked toward sliderMaximumPosition, so the thresholds do not overlap.");
+            if (game.pumpOutsideWindow)
+            {
+                float direction = game.sliderMinimumPosition <= game.sliderMaximumPosition ? 1f : -1f;
+                Require((game.rackedIdlePosition - game.unrackedToRacked) * direction < 0f,
+                    "minigame.rackedIdlePosition", "must pass unrackedToRacked toward sliderMinimumPosition for outside pumping.");
+                Require((game.unrackedIdlePosition - game.rackedToUnracked) * direction > 0f,
+                    "minigame.unrackedIdlePosition", "must pass rackedToUnracked toward sliderMaximumPosition for outside pumping.");
+            }
             Require(!game.canUseFannyPack || game.magazinePaths != null, "minigame.magazinePaths", "a dictionary is required when canUseFannyPack is true (use {} for no magazines).");
             if (game.magazinePaths != null)
                 foreach (var pair in game.magazinePaths)

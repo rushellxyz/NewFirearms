@@ -71,6 +71,7 @@ namespace GunMinigame
 
         private void EndSupportGrip()
         {
+            HidePumpGuide();
             if (supportGripHeld) (gun as IMinigameSupportGrip)?.SetSupportGrip(false);
             supportGripHeld = false;
             if (handImage != null) handImage.enabled = true;

@@ -177,6 +177,7 @@
         "fireTogglePath": "uiFireToggleTrigger",
         "grabTrigger": "uiGrabTrigger",
         "grabOnSlider": true,
+        "pumpOutsideWindow": true,
         "grabType": "Flat"
     }
 }

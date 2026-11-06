@@ -19,6 +19,7 @@ namespace GunMinigame
 
         private void ResetInertia()
         {
+            ResetOutsidePump();
             EndSupportGrip();
             ReleaseSliderPull();
             float aspect = size.x > 0f ? size.y / size.x : 0.5f;
