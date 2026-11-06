@@ -151,7 +151,7 @@
     "fireModesSpritePath": [ "safe", "", "semiauto", "fullauto", ],
 
     "magazineTexturesPath": { "smallmagazine": "blank", },
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "bulletHollow", "bulletVenomus", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "9mmroundIcon", "9mmhollowIcon", "9mmvenomusIcon", ],
 
     "minigame":
     {

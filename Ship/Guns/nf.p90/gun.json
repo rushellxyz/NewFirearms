@@ -138,7 +138,7 @@
 
 
     "magazineTexturesPath": { "nf.p90mag": "p90mag", },
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Resources/bulletRound", "COPY__Guns/nf.glock18/bulletHollow", "COPY__Guns/nf.glock18/bulletVenomus", ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.glock18/9mmroundIcon", "COPY__Guns/nf.glock18/9mmhollowIcon", "COPY__Guns/nf.glock18/9mmvenomusIcon" ],
     "minigame":
     {
         "mainExperimentPath": "uiSprite",
