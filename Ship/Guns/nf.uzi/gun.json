@@ -47,6 +47,8 @@
     [
         {
             "round": "9mmround",
+            "casingSprite": "COPY__Guns/nf.glock18/9mmroundCasing",
+            "minigameCasingSprite": "uiEject9mmroundCasing",
             "structureDamage": 81,
             "animalDamage": 108,
 
@@ -78,6 +80,8 @@
         },
         {
             "round": "nf.9mmhollow",
+            "casingSprite": "COPY__Guns/nf.glock18/9mmhollowCasing",
+            "minigameCasingSprite": "uiEject9mmvenomusCasing",
             "structureDamage": 54,
             "animalDamage": 135,
 
@@ -109,6 +113,8 @@
         },
         {
             "round": "nf.9mmvenomus",
+            "casingSprite": "COPY__Guns/nf.glock18/9mmvenomusCasing",
+            "minigameCasingSprite": "uiEject9mmvenomusCasing",
             "structureDamage": 45,
             "animalDamage": 135,
 
@@ -167,10 +173,10 @@
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.glock18/9mmroundIcon", "COPY__Guns/nf.glock18/9mmhollowIcon", "COPY__Guns/nf.glock18/9mmvenomusIcon" ],
     "minigame":
     {
-        "mainExperimentPath": "uiSprite",
-        "mainMilkyTriggerOnPath": "uiSprite",
-        "mainMilkyTriggerOffPath": "uiSprite",
-        "mainDunePath": "uiSprite",
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",
         "sliderBackPath": "uiSliderBack",
         "frontSliderInvisble": true,
@@ -179,9 +185,9 @@
         "unrackedIdlePosition": 0,
         "rackPoint": -0.01,
         "rackedIdlePosition": -0.02,
-        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
+        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
         "sliderHandFollowOffset": -0.15,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
@@ -197,7 +203,7 @@
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.07,
         "casingYPosition": 0.0575,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
+        "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
         "resizeMagazine": true,
     }
 
