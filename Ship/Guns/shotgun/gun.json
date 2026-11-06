@@ -148,6 +148,10 @@
 
     "minigame":
     {
+        "inertiaHandXPosition": -0.33,
+        "inertiaHandYPosition": 0,
+        "inertiaBarrelXPosition": 0.09,
+        "inertiaBarrelYPosition": 0.18,
         "mainExperimentPath": "uiSpriteExpie",
         "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
@@ -167,7 +171,7 @@
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
         "casingXPosition": -0.03,
-        "casingYPosition": 0.068,
+        "casingYPosition": 0.067,
         "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
         "fireTogglePath": "uiFireToggleTrigger",
     }

@@ -112,21 +112,22 @@ namespace GunMinigame
             try
             {
                 bool wasRacked = gun.IsRacked();
-                Vector2 sliderPosition = sliderFrontImage.transform.position;
+                Vector3 gripPoint = GetMarksmanRackGripPoint();
+                Vector2 sliderPosition = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handPos = sliderPosition + Vector2.down * (Screen.height * 0.08f);
                 handTransform.position = handPos;
                 yield return MoveAutomatedHand(sliderPosition, 0.09f);
                 handImage.sprite = MinigameBase.main.handSprites[2];
 
                 // Lift before any horizontal travel, then slide to the requested end.
-                yield return MoveMosynSlider(new Vector2(mosynMotion.X, MosynLift), 0.08f);
+                yield return MoveMosynSlider(new Vector2(mosynMotion.X, MosynLift), gripPoint, 0.08f);
                 mosynMotion.SetPose(mosynMotion.X, false);
                 float targetX = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
-                yield return MoveMosynSlider(new Vector2(targetX, MosynLift), 0.12f);
+                yield return MoveMosynSlider(new Vector2(targetX, MosynLift), gripPoint, 0.12f);
                 mosynMotion.SetPose(targetX, false);
                 if (wasRacked)
                 {
-                    yield return MoveMosynSlider(new Vector2(targetX, 0f), 0.08f);
+                    yield return MoveMosynSlider(new Vector2(targetX, 0f), gripPoint, 0.08f);
                     mosynMotion.SetPose(targetX, true);
                 }
                 RequestMosynRack(!wasRacked);
@@ -141,7 +142,7 @@ namespace GunMinigame
             }
         }
 
-        private IEnumerator MoveMosynSlider(Vector2 target, float duration)
+        private IEnumerator MoveMosynSlider(Vector2 target, Vector3 gripPoint, float duration)
         {
             Vector2 start = sliderFrontImage.transform.localPosition;
             float elapsed = 0f;
@@ -149,7 +150,7 @@ namespace GunMinigame
             {
                 elapsed += Time.deltaTime;
                 SetMosynSliderPosition(Vector2.Lerp(start, target, Mathf.Clamp01(elapsed / duration)));
-                handPos = sliderFrontImage.transform.position;
+                handPos = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handTransform.position = handPos;
                 yield return null;
             }

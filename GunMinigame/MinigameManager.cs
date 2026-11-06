@@ -1114,7 +1114,8 @@ namespace GunMinigame
             }
             automatedHandAction = true;
             bool wasRacked = gun.IsRacked();
-            Vector3 sliderPosition = sliderFrontImage.transform.position;
+            Vector3 gripPoint = GetMarksmanRackGripPoint();
+            Vector3 sliderPosition = sliderFrontImage.transform.TransformPoint(gripPoint);
             Vector2 belowSlider = new Vector2(sliderPosition.x, sliderPosition.y - Screen.height * 0.08f);
             handPos = belowSlider;
             handTransform.position = handPos;
@@ -1149,7 +1150,7 @@ namespace GunMinigame
                     sliderBackImage.transform.localPosition = new Vector3(x, sliderBackImage.transform.localPosition.y, sliderBackImage.transform.localPosition.z);
                     sliderLastXPos = x;
                 }
-                handPos = sliderFrontImage.transform.position;
+                handPos = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handTransform.position = handPos;
 
                 if (!rackRequested && progress >= 0.5f)
@@ -1176,6 +1177,13 @@ namespace GunMinigame
             Vector2 belowEnd = handPos + Vector2.down * (Screen.height * 0.08f);
             yield return MoveAutomatedHand(belowEnd, 0.09f);
             automatedHandAction = false;
+        }
+
+        private Vector3 GetMarksmanRackGripPoint()
+        {
+            Vector3 barrelPosition = gunBase.transform.TransformPoint(new Vector2(
+                info.inertiaBarrelXPosition * size.x, info.inertiaBarrelYPosition * size.y));
+            return sliderFrontImage.transform.InverseTransformPoint(barrelPosition);
         }
 
         private IEnumerator AnimateMarksmanMagazineRemoval()
