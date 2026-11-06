@@ -21,6 +21,8 @@
     [
         {
             "round": "9mmround",
+            "casingSprite": "9mmroundCasing",
+            "minigameCasingSprite": "uiEject9mmroundCasing",
             "structureDamage": 90,
             "animalDamage": 120,
 
@@ -52,6 +54,8 @@
         },
         {
             "round": "nf.9mmhollow",
+            "casingSprite": "9mmhollowCasing",
+            "minigameCasingSprite": "uiEject9mmhollowCasing",
             "structureDamage": 60,
             "animalDamage": 150,
 
@@ -83,6 +87,8 @@
         },
         {
             "round": "nf.9mmvenomus",
+            "casingSprite": "9mmvenomusCasing",
+            "minigameCasingSprite": "uiEject9mmvenomusCasing",
             "structureDamage": 50,
             "animalDamage": 150,
 
@@ -139,10 +145,10 @@
 
     "minigame":
     {
-        "mainExperimentPath": "uiSprite",
-        "mainMilkyTriggerOnPath": "uiSprite",
-        "mainMilkyTriggerOffPath": "uiSprite",
-        "mainDunePath": "uiSprite",
+        "mainExperimentPath": "uiSpriteExpie",
+        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
+        "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",
 
 
@@ -153,25 +159,25 @@
         "unrackedIdlePosition": 0,
         "rackPoint": -0.025,
         "rackedIdlePosition": -0.02,
-        "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
+        "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
+        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
         "sliderHandFollowOffset": -0.125,
         "canUseFannyPack": true,
         "magReleasePath": "uiReleaseTrigger",
         "magazinePaths": { "smallmagazine": "uiSmallmagazine" },
         "ammosInMagazinePaths": { "smallmagazine": [ "uiSmallmagazine9mmround", "uiSmallmagazine9mmhollow", "uiSmallmagazine9mmvenomus" ] },
-        "magazineXPosition": -0.0859375,
-        "magazineYPosition": 0.01388888888888889,
-        "magazineXSpeed": -0.2,
+        "magazineXPosition": -0.078,
+        "magazineYPosition": 0.009,
+        "magazineXSpeed": -0.175,
         "magazineYSpeed": -0.525,
         "magazineAnimationTime": 0.2,
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.075,
-        "casingYPosition": 0.0725,
-        "casingsPath": [ "uiCasingEmpty", "uiCasing9mm", "uiCasing9mmhollow", "uiCasing9mmvenomus" ],
+        "casingYPosition": 0.064,
+        "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
     }
 
 }

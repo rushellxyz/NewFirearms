@@ -20,6 +20,7 @@ namespace GunMinigame
         private void LateUpdate()
         {
             bool show = Visible && manager != null && manager.active && manager.info != null;
+            SetTriggerAlpha(show ? 0.2f : 0f);
             if (overlay != null) overlay.gameObject.SetActive(show);
             if (!show) return;
             if (overlay == null) CreateOverlay();
@@ -49,6 +50,28 @@ namespace GunMinigame
             }*/
             for (int i = used; i < dots.Count; i++) dots[i].gameObject.SetActive(false);
         }
+
+        private void SetTriggerAlpha(float alpha)
+        {
+            if (manager == null) return;
+            SetAlpha(manager.magReleaseTrigger, alpha);
+            SetAlpha(manager.rackTrigger, alpha);
+            SetAlpha(manager.laserToggleTrigger, alpha);
+            SetAlpha(manager.flashlightToggleTrigger, alpha);
+            SetAlpha(manager.fireToggleTrigger, alpha);
+            SetAlpha(manager.receiverTrigger, alpha);
+            SetAlpha(manager.magazineDragTrigger, alpha);
+        }
+
+        private static void SetAlpha(Image image, float alpha)
+        {
+            if (image == null || image.color.a == alpha) return;
+            Color color = image.color;
+            color.a = alpha;
+            image.color = color;
+        }
+
+        private void OnDisable() => SetTriggerAlpha(0f);
 
         private void CreateOverlay()
         {
