@@ -100,6 +100,8 @@ namespace GunMinigame
         public Sprite magazineDragTrigger;
         public float casingXPosition;
         public float casingYPosition;
+        // Height in local UI units, before the existing screen-dependent visual scale; zero keeps legacy sizes.
+        public float roundHeight;
         public Sprite[] casingsSprite;
         public bool casingsDrop;
         public bool fitMainSprite;
@@ -1124,7 +1126,7 @@ namespace GunMinigame
             }
             chamberedRoundImage.enabled = gun.TryGetChamberVisual(out Sprite chamberSprite, out bool liveRound);
             chamberedRoundImage.sprite = chamberSprite;
-            chamberedRoundImage.rectTransform.sizeDelta = liveRound ? new Vector2(12f, 26f) : new Vector2(9f, 19f);
+            chamberedRoundImage.rectTransform.sizeDelta = RoundVisual.GetSize(chamberSprite, info.roundHeight, liveRound);
             chamberedRoundImage.color = new Color(1f, 1f, 1f, windowAlpha);
             Vector3 casingPosition = new Vector3(info.casingXPosition, info.casingYPosition);
             Transform slider = sliderFrontImage.transform;

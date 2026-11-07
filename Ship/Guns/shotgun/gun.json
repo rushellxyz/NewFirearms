@@ -171,12 +171,13 @@
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],
         "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
-        "casingXPosition": -0.03,
+        "casingXPosition": -0.026,
         "casingYPosition": 0.067,
         "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
         "fireTogglePath": "uiFireToggleTrigger",
         "grabOnSlider": true,
         "pumpOutsideWindow": true,
-        "grabType": "Flat"
+        "grabType": "Flat",
+        "roundHeight": 3,
     }
 }

@@ -154,6 +154,8 @@ namespace NewFirearms
 
         private void Minigame(JsonMinigameInfo game, int count, int lastMode)
         {
+            Require(game.roundHeight >= 0f && !float.IsInfinity(game.roundHeight),
+                "minigame.roundHeight", "must be a finite, non-negative height; zero keeps the original sizes.");
             var inertiaPoints = new[] { game.inertiaHandXPosition, game.inertiaHandYPosition,
                 game.inertiaBarrelXPosition, game.inertiaBarrelYPosition };
             var inertiaFields = new[] { "inertiaHandXPosition", "inertiaHandYPosition",

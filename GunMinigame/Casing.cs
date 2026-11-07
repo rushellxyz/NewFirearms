@@ -45,7 +45,7 @@ namespace GunMinigame
             image.transform.SetParent(manager.maskBase.transform, false);
             image.transform.localPosition = position;
             image.transform.localScale = new Vector3((9f/2560f)*Screen.width, (9f/1440f)*Screen.height);
-            image.rectTransform.sizeDelta = live ? new Vector2(12, 26) : new Vector2(9, 19);
+            image.rectTransform.sizeDelta = RoundVisual.GetSize(sprite, manager.info?.roundHeight ?? 0f, live);
             image.sprite = sprite;
             image.preserveAspect = true;
             image.raycastTarget = false;

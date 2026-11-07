@@ -33,7 +33,7 @@ namespace GunMinigame
             //image.rectTransform.sizeDelta = new Vector2(108f * Screen.width / 2560f, 192f * Screen.height / 1440f);
             // чет тупит тут
             image.transform.localScale = new Vector3((9f/2560f)*Screen.width, (9f/1440f)*Screen.height);
-            image.rectTransform.sizeDelta =  liveRound ? new Vector2(12, 26) : new Vector2(9, 19);
+            image.rectTransform.sizeDelta = RoundVisual.GetSize(image.sprite, manager.info.roundHeight, liveRound);
 
             image.transform.localPosition = new Vector3(manager.info.casingXPosition, manager.info.casingYPosition);
             image.transform.localRotation = Quaternion.Euler(0f, 0f, liveRound ? -35f : 25f);
