@@ -192,6 +192,7 @@
         "laserTogglePath": "uiLaserTrigger",
         "laserPath": "uiLaser",
         "chargingHandle": true,
-        "closeOnMagazineInsert": true
+        "closeOnMagazineInsert": true,
+        "sliderRightClickFireToggle": true,
     }
 }

@@ -114,6 +114,7 @@ namespace GunMinigame
         public Sprite fireToggleTrigger;
         public Sprite[] fireModeSprites;
         public bool sliderFireToggle;
+        public bool sliderRightClickFireToggle;
         public Sprite[] coverAnimation;
         public float coverSpeed;
         public float coverXPosition;
@@ -619,8 +620,8 @@ namespace GunMinigame
             {
                 var pointer = (PointerEventData)data;
                 if (pointer.button == PointerEventData.InputButton.Left) SliderClickDown(pointer.position);
-                else if (pointer.button == PointerEventData.InputButton.Right && info.grabOnSlider)
-                    BeginSupportGrip(pointer.position);
+                else if (pointer.button == PointerEventData.InputButton.Right)
+                    SliderRightClick(pointer.position);
             });
             sliderTrigger.triggers.Add(sliderDownEntry);
 
@@ -1539,6 +1540,20 @@ namespace GunMinigame
 
         public void SliderClickDown()
             => SliderClickDown(handPos);
+
+        private void SliderRightClick(Vector2 pointer)
+        {
+            if (!active || hiden || hiding || automatedHandAction || holdsSlide || supportGripHeld ||
+                IsAnyGameUIOpen()) return;
+            if (info.sliderRightClickFireToggle)
+            {
+                gun.ToggleFireMode();
+                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+            else if (info.grabOnSlider)
+                BeginSupportGrip(pointer);
+        }
 
         internal void SliderClickDown(Vector2 grabPosition)
         {
