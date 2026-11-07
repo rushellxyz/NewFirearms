@@ -9,5 +9,3 @@ TODO List - Agents stay away unless stated otherwise
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
  - The sliderHandFollowOffset !
  - Move feedType to use enum too
- - Taizer spring disappears while put into closed container, tho, i think its an edge case
- - Refractor RshGun.SupportGrip so it instead GunMinigame telling to NewFirearms when half recoil, and nothing else

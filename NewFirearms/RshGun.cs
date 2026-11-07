@@ -117,7 +117,7 @@ namespace NewFirearms
 
         public void Update()
         {
-            UpdateSupportGripState();
+            UpdateClientHalfRecoilState();
             UpdateFlashlight();
             if (Plugin.MultiplayerActive && !Plugin.IsHost())
             {
@@ -743,7 +743,8 @@ namespace NewFirearms
             {
                 writer.Put(transform.position.x);
                 writer.Put(transform.position.y);
-                writer.Put(IsSupportGripActive(PlayerCamera.main.body));
+                // Keep the existing boolean in the packet for older hosts and clients.
+                writer.Put(halfRecoil);
             }
             if (null != second)
             {

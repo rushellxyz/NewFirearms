@@ -11,11 +11,7 @@ namespace GunMinigame
         public void RemoveMag();
         public string CurrentMag();
         public bool IsReady();
-    }
-
-    public interface IMinigameSupportGrip
-    {
-        void SetSupportGrip(bool held);
+        public void SetHalfRecoil(bool active);
     }
 
     public interface IMinigameRetractableGun

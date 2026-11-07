@@ -13,7 +13,6 @@ namespace GunMinigame
         private GameObject supportGripInputBlocker;
         private bool supportGripHeld;
         private Vector3 supportGripPoint;
-        private float nextSupportGripUpdate;
 
         private void PrepareSupportGrip()
         {
@@ -53,8 +52,8 @@ namespace GunMinigame
                 !IsAnyGameUIOpen() && body != null && body.conscious &&
                 (body.handSlot == 0 || body.handSlot == 1) && item != null &&
                 body.GetItem(body.handSlot) == item && body.GetItem(1 - body.handSlot) == null &&
-//                0.1f < body.limbs[1 - body.handSlot].totalForce &&
-                info.HasSupportGrip && gun is IMinigameSupportGrip;
+                body.slots?[1 - body.handSlot]?.limb?.totalForce > 0.1f && // окей, сама нейрнока тоже в ахуе что это не работает
+                info.HasSupportGrip;
         }
 
         internal void BeginSupportGrip(Vector2 pointer)
@@ -66,14 +65,14 @@ namespace GunMinigame
                 ? new Vector3(info.inertiaBarrelXPosition * size.x, info.inertiaBarrelYPosition * size.y)
                 : anchor.InverseTransformPoint(pointer);
             supportGripHeld = true;
-            nextSupportGripUpdate = 0f;
+            gun.SetHalfRecoil(true);
             UpdateSupportGrip();
         }
 
         private void EndSupportGrip()
         {
             HidePumpGuide();
-            if (supportGripHeld) (gun as IMinigameSupportGrip)?.SetSupportGrip(false);
+            if (supportGripHeld) gun?.SetHalfRecoil(false);
             supportGripHeld = false;
             if (handImage != null) handImage.enabled = true;
             if (supportHandImage != null) supportHandImage.gameObject.SetActive(false);
@@ -96,11 +95,6 @@ namespace GunMinigame
             supportHandImage.gameObject.SetActive(true);
             supportGripInputBlocker.SetActive(true);
             handImage.enabled = false;
-            if (Time.unscaledTime >= nextSupportGripUpdate)
-            {
-                nextSupportGripUpdate = Time.unscaledTime + 0.25f;
-                ((IMinigameSupportGrip)gun).SetSupportGrip(true);
-            }
         }
     }
 
