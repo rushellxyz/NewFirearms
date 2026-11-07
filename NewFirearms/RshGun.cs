@@ -100,6 +100,11 @@ namespace NewFirearms
         public string CurrentMag()
          => mag;
 
+        public bool HasEmptyMagazine()
+            => !string.IsNullOrEmpty(mag) && (prop?.feedType == BatteryFeed
+                ? BatteryCells.Charge(magazineBatteries) <= 0f
+                : !rounds.Skip(1).Any(round => round >= 0));
+
         public bool JamChance()
         {
             if (!jamming)
@@ -353,6 +358,8 @@ namespace NewFirearms
                 gasTime = 0f;
             }
             if (IsJammed) return;
+            // An empty magazine holds the action open, including during automatic cycling.
+            if (racked && prop.minigame?.chargingHandle == true && HasEmptyMagazine()) return;
             racked = !racked;
             if (manual)
             {
@@ -507,6 +514,11 @@ namespace NewFirearms
                 else
                     rounds.AddRange(newMag.rounds);
                 UnityEngine.Object.Destroy(item.gameObject);
+                // окак
+                // Release the open action on the host, even when the minigame is hidden or disabled.
+                if (prop.feedType != BatteryFeed && racked && prop.minigame?.chargingHandle == true &&
+                    !HasEmptyMagazine())
+                    Rack(manual: false);
                 UpdateSprite();
                 if (Plugin.MultiplayerActive)
                     SyncIfHost();

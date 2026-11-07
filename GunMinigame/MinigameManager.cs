@@ -61,6 +61,7 @@ namespace GunMinigame
         public Sprite backLayerSprite;
         public Sprite rackedOnlySprite;
         public Sprite unrackedOnlySprite;
+        public bool rackedOnlyWhenMagazineEmpty;
         public float sliderMinimumPosition;
         public float sliderMaximumPosition;
         public float unrackedIdlePosition;
@@ -1049,7 +1050,11 @@ namespace GunMinigame
             handTransform.position = handPos;
             SliderHandle:
             bool racked = gun.IsRacked();
-            if (racked)
+            bool closingBlocked = info.chargingHandle && racked && gun.HasEmptyMagazine();
+            // Removing an empty magazine does not release an already open action.
+            bool holdOpen = closingBlocked || info.chargingHandle && racked &&
+                string.IsNullOrEmpty(gun.CurrentMag());
+            if (racked && (!info.rackedOnlyWhenMagazineEmpty || gun.HasEmptyMagazine() || holdOpen))
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
             if (HandleOutsidePump())
@@ -1079,12 +1084,12 @@ namespace GunMinigame
                 Vector2 pointer = gunBase.transform.InverseTransformPoint(SliderPointer);
                 xPos = (pointer.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
-                if (SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
+                if (!closingBlocked && SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
                 {
                     gun.Rack();
                 }
             }
-       else if (!info.chargingHandle)
+       else if (!info.chargingHandle || holdOpen)
             {
                 if (racked)
                     xPos = info.rackedIdlePosition;
@@ -1097,6 +1102,8 @@ namespace GunMinigame
                     gun.Rack();
                 }
             }
+            if (closingBlocked)
+                xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.rackedToUnracked);
             sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             if (holdsSlide || info.chargingHandle) AddSliderImpulse(new Vector2(xPos - sliderLastXPos, 0f));

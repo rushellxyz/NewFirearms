@@ -10,6 +10,7 @@ namespace GunMinigame
         public bool DragOnto(Item item); // Returns whenever load is success
         public void RemoveMag();
         public string CurrentMag();
+        public bool HasEmptyMagazine();
         public bool IsReady();
         public void SetHalfRecoil(bool active);
     }
