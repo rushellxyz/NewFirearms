@@ -179,5 +179,6 @@
         "casingYPosition": 0.068,
         "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
         "fitMainSprite": true,
+        "roundHeight": 3,
     }
 }
