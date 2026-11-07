@@ -191,5 +191,7 @@
         "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
         "laserTogglePath": "uiLaserTrigger",
         "laserPath": "uiLaser",
+        "chargingHandle": true,
+        "closeOnMagazineInsert": true
     }
 }

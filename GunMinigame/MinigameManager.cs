@@ -119,6 +119,7 @@ namespace GunMinigame
         public float coverXPosition;
         public float coverYPosition;
         public bool chargingHandle;
+        public bool closeOnMagazineInsert;
         public bool p90reload;
         public float inertiaHandXPosition = -0.3f;
         public float inertiaHandYPosition = -0.05f;
@@ -1051,9 +1052,13 @@ namespace GunMinigame
             SliderHandle:
             bool racked = gun.IsRacked();
             bool closingBlocked = info.chargingHandle && racked && gun.HasEmptyMagazine();
+            if (!racked || closingBlocked || holdsSlide) chargingHandleCloseRequested = false;
+            if (closingBlocked || string.IsNullOrEmpty(gun.CurrentMag()) || !racked && !holdsSlide)
+                chargingHandleReturnPending = false;
             // Removing an empty magazine does not release an already open action.
             bool holdOpen = closingBlocked || info.chargingHandle && racked &&
-                string.IsNullOrEmpty(gun.CurrentMag());
+                (string.IsNullOrEmpty(gun.CurrentMag()) ||
+                    !info.closeOnMagazineInsert && !chargingHandleReturnPending);
             if (racked && (!info.rackedOnlyWhenMagazineEmpty || gun.HasEmptyMagazine() || holdOpen))
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
@@ -1081,6 +1086,7 @@ namespace GunMinigame
             float xPos;
             if (holdsSlide)
             {
+                chargingHandleReturnPending = !closingBlocked;
                 Vector2 pointer = gunBase.transform.InverseTransformPoint(SliderPointer);
                 xPos = (pointer.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
@@ -1097,8 +1103,11 @@ namespace GunMinigame
             }
        else {
                 xPos = Mathf.MoveTowards(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime * Screen.width);
-                if (racked && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked) && xPos != info.unrackedIdlePosition)
-                { // case rack from shoot
+                // A single frame can reach the closed endpoint; it must still close the real action.
+                if (racked && !chargingHandleCloseRequested && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
+                {
+                    // Rack is a toggle: send once while waiting for the host's closed state.
+                    chargingHandleCloseRequested = true;
                     gun.Rack();
                 }
             }

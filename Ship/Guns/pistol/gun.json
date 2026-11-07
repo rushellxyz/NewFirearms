@@ -183,6 +183,7 @@
         "rackedOnlyPath": "uiRackedOnly",
         "rackedOnlyWhenMagazineEmpty": true,
         "chargingHandle": true,
+        "closeOnMagazineInsert": true
     }
 
 }

@@ -516,7 +516,7 @@ namespace NewFirearms
                 UnityEngine.Object.Destroy(item.gameObject);
                 // окак
                 // Release the open action on the host, even when the minigame is hidden or disabled.
-                if (prop.feedType != BatteryFeed && racked && prop.minigame?.chargingHandle == true &&
+                if (prop.feedType != BatteryFeed && racked && prop.minigame?.closeOnMagazineInsert == true &&
                     !HasEmptyMagazine())
                     Rack(manual: false);
                 UpdateSprite();

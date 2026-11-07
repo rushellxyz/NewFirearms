@@ -12,6 +12,8 @@ namespace GunMinigame
         private float lastBodyAngularVelocity;
         private Vector2 painTremor;
         private bool sliderGripActive;
+        private bool chargingHandleReturnPending;
+        private bool chargingHandleCloseRequested;
         private Vector2 sliderGripLocalPoint;
         private Vector2 sliderPullTarget;
         private Quaternion sliderHandRotationOffset, sliderHandRestRotation;
@@ -19,6 +21,8 @@ namespace GunMinigame
 
         private void ResetInertia()
         {
+            chargingHandleReturnPending = false;
+            chargingHandleCloseRequested = false;
             ResetOutsidePump();
             EndSupportGrip();
             ReleaseSliderPull();
