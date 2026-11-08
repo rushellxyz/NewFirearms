@@ -1059,7 +1059,7 @@ namespace GunMinigame
             // Removing an empty magazine does not release an already open action.
             bool holdOpen = closingBlocked || info.chargingHandle && racked &&
                 (string.IsNullOrEmpty(gun.CurrentMag()) ||
-                    !info.closeOnMagazineInsert && !chargingHandleReturnPending);
+                    !chargingHandleReturnPending);
             if (racked && (!info.rackedOnlyWhenMagazineEmpty || gun.HasEmptyMagazine() || holdOpen))
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
@@ -1105,10 +1105,11 @@ namespace GunMinigame
        else {
                 xPos = Mathf.MoveTowards(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime * Screen.width);
                 // A single frame can reach the closed endpoint; it must still close the real action.
-                if (racked && !chargingHandleCloseRequested && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
+                if (racked && chargingHandleReturnPending && !chargingHandleCloseRequested && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
                 {
                     // Rack is a toggle: send once while waiting for the host's closed state.
                     chargingHandleCloseRequested = true;
+                    chargingHandleReturnPending = false;
                     gun.Rack();
                 }
             }

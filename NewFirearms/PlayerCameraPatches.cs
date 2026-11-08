@@ -67,7 +67,8 @@ namespace NewFirearms
                     }
                else     __instance.gunCrosshair.gameObject.SetActive(false);
 
-                    if (null == rshGun.prop.minigame.fireToggleTrigger)
+                    if (null == rshGun.prop.minigame.fireToggleTrigger &&
+                        !rshGun.prop.minigame.sliderRightClickFireToggle)
                         rshGun.fireMode = rshGun.prop.fireModes.Max();
                 }
            else {

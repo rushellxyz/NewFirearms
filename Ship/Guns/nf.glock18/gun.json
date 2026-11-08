@@ -129,7 +129,7 @@
         },
     ],
     "desiredGasTime": 0.1,
-    "fireModes": [ 0, 2, 3, ],
+    "fireModes": [ 2, 3, ],
     "magazineType": [ "glock17", ],
     "barrelOffset": 0.9,
     "hasLaser": true,
@@ -159,7 +159,7 @@
         "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
-        "sliderFrontPath": "uiSliderFront",
+        "sliderFrontPath": "uiSliderFrontSemi",
 
 
 
@@ -186,7 +186,7 @@
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.075,
+        "casingXPosition": -0.073,
         "casingYPosition": 0.064,
         "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
         "laserTogglePath": "uiLaserTrigger",
@@ -194,5 +194,6 @@
         "chargingHandle": true,
         "closeOnMagazineInsert": true,
         "sliderRightClickFireToggle": true,
+        "roundHeight": 2.5,
     }
 }

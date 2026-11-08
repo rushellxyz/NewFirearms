@@ -3,7 +3,6 @@ TODO List - Agents stay away unless stated otherwise
  - Move more guns to use copy
  - Do something about RshGun.RemoveMagPart2WhenCuCore
  - Name for loading order
- - Resize casings, expecially pistols
  - And hot reloading!
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items

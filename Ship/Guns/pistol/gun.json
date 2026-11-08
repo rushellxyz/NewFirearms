@@ -176,14 +176,15 @@
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.075,
+        "casingXPosition": -0.073,
         "casingYPosition": 0.064,
         "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
         "unrackedOnlyPath": "uiUnrackedOnly",
         "rackedOnlyPath": "uiRackedOnly",
         "rackedOnlyWhenMagazineEmpty": true,
         "chargingHandle": true,
-        "closeOnMagazineInsert": true
+        "closeOnMagazineInsert": true,
+        "roundHeight": 2.5,
     }
 
 }
