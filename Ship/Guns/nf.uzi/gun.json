@@ -183,8 +183,8 @@
         "sliderMinimumPosition": -0.02,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "unrackedToRacked": -0.01,
-        "rackedToUnracked": -0.01,
+        "unrackedToRacked": -0.015,
+        "rackedToUnracked": -0.005,
         "rackedIdlePosition": -0.02,
         "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
@@ -202,10 +202,11 @@
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.07,
-        "casingYPosition": 0.0575,
+        "casingXPosition": -0.061,
+        "casingYPosition": 0.055,
         "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
         "resizeMagazine": true,
+        "roundHeight": 2.5,
     }
 
 }
