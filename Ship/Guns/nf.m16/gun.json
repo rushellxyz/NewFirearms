@@ -92,7 +92,6 @@
         "ammosInHandPaths": [ "ui556inHand" ],
         "receiverPath": "uiReceiverTrigger",
         "ammosInPtrPaths": [ "ui556" ],
-        "sliderHandFollowOffset": -0.1,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagReleaseTrigger",
         "magazinePaths": { "riflemagazine": "uiRiflemagazine" },

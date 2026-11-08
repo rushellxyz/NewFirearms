@@ -82,7 +82,6 @@ namespace GunMinigame
             Array.Exists(ammosInHand, sprite => sprite != null) && Array.Exists(ammosInPtr, sprite => sprite != null);
         public Sprite receiverTrigger;
         public Sprite[] ammosIcons;
-        public float sliderHandFollowOffset;
         public bool canUseFannyPack;
         public Sprite magReleaseTrigger;
         public Sprite rackTrigger;

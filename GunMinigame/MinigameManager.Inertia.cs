@@ -148,11 +148,6 @@ namespace GunMinigame
                 -velocity.y * 0.001f - Mathf.Clamp01(body.crouchAmount) * 0.04f);
             handTarget += painTremor / Mathf.Max(size.x, 1f);
             handTarget.y += Mathf.Clamp(body.rb.angularVelocity * 0.0001f, -0.03f, 0.03f);
-            if (holdsSlide && handIsHovered)
-            {
-                handTarget.x += Mathf.Clamp((info.sliderHandFollowOffset * Screen.width + SliderPointer.x * 0.3f) /
-                    Mathf.Max(size.x, 1f), -0.14f, 0.14f);
-            }
             float strength = Mathf.Clamp(0.65f + body.skills.STRFrom10 * 0.05f, 0.5f, 1.35f) *
                 Mathf.Clamp(body.consciousness * 0.01f, 0.2f, 1f);
             if (!body.conscious) strength *= 0.35f;

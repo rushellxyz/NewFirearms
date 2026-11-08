@@ -123,7 +123,6 @@
         "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
-        "sliderHandFollowOffset": -0.16,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagReleaseTrigger",
         "magazinePaths": { "riflemagazine": "uiRiflemagazine" },

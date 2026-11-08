@@ -173,7 +173,6 @@
         "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
-        "sliderHandFollowOffset": -0.125,
         "canUseFannyPack": false,
         "casingXPosition": -0.055,
         "casingYPosition": 0.07,

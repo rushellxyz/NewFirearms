@@ -169,7 +169,6 @@
         "ammosInHandPaths": [ "uiHand12gauge", "uiHand12gaugebird", "uiHand12gaugeslug", ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],
-        "sliderHandFollowOffset": -0.15625,
         "canUseFannyPack": false,
         "casingXPosition": -0.026,
         "casingYPosition": 0.067,

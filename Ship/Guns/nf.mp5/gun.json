@@ -158,7 +158,6 @@
         "ammosInHandPaths": [ "ui9mmInHand", "ui9mmhollowInHand", "ui9mmvenomusInHand" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "ui9mm", "ui9mmhollow", "ui9mmvenomus" ],
-        "sliderHandFollowOffset": -0.15,
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
         "magazinePaths": { "nf.smgmag": "uiSmgmag" },

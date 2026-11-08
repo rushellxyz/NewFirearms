@@ -74,7 +74,6 @@
         "ammosInHandPaths": [ "uiGrenade" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiGrenade" ],
-        "sliderHandFollowOffset": -0.145,
         "canUseFannyPack": true,
         "magazinePaths": { "nf.grenade": "uiGrenade" },
         "ammosInMagazinePaths": { "nf.grenade": [ "uiGrenade" ] },

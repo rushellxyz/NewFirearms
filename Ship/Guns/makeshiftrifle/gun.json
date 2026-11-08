@@ -116,7 +116,6 @@
         "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
-        "sliderHandFollowOffset": -0.135,
         "canUseFannyPack": false,
         "casingXPosition": -0.05,
         "casingYPosition": 0.05,
