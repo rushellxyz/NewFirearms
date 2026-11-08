@@ -184,6 +184,8 @@
         "chargingHandle": true,
         "closeOnMagazineInsert": true,
         "roundHeight": 2.5,
+        "backLayerPath": "uiBackLayer",
+        "backLayerFollowsSlider": true
     }
 
 }

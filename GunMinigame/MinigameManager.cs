@@ -59,6 +59,7 @@ namespace GunMinigame
             (grabOnSlider ? sliderFrontSprite != null : grabTriggerSprite != null);
         public Sprite sliderBackSprite;
         public Sprite backLayerSprite;
+        public bool backLayerFollowsSlider;
         public Sprite rackedOnlySprite;
         public Sprite unrackedOnlySprite;
         public bool rackedOnlyWhenMagazineEmpty;
@@ -507,6 +508,7 @@ namespace GunMinigame
             if (info.mosynStyleRack) EnsureMosynRack();
             laser = newLaser;
             UpdateSliderFireToggle(gun.IsRacked());
+            UpdateBackLayerTransform();
 
             laserToggleTrigger.enabled = null != laser;
             laserToggleTrigger.GetComponent<Button>().interactable = null != laser;
@@ -1133,11 +1135,20 @@ namespace GunMinigame
             UpdateChamberVisual();
             HandleInertia();
             AttachHandToSlider();
+            UpdateBackLayerTransform();
             if (!active || info == null || !info.rackByRotation || info.mosynStyleRack) return;
             // Run after both RotatingSlider.Update and the automated rack coroutine.
             // Keep the sprites as siblings to preserve their separate render layers.
             sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
             sliderBackImage.transform.localRotation = sliderFrontImage.transform.localRotation;
+        }
+
+        private void UpdateBackLayerTransform()
+        {
+            backLayerImage.transform.localPosition = info.backLayerFollowsSlider
+                ? sliderFrontImage.transform.localPosition : Vector3.zero;
+            backLayerImage.transform.localRotation = info.backLayerFollowsSlider
+                ? sliderFrontImage.transform.localRotation : Quaternion.identity;
         }
 
         private void UpdateChamberVisual()
