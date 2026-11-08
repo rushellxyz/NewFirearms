@@ -194,5 +194,8 @@
         "sliderRightClickFireToggle": true,
         "roundHeight": 2.5,
         "fireModePaths": [ "", "", "uiSliderFrontSemi", "uiSliderFrontFull" ],
+        "barrelPath": "uiBarrel",
+        "barrelXPosition": -0.055,
+        "barrelYPosition": 0.051
     }
 }
