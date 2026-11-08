@@ -12,18 +12,22 @@ namespace GunMinigame
         private RectTransform pumpGuideRoot;
         private Image pumpGuideLine, pumpGuideStart, pumpGuideEnd, pumpGuideCursor;
 
+        public bool hadRacked;
+
         private void BeginOutsidePumpAfterShot()
         {
             if (!info.pumpOutsideWindow) return;
             outsidePumpRequired = true;
             outsidePumpInitialized = outsidePumpOpened = false;
             outsidePumpRequest = null;
+            hadRacked = false;
         }
 
         private void ResetOutsidePump()
         {
             outsidePumpRequired = outsidePumpInitialized = outsidePumpOpened = false;
             outsidePumpRequest = null;
+            hadRacked = false;
             HidePumpGuide();
         }
 
@@ -66,6 +70,9 @@ namespace GunMinigame
                 outsidePumpRequest = !racked;
                 outsidePumpRequestTime = Time.unscaledTime;
                 gun.Rack();
+                if (hadRacked)
+                    ResetOutsidePump();
+                hadRacked = true;
             }
             sliderFrontImage.transform.localPosition = new Vector3(position, 0f);
             sliderBackImage.transform.localPosition = new Vector3(position, 0f);
