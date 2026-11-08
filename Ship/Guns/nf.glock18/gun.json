@@ -159,17 +159,16 @@
         "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
-        "sliderFrontPath": "uiSliderFrontSemi",
 
 
 
 
-        "sliderMinimumPosition": -0.03,
+        "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "unrackedToRacked": -0.025,
-        "rackedToUnracked": -0.025,
-        "rackedIdlePosition": -0.02,
+        "unrackedToRacked": -0.015,
+        "rackedToUnracked": -0.015,
+        "rackedIdlePosition": -0.015,
         "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
@@ -195,5 +194,6 @@
         "closeOnMagazineInsert": true,
         "sliderRightClickFireToggle": true,
         "roundHeight": 2.5,
+        "fireModePaths": [ "", "", "uiSliderFrontSemi", "uiSliderFrontFull" ],
     }
 }

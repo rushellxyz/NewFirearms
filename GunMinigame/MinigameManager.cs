@@ -444,7 +444,8 @@ namespace GunMinigame
        else     mainImageRect.sizeDelta = size;
             laserImage.GetComponent<RectTransform>().sizeDelta = info.fitLaserImage ? fitSize : size;
             UpdateMainSprite();
-            sliderFrontImage.sprite = info.sliderFrontSprite;
+            if (!info.sliderRightClickFireToggle || null == info.fireModeSprites)
+                sliderFrontImage.sprite = info.sliderFrontSprite;
             chamberedRoundImage.enabled = false;
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.sprite = info.sliderBackSprite;
@@ -1304,8 +1305,14 @@ namespace GunMinigame
             }
 
             Sprite sprite = info.fireModeSprites[gun.CurrentFireMode()];
-            fireModeImage.sprite = sprite;
-            fireModeImage.enabled = null != sprite;
+            if (info.sliderRightClickFireToggle)
+            {
+                sliderFrontImage.sprite = sprite;
+            }
+       else {
+                fireModeImage.sprite = sprite;
+                fireModeImage.enabled = null != sprite;
+            }
         }
 
         private void HandleMag()
