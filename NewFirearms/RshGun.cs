@@ -211,6 +211,8 @@ namespace NewFirearms
                     MpStartOp();
            else if (prop.feedType != FeedKind.Battery && !prop.spawnUnracked)
                     Rack(manual: true);
+                if (prop.halfDurability)
+                    it.condition *= 0.5f;
                 existed = true;
             }
        else if (Plugin.MultiplayerActive)

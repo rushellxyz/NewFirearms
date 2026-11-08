@@ -140,5 +140,6 @@
         "resizeMagazine": true,
         "chargingHandle": true,
         "blockSlideWithEmptyMagazine": true,
+        "roundHeight": 2.5,
     }
 }

@@ -30,6 +30,7 @@ namespace NewFirearms
         public int recognition;
         public bool milkyCanSell = true;
         public bool onlyHoldInHands;
+        public bool halfDurability;
 
         public bool craftable = false;
         public List<string> recipe;
