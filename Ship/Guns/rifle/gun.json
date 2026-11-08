@@ -139,5 +139,6 @@
         "casingsPath": [ "uiEject556roundCasing", "uiEject556round", "uiEject556piercing"],//, "uiEject12gaugeslug" ],
         "resizeMagazine": true,
         "chargingHandle": true,
+        "blockSlideWithEmptyMagazine": true,
     }
 }

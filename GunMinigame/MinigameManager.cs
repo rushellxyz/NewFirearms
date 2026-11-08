@@ -125,6 +125,7 @@ namespace GunMinigame
         public float inertiaHandYPosition = -0.05f;
         public float inertiaBarrelXPosition = 0.2f;
         public float inertiaBarrelYPosition = 0.1f;
+        public bool blockSlideWithEmptyMagazine;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -1063,6 +1064,10 @@ namespace GunMinigame
             if (racked && (!info.rackedOnlyWhenMagazineEmpty || gun.HasEmptyMagazine() || holdOpen))
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
+
+            if (info.blockSlideWithEmptyMagazine && gun.HasEmptyMagazine() && gun.IsRacked())
+                return;
+
             if (HandleOutsidePump())
             {
                 UpdateSliderFireToggle(gun.IsRacked());
