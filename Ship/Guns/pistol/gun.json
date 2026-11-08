@@ -185,7 +185,10 @@
         "closeOnMagazineInsert": true,
         "roundHeight": 2.5,
         "backLayerPath": "uiBackLayer",
-        "backLayerFollowsSlider": true
+        "backLayerFollowsSlider": true,
+        "barrelPath": "uiBarrel",
+        "barrelXPosition": -0.055,
+        "barrelYPosition": 0.051
     }
 
 }

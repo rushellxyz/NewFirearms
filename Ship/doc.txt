@@ -196,6 +196,9 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "mosynStyleRack": false, // Two-position slider: lift/lower only at sliderMaximumPosition (fully forward). Lower to lock (racked -> unracked); pull back past unrackedToRacked while raised for unracked -> racked. Only the front sprite lifts; both slide horizontally. Overrides rackByRotation and chargingHandle.
     "backLayerPath": "uiBackLayer", // Optional sprite below the back slider; omit .png.
     "backLayerFollowsSlider": false, // Follow the front slider's position and rotation, including Mosyn lift and automated racking. False keeps the layer fixed to the gun. Drawing order is preserved.
+    "barrelPath": "", // Optional separate barrel sprite, without .png. Requires a linear slider. Drawn over the main gun sprite and under the front slider; scaled like the slider art.
+    "barrelXPosition": 0.0, // Barrel image center / rotation pivot, fraction of screen width from gun center.
+    "barrelYPosition": 0.0, // Fraction of screen height from gun center. Barrel rotates from 0 degrees at sliderMaximumPosition to +30 degrees at sliderMinimumPosition, following the animated slider position.
     "rackTriggerPath": "uiRackTrigger", // Optional rack/retract hit-area mask, like magReleasePath. Click opaque pixels to rack once. Available without Marksman; omit .png. Missing/blank disables it.
     "onlyUnrackedToRacked": false, // Restrict the rackTriggerPath button to unracked -> racked; clicking while already racked does nothing. Slider and hotkeys are unaffected.
     "flashlightTogglePath": "uiFlashlightToggle", // Flashlight on/off hit-area mask; required with hasFlashlight. Click opaque pixels. No hotkey or inventory toggle; omit .png.

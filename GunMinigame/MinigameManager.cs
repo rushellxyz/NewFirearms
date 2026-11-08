@@ -60,6 +60,9 @@ namespace GunMinigame
         public Sprite sliderBackSprite;
         public Sprite backLayerSprite;
         public bool backLayerFollowsSlider;
+        public Sprite barrelSprite;
+        public float barrelXPosition;
+        public float barrelYPosition;
         public Sprite rackedOnlySprite;
         public Sprite unrackedOnlySprite;
         public bool rackedOnlyWhenMagazineEmpty;
@@ -439,6 +442,8 @@ namespace GunMinigame
                 info.initialized = true;
                 info.coverXPosition *= Screen.width;
                 info.coverYPosition *= Screen.height;
+                info.barrelXPosition *= Screen.width;
+                info.barrelYPosition *= Screen.height;
             }
             if (info.fitMainSprite)
                 mainImageRect.sizeDelta = fitSize;
@@ -452,6 +457,8 @@ namespace GunMinigame
             sliderBackImage.sprite = info.sliderBackSprite;
             backLayerImage.sprite = info.backLayerSprite;
             backLayerImage.enabled = info.backLayerSprite != null;
+            barrelImage.sprite = info.barrelSprite;
+            barrelImage.enabled = info.barrelSprite != null && (!info.rackByRotation || info.mosynStyleRack);
             receiverTrigger.sprite = info.receiverTrigger;
             grabTriggerImage.sprite = info.grabTriggerSprite;
             grabTriggerImage.gameObject.SetActive(!info.grabOnSlider && info.HasSupportGrip);
@@ -522,6 +529,7 @@ namespace GunMinigame
             laser = newLaser;
             UpdateSliderFireToggle(gun.IsRacked());
             UpdateBackLayerTransform();
+            UpdateBarrelTransform();
 
             laserToggleTrigger.enabled = null != laser;
             laserToggleTrigger.GetComponent<Button>().interactable = null != laser;
@@ -559,6 +567,7 @@ namespace GunMinigame
             maskBase.AddComponent<ImageHoverror>();
             maskBase.AddComponent<RectMask2D>();
             maskBase.AddComponent<MinigameVisualization>().Initialize(this);
+            maskBase.AddComponent<MinigameCoordinates>().Initialize(this);
             maskBase.AddComponent<MinigameJamVisual>().Initialize(this);
 
             gunBase = new GameObject("GunBase");
@@ -598,6 +607,12 @@ namespace GunMinigame
             mainImage.transform.localPosition = Vector3.zero;
             mainImage.transform.localScale = Vector3.one;
             mainImageRect = mainImage.GetComponent<RectTransform>();
+
+            barrelImage = new GameObject("MinigameBarrel").AddComponent<Image>();
+            barrelImage.transform.SetParent(gunBase.transform, false);
+            barrelImage.rectTransform.sizeDelta = size;
+            barrelImage.raycastTarget = false;
+            barrelImage.enabled = false;
 
             laserImage = new GameObject("MinigameLaserImage").AddComponent<Image>();
             laserImage.raycastTarget = false;
@@ -1162,6 +1177,7 @@ namespace GunMinigame
             HandleInertia();
             AttachHandToSlider();
             UpdateBackLayerTransform();
+            UpdateBarrelTransform();
             if (!active || info == null || !info.rackByRotation || info.mosynStyleRack) return;
             // Run after both RotatingSlider.Update and the automated rack coroutine.
             // Keep the sprites as siblings to preserve their separate render layers.
@@ -1750,6 +1766,7 @@ namespace GunMinigame
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.color = colo;
             backLayerImage.color = colo;
+            barrelImage.color = colo;
             rackedSpecific.color = colo;
             hideShowButton.color = colo;
             ammoSelector.color = colo;

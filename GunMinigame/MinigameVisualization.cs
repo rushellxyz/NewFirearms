@@ -125,6 +125,12 @@ namespace GunMinigame
                 Debug.Log(Locale.GetOther(MinigameVisualization.Visible
                     ? "gunminigame.command.visualize.enabled" : "gunminigame.command.visualize.disabled"));
             }, new Dictionary<int, List<string>>()));
+            ConsoleScript.Commands.Add(new Command("nf_coordinate", Locale.GetOther("gunminigame.command.coordinate.description"), args =>
+            {
+                MinigameCoordinates.Visible = !MinigameCoordinates.Visible;
+                Debug.Log(Locale.GetOther(MinigameCoordinates.Visible
+                    ? "gunminigame.command.coordinate.enabled" : "gunminigame.command.coordinate.disabled"));
+            }, new Dictionary<int, List<string>>()));
         }
     }
 }

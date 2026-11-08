@@ -292,6 +292,9 @@ namespace NewFirearms
                 if (!string.IsNullOrEmpty(prop.minigame.backLayerPath))
                     prop.minigame.backLayerSprite = LoadConfigSprite(folder, prop.minigame.backLayerPath, "minigame.backLayerPath");
 
+                if (!string.IsNullOrWhiteSpace(prop.minigame.barrelPath))
+                    prop.minigame.barrelSprite = LoadConfigSprite(folder, prop.minigame.barrelPath, "minigame.barrelPath");
+
                 if (!string.IsNullOrEmpty(prop.minigame.rackedOnlyPath))
                     prop.minigame.rackedOnlySprite = LoadConfigSprite(folder, prop.minigame.rackedOnlyPath, "minigame.rackedOnlyPath");
                 else prop.minigame.rackedOnlySprite = emptySprite;

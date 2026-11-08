@@ -111,6 +111,7 @@ namespace NewFirearms
         public string grabTrigger;
         public string sliderBackPath;
         public string backLayerPath;
+        public string barrelPath;
         public string rackedOnlyPath;
         public string unrackedOnlyPath;
         public string[] ammosInHandPaths;
