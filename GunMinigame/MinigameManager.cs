@@ -506,6 +506,19 @@ namespace GunMinigame
             gun = newGun;
             if (resetInertia) ResetInertia();
             if (info.mosynStyleRack) EnsureMosynRack();
+            else if (resetInertia)
+            {
+                if (info.rackByRotation)
+                    sliderFrontImage.transform.localRotation = Quaternion.Euler(0f, 0f,
+                        gun.IsRacked() ? info.rackedIdlePosition : info.unrackedIdlePosition);
+                else
+                {
+                    sliderLastXPos = gun.IsRacked() ? info.rackedIdlePosition : info.unrackedIdlePosition;
+                    sliderFrontImage.transform.localPosition = new Vector3(sliderLastXPos, 0f, 0f);
+                    sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
+                    sliderFrontImage.transform.localRotation = Quaternion.identity;
+                }
+            }
             laser = newLaser;
             UpdateSliderFireToggle(gun.IsRacked());
             UpdateBackLayerTransform();
@@ -1068,7 +1081,19 @@ namespace GunMinigame
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
 
             if (info.blockSlideWithEmptyMagazine && gun.HasEmptyMagazine() && gun.IsRacked())
+            {
+                if (!info.rackByRotation && !info.mosynStyleRack)
+                {
+                    float target = SliderRange.Clamp(info.rackedIdlePosition,
+                        info.sliderMinimumPosition, info.rackedToUnracked);
+                    float position = SliderAnimation.Move(sliderLastXPos, target, Time.deltaTime);
+                    sliderFrontImage.transform.localPosition = new Vector3(position, 0f, 0f);
+                    sliderBackImage.transform.localPosition = sliderFrontImage.transform.localPosition;
+                    sliderLastXPos = position;
+                }
+                UpdateSliderFireToggle(racked);
                 return;
+            }
 
             if (HandleOutsidePump())
             {
@@ -1105,12 +1130,13 @@ namespace GunMinigame
             }
        else if (!info.chargingHandle || holdOpen)
             {
-                if (racked)
-                    xPos = info.rackedIdlePosition;
-           else     xPos = info.unrackedIdlePosition;
+                float target = racked ? info.rackedIdlePosition : info.unrackedIdlePosition;
+                if (closingBlocked)
+                    target = SliderRange.Clamp(target, info.sliderMinimumPosition, info.rackedToUnracked);
+                xPos = SliderAnimation.Move(sliderLastXPos, target, Time.deltaTime);
             }
        else {
-                xPos = Mathf.MoveTowards(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime * Screen.width);
+                xPos = SliderAnimation.Move(sliderLastXPos, info.unrackedIdlePosition, Time.deltaTime);
                 // A single frame can reach the closed endpoint; it must still close the real action.
                 if (racked && chargingHandleReturnPending && !chargingHandleCloseRequested && SliderRange.ShouldToggle(xPos, true, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
                 {
@@ -1120,7 +1146,7 @@ namespace GunMinigame
                     gun.Rack();
                 }
             }
-            if (closingBlocked)
+            if (closingBlocked && holdsSlide)
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.rackedToUnracked);
             sliderFrontImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
             sliderBackImage.transform.localPosition = new Vector3(xPos, 0f, 0f);
@@ -1224,7 +1250,7 @@ namespace GunMinigame
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                float progress = Mathf.Clamp01(elapsed / duration);
+                float progress = SliderAnimation.Ease(elapsed / duration);
                 if (info.rackByRotation)
                 {
                     float angle = Mathf.LerpAngle(startAngle, targetAngle, progress);
@@ -1298,7 +1324,7 @@ namespace GunMinigame
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                handPos = Vector2.Lerp(start, target, Mathf.Clamp01(elapsed / duration));
+                handPos = Vector2.Lerp(start, target, SliderAnimation.Ease(elapsed / duration));
                 handTransform.position = handPos;
                 yield return null;
             }
@@ -2006,15 +2032,9 @@ namespace GunMinigame
             }
 
             bool racked = minigame.gun.IsRacked();
-            if (racked)
-            {
-                lastPointerAngle = minigame.info.rackedIdlePosition;
-                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.rackedIdlePosition);
-            }
-       else {
-                lastPointerAngle = minigame.info.unrackedIdlePosition;
-                rectTransform.localRotation = Quaternion.Euler(0, 0, minigame.info.unrackedIdlePosition);
-            }
+            float target = racked ? minigame.info.rackedIdlePosition : minigame.info.unrackedIdlePosition;
+            lastPointerAngle = SliderAnimation.MoveAngle(rectTransform.localEulerAngles.z, target, Time.deltaTime);
+            rectTransform.localRotation = Quaternion.Euler(0f, 0f, lastPointerAngle);
         }
 
         public void OnBeginDrag(PointerEventData eventData)

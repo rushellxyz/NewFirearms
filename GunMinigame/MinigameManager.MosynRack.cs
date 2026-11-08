@@ -18,17 +18,20 @@ namespace GunMinigame
         {
             if (mosynInitialized) return;
             mosynInitialized = true;
-            ResetMosynRack();
+            ResetMosynRack(immediate: true);
         }
 
-        private void ResetMosynRack()
+        private void ResetMosynRack(bool immediate = false)
         {
             mosynObservedRacked = gun.IsRacked();
             mosynRequestedRacked = null;
             mosynMotion.SetPose(mosynObservedRacked ? info.sliderMinimumPosition : info.sliderMaximumPosition,
                 !mosynObservedRacked);
             mosynMotion.BeginDrag(MosynPointer);
-            ApplyMosynPose();
+            if (immediate)
+                SetMosynSliderPosition(new Vector2(mosynMotion.X, mosynMotion.LockedDown ? 0f : MosynLift));
+            else
+                ApplyMosynPose();
         }
 
         private void BeginMosynDrag()
@@ -65,16 +68,16 @@ namespace GunMinigame
             else if (racked != mosynObservedRacked)
                 ResetMosynRack();
 
+            Vector2 previousPosition = sliderFrontImage.transform.localPosition;
             if (holdsSlide)
             {
-                Vector2 previousPosition = sliderFrontImage.transform.localPosition;
                 bool? target = mosynMotion.Drag(MosynPointer, racked, info.sliderMinimumPosition,
                     info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked, MosynLift);
                 if (target.HasValue) RequestMosynRack(target.Value);
-                ApplyMosynPose();
-                AddSliderImpulse((Vector2)sliderFrontImage.transform.localPosition - previousPosition);
             }
             ApplyMosynPose();
+            if (holdsSlide)
+                AddSliderImpulse((Vector2)sliderFrontImage.transform.localPosition - previousPosition);
         }
 
         private void RequestMosynRack(bool target)
@@ -92,7 +95,11 @@ namespace GunMinigame
 
         private void ApplyMosynPose()
         {
-            SetMosynSliderPosition(new Vector2(mosynMotion.X, mosynMotion.LockedDown ? 0f : MosynLift));
+            Vector2 current = sliderFrontImage.transform.localPosition;
+            float x = holdsSlide ? mosynMotion.X
+                : SliderAnimation.Move(current.x, mosynMotion.X, Time.deltaTime);
+            float y = SliderAnimation.Move(current.y, mosynMotion.LockedDown ? 0f : MosynLift, Time.deltaTime);
+            SetMosynSliderPosition(new Vector2(x, y));
         }
 
         private void SetMosynSliderPosition(Vector2 position)
@@ -149,7 +156,7 @@ namespace GunMinigame
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                SetMosynSliderPosition(Vector2.Lerp(start, target, Mathf.Clamp01(elapsed / duration)));
+                SetMosynSliderPosition(Vector2.Lerp(start, target, SliderAnimation.Ease(elapsed / duration)));
                 handPos = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handTransform.position = handPos;
                 yield return null;
