@@ -41,7 +41,7 @@
     "craftCutting": 5,
     "craftInt": 19,
 
-    "feedType": 1,
+    "feedType": "Magazine",
 
     "ammoTypes":
     [

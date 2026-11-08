@@ -25,7 +25,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "craftHammering": 0.0,
     "craftInt": 0,
 
-    "feedType": 0, // 1 - mag, 2 - tube, 3 - barrel, 4 - revolver, 5 - battery magazine
+    "feedType": "Magazine", // Magazine = 1, Tube = 2, Barrel = 3, Revolver = 4, Battery = 5. Legacy numeric values are still accepted.
     "internalCapacity": 1, // must always be 1 for mag feed
     "ammoTypes":
     [

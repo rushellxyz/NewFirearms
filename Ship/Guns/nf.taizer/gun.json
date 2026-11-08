@@ -12,7 +12,7 @@
 
 
 
-    "feedType": 5,
+    "feedType": "Battery",
 
     "ammoTypes":
     [

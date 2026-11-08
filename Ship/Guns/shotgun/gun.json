@@ -13,7 +13,7 @@
 
 
 
-    "feedType": 2,
+    "feedType": "Tube",
     "internalCapacity": 7,
     "ammoTypes":
     [

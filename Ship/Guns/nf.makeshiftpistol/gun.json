@@ -25,7 +25,7 @@
     "craftCutting": 1,
     "craftInt": 12,
 
-    "feedType": 3,
+    "feedType": "Barrel",
     "internalCapacity": 2,
     "ammoTypes":
     [

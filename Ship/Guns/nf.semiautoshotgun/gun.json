@@ -27,7 +27,7 @@
     "craftCutting": 2,
     "craftInt": 16,
 
-    "feedType": 2,
+    "feedType": "Tube",
     "internalCapacity": 7,
     "ammoTypes":
     [

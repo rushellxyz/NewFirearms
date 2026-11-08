@@ -6,8 +6,6 @@ namespace NewFirearms
 {
     public partial class RshGun
     {
-        public const int BatteryFeed = 5;
-
         [JsonProperty("magazineBatteries")]
         internal List<BatteryCell> magazineBatteries = new List<BatteryCell>();
 
@@ -29,7 +27,7 @@ namespace NewFirearms
         internal void SetBatteryState(IEnumerable<BatteryCell> cells)
         {
             magazineBatteries = BatteryCells.Copy(cells);
-            if (prop?.feedType == BatteryFeed) UpdateBatteryRound();
+            if (prop?.feedType == FeedKind.Battery) UpdateBatteryRound();
         }
 
         private void UpdateBatteryRound()

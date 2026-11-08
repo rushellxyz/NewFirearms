@@ -82,19 +82,20 @@ namespace NewFirearms
         internal void Gun(GunJson gun)
         {
             if (gun == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
-            Require(gun.feedType >= 1 && gun.feedType <= 5, "feedType", "expected 1 (magazine), 2 (tube), 3 (barrel), 4 (revolver), or 5 (battery magazine).");
-            Require(!gun.needRetract || gun.feedType == 5, "needRetract", "requires feedType 5 (battery magazine).");
+            Require(Enum.IsDefined(typeof(FeedKind), gun.feedType), "feedType",
+                "expected Magazine (1), Tube (2), Barrel (3), Revolver (4), or Battery (5).");
+            Require(!gun.needRetract || gun.feedType == FeedKind.Battery, "needRetract", "requires feedType 5 (battery magazine).");
             Require(gun.batteryDrainPerRetract >= 0f && gun.batteryDrainPerRetract <= 1f,
                 "batteryDrainPerRetract", "must be between 0 and 1 (fraction of full cell charge per manual retraction).");
-            Require(gun.batteryDrainPerRetract == 0f || gun.feedType == 5 && gun.needRetract,
+            Require(gun.batteryDrainPerRetract == 0f || gun.feedType == FeedKind.Battery && gun.needRetract,
                 "batteryDrainPerRetract", "requires feedType 5 and needRetract when greater than zero.");
-            Require(!gun.hasFlashlight || gun.feedType == 5, "hasFlashlight", "requires feedType 5 (battery magazine).");
+            Require(!gun.hasFlashlight || gun.feedType == FeedKind.Battery, "hasFlashlight", "requires feedType 5 (battery magazine).");
             Require(!gun.hasFlashlight || gun.minigame != null, "minigame", "is required when hasFlashlight is true.");
             Require(!gun.hasFlashlight || !string.IsNullOrWhiteSpace(gun.minigame?.flashlightTogglePath),
                 "minigame.flashlightTogglePath", "a toggle hit-area sprite is required when hasFlashlight is true.");
             Require(gun.internalCapacity > 0, "internalCapacity", "must be greater than zero.");
-            Require(gun.feedType != 1 && gun.feedType != 5 || gun.internalCapacity == 1, "internalCapacity", "must be 1 for magazine-fed and battery-fed guns.");
-            if (gun.feedType == 5)
+            Require(gun.feedType != FeedKind.Magazine && gun.feedType != FeedKind.Battery || gun.internalCapacity == 1, "internalCapacity", "must be 1 for magazine-fed and battery-fed guns.");
+            if (gun.feedType == FeedKind.Battery)
             {
                 Require(gun.batteryDrainPerShot > 0f && gun.batteryDrainPerShot <= 1f, "batteryDrainPerShot", "must be greater than zero and at most 1 (fraction of full charge per shot).");
                 Require(gun.ammoTypes?.Count == 1, "ammoTypes", "battery-fed guns require exactly one firing profile.");
@@ -128,7 +129,7 @@ namespace NewFirearms
                     Require(gun.fireModes[i] <= 4, $"fireModes[{i}]", "expected 0 (safe), 1 (manual), 2 (semi-auto), 3 (full-auto), or 4 (three-round burst).");
                     lastMode = Math.Max(lastMode, gun.fireModes[i]);
                 }
-            Require(gun.feedType != 1 && gun.feedType != 5 || gun.magazineType != null, "magazineType", "an array is required for magazine-fed and battery-fed guns.");
+            Require(gun.feedType != FeedKind.Magazine && gun.feedType != FeedKind.Battery || gun.magazineType != null, "magazineType", "an array is required for magazine-fed and battery-fed guns.");
             Ids(gun.magazineType, "magazineType", false);
             Recipe(gun.craftable, gun.recipe);
             Texture(gun.normalTexturePath, "normalTexturePath", true);
@@ -147,7 +148,7 @@ namespace NewFirearms
             if (gun.magazineTexturesPath != null)
                 foreach (var pair in gun.magazineTexturesPath) Texture(pair.Value, $"magazineTexturesPath['{pair.Key}']");
             if (gun.minigame != null) Minigame(gun.minigame, count, lastMode);
-            Require(gun.minigame?.pumpOutsideWindow != true || gun.feedType == 2,
+            Require(gun.minigame?.pumpOutsideWindow != true || gun.feedType == FeedKind.Tube,
                 "minigame.pumpOutsideWindow", "requires a tube-fed gun (feedType 2).");
             Finish();
         }

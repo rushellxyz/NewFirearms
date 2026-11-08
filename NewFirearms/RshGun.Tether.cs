@@ -14,7 +14,7 @@ namespace NewFirearms
         internal Vector2 TetherLocalPoint;
         private LineRenderer tetherLine;
 
-        public bool UsesRetraction() => prop?.feedType == BatteryFeed && prop.needRetract;
+        public bool UsesRetraction() => prop?.feedType == FeedKind.Battery && prop.needRetract;
 
         // Прикольно что есть [OnSerializing], но я сомниваюсь что имено RetractBeforeSaving нужен
         [OnSerializing]

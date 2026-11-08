@@ -25,7 +25,7 @@ namespace NewFirearms
         {
             sprite = null;
             liveRound = false;
-            if (prop == null || prop.feedType == BatteryFeed || rounds.Count == 0 ||
+            if (prop == null || prop.feedType == FeedKind.Battery || rounds.Count == 0 ||
                 rounds[0] == -2 || IsJammed) return false;
             liveRound = rounds[0] >= 0;
             if (liveRound)
@@ -92,7 +92,7 @@ namespace NewFirearms
           => RemoveMag(null);
 
         public bool IsRacked()
-         => prop?.feedType != BatteryFeed && racked;
+         => prop?.feedType != FeedKind.Battery && racked;
 
         public byte CurrentFireMode()
          => fireMode;
@@ -101,7 +101,7 @@ namespace NewFirearms
          => mag;
 
         public bool HasEmptyMagazine()
-            => !string.IsNullOrEmpty(mag) && (prop?.feedType == BatteryFeed
+            => !string.IsNullOrEmpty(mag) && (prop?.feedType == FeedKind.Battery
                 ? BatteryCells.Charge(magazineBatteries) <= 0f
                 : !rounds.Skip(1).Any(round => round >= 0));
 
@@ -143,9 +143,9 @@ namespace NewFirearms
             if (gasTime <= 0f)
             {
                 gasTime = 0f;
-                if (prop.feedType != BatteryFeed)
+                if (prop.feedType != FeedKind.Battery)
                 {
-                    if (4 == prop.feedType || prop.feedType == 3 && fireMode == BurstFireMode)
+                    if (FeedKind.Revolver == prop.feedType || prop.feedType == FeedKind.Barrel && fireMode == BurstFireMode)
                         RotateChambers();
                     else if (!(1 < rounds.Count && 0 > rounds[1]))
                         Rack(manual: false);
@@ -201,7 +201,7 @@ namespace NewFirearms
             if (TryGetComponent<LaserPointer>(out var laser))
                 laser.enabled = laserEnabled;
             jamming = WorldGeneration.GetRunSettingBool("newfirearms.gunjamming");
-            if (prop.feedType == BatteryFeed) racked = false;
+            if (prop.feedType == FeedKind.Battery) racked = false;
             if (!UsesRetraction()) ApplyTetherState(false, Vector2.zero);
             if (!existed)
             {
@@ -209,7 +209,7 @@ namespace NewFirearms
                 fireMode = prop.fireModes.Min();
                 if (Plugin.MultiplayerActive)
                     MpStartOp();
-           else if (prop.feedType != BatteryFeed && !prop.spawnUnracked)
+           else if (prop.feedType != FeedKind.Battery && !prop.spawnUnracked)
                     Rack(manual: true);
                 existed = true;
             }
@@ -228,7 +228,7 @@ namespace NewFirearms
                 return;
             if (!existed)
             {
-                racked = prop.feedType != BatteryFeed && !prop.spawnUnracked;
+                racked = prop.feedType != FeedKind.Battery && !prop.spawnUnracked;
                 if (racked)
                     Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 UpdateSprite();
@@ -238,8 +238,8 @@ namespace NewFirearms
 
         public bool IsReady()
         {
-            return !needsRetraction && !IsJammed && (prop.feedType == BatteryFeed || !racked) && 0 != fireMode && rounds.Count > 0 &&
-                (prop.feedType == BatteryFeed ? HasBatteryPower : 0 <= rounds[0]) && 0.005f < it.condition;
+            return !needsRetraction && !IsJammed && (prop.feedType == FeedKind.Battery || !racked) && 0 != fireMode && rounds.Count > 0 &&
+                (prop.feedType == FeedKind.Battery ? HasBatteryPower : 0 <= rounds[0]) && 0.005f < it.condition;
         }
 
         private bool FireRound(Body body)
@@ -255,7 +255,7 @@ namespace NewFirearms
                     SyncIfHost(2);
                 return false;
             }
-            AmmoInfo info = prop.ammoTypes[prop.feedType == BatteryFeed ? 0 : rounds[0]];
+            AmmoInfo info = prop.ammoTypes[prop.feedType == FeedKind.Battery ? 0 : rounds[0]];
             float muzzleRise = GetMuzzleRise(body, info.muzzleRise);
             float num = (body.isRight ? 1f : (-1f));
             ShootVisuals visuals = new ShootVisuals
@@ -268,7 +268,7 @@ namespace NewFirearms
             for (int i = 0; i < info.pellets; i++)
             {
                 ShootManager.ShootLogic(info, barrelPosition, (transform.right + transform.up * (UnityEngine.Random.Range(-1f, 1f) * info.verticalSpread)) * num, shooter, ref visuals,
-                    prop.feedType == BatteryFeed && prop.needRetract ? this : null);
+                    prop.feedType == FeedKind.Battery && prop.needRetract ? this : null);
             }
             if (!Plugin.MultiplayerActive || (Plugin.MultiplayerActive && !Plugin.IsDedicated()))
             {
@@ -288,7 +288,7 @@ namespace NewFirearms
             body.armsAnimator.SetFloat("gunangle", body.armsAnimator.GetFloat("gunangle") + muzzleRise * MUZZLE_RISE_MODIFIER);
             if (PlayerCamera.main.body == shooter && GunMinigame.Plugin.useMinigame)
                 GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(info.knockback, muzzleRise);
-            if (prop.feedType == BatteryFeed)
+            if (prop.feedType == FeedKind.Battery)
             {
                 FinishBatteryShot();
                 if (needsRetraction) StopFiring();
@@ -314,7 +314,7 @@ namespace NewFirearms
                 if (0f < prop.desiredGasTime || fireMode == BurstFireMode)
                 {
                     gasTime = fireMode == BurstFireMode ? Mathf.Max(0.05f, prop.desiredGasTime) : prop.desiredGasTime;
-                    if (4 != prop.feedType && !(prop.feedType == 3 && fireMode == BurstFireMode))
+                    if (FeedKind.Revolver != prop.feedType && !(prop.feedType == FeedKind.Barrel && fireMode == BurstFireMode))
                         Rack(manual: false);
                     if (Plugin.MultiplayerActive)
                         SyncIfHost();
@@ -330,7 +330,7 @@ namespace NewFirearms
 
         public void Rack(bool manual)
         {
-            if (prop.feedType == BatteryFeed)
+            if (prop.feedType == FeedKind.Battery)
             {
                 if (!manual || !prop.needRetract) return;
                 if (Plugin.MultiplayerActive && RequestHostIfClient(1)) return;
@@ -367,7 +367,7 @@ namespace NewFirearms
                     Sound.Play(prop.rackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
            else     Sound.Play(prop.unrackAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             }
-            if (2 >= prop.feedType)
+            if (prop.feedType == FeedKind.Magazine || prop.feedType == FeedKind.Tube)
             {
                 if (racked)
                     EjectRound(0);
@@ -477,8 +477,8 @@ namespace NewFirearms
         {
             if (prop == null || newMag == null) return false;
             if (newMag.type == MagazineKind.Pseudo && !racked) return false;
-            if (prop.feedType == BatteryFeed ? newMag.type != MagazineKind.Battery
-                : prop.feedType != 1 || newMag.type == MagazineKind.Battery)
+            if (prop.feedType == FeedKind.Battery ? newMag.type != MagazineKind.Battery
+                : prop.feedType != FeedKind.Magazine || newMag.type == MagazineKind.Battery)
                 return false;
             if (null != mag && "" != mag)
                 return false;
@@ -509,14 +509,14 @@ namespace NewFirearms
 
                 Sound.Play(prop.loadMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 mag = newMag.it.id;
-                if (prop.feedType == BatteryFeed)
+                if (prop.feedType == FeedKind.Battery)
                     SetBatteryState(newMag.batteries);
                 else
                     rounds.AddRange(newMag.rounds);
                 UnityEngine.Object.Destroy(item.gameObject);
                 // окак
                 // Release the open action on the host, even when the minigame is hidden or disabled.
-                if (prop.feedType != BatteryFeed && racked && prop.minigame?.closeOnMagazineInsert == true &&
+                if (prop.feedType != FeedKind.Battery && racked && prop.minigame?.closeOnMagazineInsert == true &&
                     !HasEmptyMagazine())
                     Rack(manual: false);
                 UpdateSprite();
@@ -525,20 +525,20 @@ namespace NewFirearms
                 return true;
             }
        else {
-                if (prop.feedType == BatteryFeed) return false;
+                if (prop.feedType == FeedKind.Battery) return false;
                 for (sbyte i = 0; i < prop.ammoTypes.Count(); i++)
                 {
                     AmmoInfo ammo = prop.ammoTypes[i];
                     if (ammo.round != item.id)
                         continue;
 
-                    if (1 == prop.feedType)
+                    if (FeedKind.Magazine == prop.feedType)
                     {
                         if (!racked || -2 != rounds[0])
                             return false;
                         rounds[0] = i;
                     }
-               else if (2 == prop.feedType)
+               else if (FeedKind.Tube == prop.feedType)
                     { // TODO for tube feed, option to shift rounds in tube forward, like it does irl
                         int begin = 1;
                         if (racked)
@@ -607,7 +607,7 @@ namespace NewFirearms
             if (Plugin.MultiplayerActive && RequestHostIfClient(3))
                 return;
             StopFiring();
-            if ((prop.feedType == 3 || prop.feedType == 4) && racked)
+            if ((prop.feedType == FeedKind.Barrel || prop.feedType == FeedKind.Revolver) && racked)
             {
                 if (playSound)
                     Sound.Play(prop.removeMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
@@ -806,7 +806,7 @@ namespace NewFirearms
 
             writer.Put((byte)extraData);
             GunNetwork.WriteJamState(this, writer);
-            BatteryNetwork.Write(writer, prop.feedType == BatteryFeed ? magazineBatteries : null);
+            BatteryNetwork.Write(writer, prop.feedType == FeedKind.Battery ? magazineBatteries : null);
             GunNetwork.WriteTetherState(this, writer);
             writer.Put(FlashlightEnabled);
             writer.Put(ChamberSpentAmmo);

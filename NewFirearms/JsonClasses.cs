@@ -38,14 +38,7 @@ namespace NewFirearms
         public float craftHammering;
         public int craftInt;
 
-        public int feedType;
-        /*
-        * 1 - Magazine feed
-        * 2 - Tube
-        * 3 - Barrel
-        * 4 - Revolver
-        * 5 - Battery magazine
-        */
+        public FeedKind feedType;
         public int internalCapacity = 1;
         public List<AmmoInfo> ammoTypes;
         public float desiredGasTime;

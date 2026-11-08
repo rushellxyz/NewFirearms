@@ -6,5 +6,3 @@ TODO List - Agents stay away unless stated otherwise
  - And hot reloading!
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
- - The sliderHandFollowOffset !
- - Move feedType to use enum too

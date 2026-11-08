@@ -99,11 +99,11 @@ namespace NewFirearms
                 if (rshGun.racked)
                     __instance.gunRackImage.sprite = rshGun.prop.unrackSprite;
        else         __instance.gunRackImage.sprite = rshGun.prop.rackSprite;
-                __instance.gunMagButton.interactable = !string.IsNullOrEmpty(rshGun.mag) || (3 == rshGun.prop.feedType && rshGun.racked);
+                __instance.gunMagButton.interactable = !string.IsNullOrEmpty(rshGun.mag) || (FeedKind.Barrel == rshGun.prop.feedType && rshGun.racked);
                 __instance.gunMagButton.transform.GetChild(0).GetComponent<Image>().sprite = rshGun.prop.removeMagSprite;
                 __instance.gunSafeImage.sprite = rshGun.prop.fireModesSprite[rshGun.fireMode];
                 int chambers = 1;
-                if (3 == rshGun.prop.feedType)
+                if (FeedKind.Barrel == rshGun.prop.feedType)
                     chambers = rshGun.rounds.Count;
                 for (int i = 0; i < rshGun.prop.internalCapacity; i++)
                 {

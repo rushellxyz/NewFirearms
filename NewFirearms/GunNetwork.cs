@@ -34,7 +34,7 @@ namespace NewFirearms
             rshGun.fireMode = newFireMode;
 
             reader.Get(out bool newRack);
-            if (rshGun.prop.feedType == RshGun.BatteryFeed) newRack = false;
+            if (rshGun.prop.feedType == FeedKind.Battery) newRack = false;
 
             string newMag = null;
             reader.Get(out bool haveMag);

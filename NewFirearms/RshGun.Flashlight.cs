@@ -11,7 +11,7 @@ namespace NewFirearms
         private bool flashlightResourceMissing;
         private static ItemInfo flashlightDefinition;
 
-        public bool HasFlashlight() => prop?.feedType == BatteryFeed && prop.hasFlashlight;
+        public bool HasFlashlight() => prop?.feedType == FeedKind.Battery && prop.hasFlashlight;
 
         private bool HasFlashlightPower => !string.IsNullOrEmpty(mag) && BatteryCells.Charge(magazineBatteries) > 0f;
 
