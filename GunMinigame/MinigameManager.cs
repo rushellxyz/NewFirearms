@@ -337,12 +337,6 @@ namespace GunMinigame
 
         public static Func<Item, string> bulletToShow;
 
-#if DEBUG
-        private static Sprite debugGreen;
-        private static Sprite debugRed;
-        private bool hoveringOverReciever;
-#endif
-
         public static Vector3 fitSize;
 
 
@@ -747,14 +741,6 @@ namespace GunMinigame
             receiverTriggerTrigger.triggers.Add(receiverTriggerEntry);
             receiverTrigger.color = new Color(1f, 1f, 1f, 0f);
             receiverTrigger.gameObject.SetActive(false);
-#if DEBUG
-            EventTrigger.Entry a = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-            a.callback.AddListener((data) => { hoveringOverReciever=true; });
-            EventTrigger.Entry b = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
-            b.callback.AddListener((data) => { hoveringOverReciever=false; });
-            receiverTriggerTrigger.triggers.Add(a);
-            receiverTriggerTrigger.triggers.Add(b);
-#endif
 
             magazineDragTrigger = new GameObject("MinigameMagazineDragTrigger").AddComponent<Image>();
             magazineDragTrigger.transform.SetParent(gunBase.transform);
@@ -929,10 +915,6 @@ namespace GunMinigame
             fannyPackZipSprite = Plugin.LoadResource("minigameFannyPackZip");
             traumarigBackgroundSprite = Plugin.LoadResource("minigameTraumarigBackground");
             traumarigForegroundSprite = Plugin.LoadResource("minigameTraumarigForeground");
-#if DEBUG
-            debugGreen = Plugin.LoadResource("minigameDebugGreen");
-            debugRed = Plugin.LoadResource("minigameDebugRed");
-#endif
         }
 
         public Vector2 GetMousePos()
@@ -950,10 +932,6 @@ namespace GunMinigame
         public void Update()
         {
             UpdateSupportGrip();
-#if DEBUG
-            if (null != hideShowButton)
-                hideShowButton.sprite = hoveringOverReciever ? debugGreen : debugRed;
-#endif
             if (!active)
             {
                 shouldntRefreshBandolierCount = false;
@@ -1019,9 +997,6 @@ namespace GunMinigame
            else if (Input.GetKeyUp(precachingcahce) || shouldResetHandSprite)
                 {
                     receiverTrigger.gameObject.SetActive(false);
-#if DEBUG
-                    hoveringOverReciever = false;
-#endif
                     shouldResetHandSprite = false;
                     holdsSlide = false;
                     if (null != holding)
