@@ -56,8 +56,5 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="GunsawGenetics" Publicize="true">
-      <HintPath>$(GameDirectory)/BepInEx/plugins/GunsawGenetics.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

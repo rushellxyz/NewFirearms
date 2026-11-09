@@ -1,5 +1,15 @@
 # Full-game transition audit
 
+## Full release verified on 2026-11-09
+
+`/home/rushell/Documents/CU` now contains the full-release game assemblies. Both projects compile against these assemblies in Debug and Release.
+
+The release's `Body.HandleVisuals(Painkillers)` obtains `GunScript` from a held gun-tagged item and dereferences its transform. NewFirearms weapons use `RshGun`, so this lookup can return null and stop the rest of the body's visual update. `GunAnimationPatch` replaces just this transform lookup with a native-first fallback to the held item's transform. It keeps the original animation method, gun flags, aiming calculations, and vanilla GunScript behavior; no dummy GunScript is attached. The transpiler is checked against the actual release method: exactly one transform call changes, and branch labels move with its inserted body-context load.
+
+GunMinigame now reads native `Body.charType`: 0 is Experiment, 1 is Milky, 2 is Dune. Milky enables marksman handling unless the run setting already forces it for everyone. Species selection uses the supplied body where available, with Experiment as the fallback for missing/unknown characters. The Gunsaw Genetics plugin dependency, assembly reference, and integration code were removed.
+
+The notes below describe the earlier pre-release review. They do not replace full-release validation or establish compatibility of the installed third-party multiplayer/core mods.
+
 Reviewed against the [updated CUCoreLib transition guide](https://cucorelib.web.app/docs/full-game-transition/) on 2026-11-03.
 
 `agentbox/CUCoreLib-main` is now a Git checkout of upstream `main` at `7f28e98` (2026-10-27). The previous source snapshot is preserved in `agentbox/CUCoreLib-before-update-2026-11-03`. The deployed transition guide is newer than the copy committed upstream; its machine-readable content is saved separately as `agentbox/full-game-transition-live-2026-11-03.json`.
@@ -26,7 +36,7 @@ dotnet build NewFirearms/NewFirearms.csproj -c Release -p:GameDirectory="/path/t
 
 The selected installation must contain the referenced game, BepInEx, CUCoreLib, and optional-integration build assemblies. Optional integrations remain optional at runtime.
 
-## Validation and remaining limit
+## Earlier pre-release validation
 
 Debug and Release builds pass against the installed demo assemblies. Source inspection finds no direct references to the removed/changed members listed above. `CU_PATH` selection is checked for both projects.
 

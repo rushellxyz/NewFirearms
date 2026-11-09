@@ -15,53 +15,34 @@ namespace GunMinigame
     }
 
     [BepInPlugin("com.rushellxyz.gunminigame", "Gun Minigame", "1.0.0")]
-    [BepInDependency("GunsawGenetics", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         public static bool standalone = false;
         public static bool useMinigame = true;
 
-        static bool ggEnabled;
-        static bool speciesIntegrationFailed;
-
         public static PlayerSpecies GetPlayerSpecies()
-        {
-            if (!ggEnabled || speciesIntegrationFailed) return PlayerSpecies.Experiment;
-            try
-            {
-                return GetGeneticsSpecies();
-            }
-            catch (Exception ex)
-            {
-                speciesIntegrationFailed = true;
-                Debug.LogWarning($"[GunMinigame] Could not read Gunsaw Genetics species; using Experiment sprites. {ex}");
-                return PlayerSpecies.Experiment;
-            }
-        }
+            => GetPlayerSpecies(PlayerCamera.main != null ? PlayerCamera.main.body : null);
 
-        // Ха а вот еще один ai gave away
-        // про reflection думаю уже все знают, но ии любит NoInlining когда просишь через jit гонку написать
-        // помню видел в моде на протезы NoInlining в мп синхе, просто, holy memory
-
-        // Keep optional assembly references outside the fallback method's JIT boundary.
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        private static PlayerSpecies GetGeneticsSpecies()
+        public static PlayerSpecies GetPlayerSpecies(Body body)
         {
-            string species = GunsawGenetics.SpeciesAbilityManager.ActiveSpecies;
-            if (species == "Dune" || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Dune"))
-                return PlayerSpecies.Dune;
-            if (species == "Milky" || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Milky") || "Voyager" == species)
-                return PlayerSpecies.Milky;
-            return PlayerSpecies.Experiment;
+            // The native character prefabs use charType 0/1/2 for Experiment/Milky/Dune.
+            if (body == null) return PlayerSpecies.Experiment;
+            switch (body.charType)
+            {
+                case 1: return PlayerSpecies.Milky;
+                case 2: return PlayerSpecies.Dune;
+                default: return PlayerSpecies.Experiment;
+            }
         }
 
         void Awake()
         {
-            if (File.Exists("BepInEx/plugins/NewFirearms.dll"))
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rushellxyz.newfirearms") ||
+                Directory.GetFiles(Paths.PluginPath, "NewFirearms.dll", SearchOption.AllDirectories).Length != 0)
                 Logger.LogInfo("NewFirearms.dll detected, running in api-only mode");
-       else if (File.Exists("BepInEx/plugins/GunMinigame-ApiOnlyMode"))
+       else if (File.Exists(Path.Combine(Paths.PluginPath, "GunMinigame-ApiOnlyMode")))
                 Logger.LogInfo("GunMinigame-ApiOnlyMode detected, running in api-only mode");
-       else if (!Directory.Exists("BepInEx/plugins/GunMinigame/"))
+       else if (!Directory.Exists(Path.Combine(Paths.PluginPath, "GunMinigame")))
                 Logger.LogInfo("GunMinigame/ not detected, running in api-only mode");
        else {
                 Logger.LogInfo("Running in standalone mode");
@@ -76,7 +57,6 @@ namespace GunMinigame
                 RunSettings.settingTypes.Insert(i + 1, new RunSettingBool("gunminigame.alwaysmarksman"));
                 break;
             }
-            ggEnabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("GunsawGenetics");
             RunSettings.presets[0].presetValues.Add("gunminigame.alwaysmarksman", false);
             RunSettings.presets[1].presetValues.Add("gunminigame.alwaysmarksman", false);
             RunSettings.presets[2].presetValues.Add("gunminigame.alwaysmarksman", true);
@@ -88,36 +68,29 @@ namespace GunMinigame
         {
             byte[] fileData = File.ReadAllBytes(path);
             Texture2D texture = new Texture2D(8, 8);
-            texture.LoadImage(fileData);
+            if (!texture.LoadImage(fileData))
+            {
+                Destroy(texture);
+                throw new InvalidDataException("Could not decode PNG: " + path);
+            }
             texture.filterMode = FilterMode.Point;
             return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), ppu);
         }
 
-        public static bool IsMarksman(Body body)
-        {
-            if (WorldGeneration.GetRunSettingBool("gunminigame.alwaysmarksman"))
-                return true;
-            if (ggEnabled)
-            {
-                try
-                {
-                    return IsMilkyOrVoyboy(body);
-                }
-           catch{
-                    UnityEngine.Debug.LogError("[GunMinigame] Gunsaw Genetics integration failed! Send a bug report.");
-                    return false;
-                }
-            }
-       else    return false;
-        }
+        internal static Sprite LoadResource(string name)
+            => LoadSprite(Path.Combine(Paths.PluginPath, standalone ? "GunMinigame" : "NewFirearms",
+                "Resources", name + ".png"));
 
-        private static bool IsMilkyOrVoyboy(Body body)
-        { // evil string comparassions
-            return "Milky" == GunsawGenetics.SpeciesAbilityManager.ActiveSpecies || "Voyager" == GunsawGenetics.SpeciesAbilityManager.ActiveSpecies || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Milky") || GunsawGenetics.SpeciesAbilityManager.MercenaryIsHosting("Voyager");
-        }
+        public static bool IsMarksman(Body body)
+            => WorldGeneration.GetRunSettingBool("gunminigame.alwaysmarksman") ||
+                GetPlayerSpecies(body) == PlayerSpecies.Milky;
 
         private void PrepareStandaloneMode()
         {
+            string root = Path.Combine(Paths.PluginPath, "GunMinigame");
+            StandaloneContent.Load(root, path => LoadSprite(path), message => Logger.LogWarning(message));
+            standalone = StandaloneContent.Guns.Count != 0;
+            Logger.LogInfo("Standalone minigames loaded: " + StandaloneContent.Guns.Count);
             MinigameManager.bulletToShow = (mag) => {
                 AmmoScript ass = mag.GetComponent<AmmoScript>();
                 if (null == ass)
@@ -125,12 +98,11 @@ namespace GunMinigame
                     UnityEngine.Debug.LogWarning("[GunMinigame] Expected item doesnt have a AmmoScript :tourniqet:");
                     return null;
                 }
-                if (0 == mag.GetComponent<AmmoScript>().rounds)
+                if (ass.rounds <= 0)
                     return null;
                 return AmmoScript.AmmoTypeToItem(ass.ammoType);
 
             };
-            throw new NotImplementedException();//standalone = true;
         }
     }
 

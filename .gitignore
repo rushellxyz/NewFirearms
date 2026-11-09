@@ -4,3 +4,4 @@ NewFirearms/bin/
 NewFirearms/obj/
 *.png~
 agentbox/
+dist/

@@ -262,6 +262,7 @@ namespace GunMinigame
 
         private float sliderLastXPos;
         private bool automatedHandAction;
+        internal bool IsManipulatingGun => holdsSlide || automatedHandAction;
 
         public Image rackedSpecific;
 
@@ -452,9 +453,11 @@ namespace GunMinigame
             UpdateMainSprite();
             if (!info.sliderRightClickFireToggle || null == info.fireModeSprites)
                 sliderFrontImage.sprite = info.sliderFrontSprite;
+            sliderFrontImage.enabled = sliderFrontImage.sprite != null;
             chamberedRoundImage.enabled = false;
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.sprite = info.sliderBackSprite;
+            sliderBackImage.enabled = info.sliderBackSprite != null;
             backLayerImage.sprite = info.backLayerSprite;
             backLayerImage.enabled = info.backLayerSprite != null;
             barrelImage.sprite = info.barrelSprite;
@@ -463,6 +466,7 @@ namespace GunMinigame
             grabTriggerImage.sprite = info.grabTriggerSprite;
             grabTriggerImage.gameObject.SetActive(!info.grabOnSlider && info.HasSupportGrip);
             magReleaseTrigger.sprite = info.magReleaseTrigger;
+            magReleaseTrigger.gameObject.SetActive(info.magReleaseTrigger != null);
             rackTrigger.sprite = info.rackTrigger;
             rackTrigger.gameObject.SetActive(info.rackTrigger != null);
             magazineDragTrigger.sprite = info.magazineDragTrigger;
@@ -593,6 +597,7 @@ namespace GunMinigame
             sliderBackImage.transform.localPosition = Vector3.zero;
             sliderBackImage.transform.localScale = Vector3.one;
             sliderBackImage.GetComponent<RectTransform>().sizeDelta = size;
+            sliderBackImage.enabled = false;
 
             rackedSpecific = new GameObject("MinigameRackedSpecific").AddComponent<Image>();
             rackedSpecific.transform.SetParent(gunBase.transform);
@@ -600,6 +605,7 @@ namespace GunMinigame
             rackedSpecific.transform.localScale = Vector3.one;
             rackedSpecific.GetComponent<RectTransform>().sizeDelta = size;
             rackedSpecific.raycastTarget = false;
+            rackedSpecific.enabled = false;
 
             mainImage = new GameObject("MinigameMainSprite").AddComponent<Image>();
             mainImage.raycastTarget = false;
@@ -881,6 +887,12 @@ namespace GunMinigame
             PrepareSupportGrip();
 
             placedMagazines = new List<Image>();
+
+            // Vanilla UIUtil filters raycast hits by layer; otherwise clicks also act on the world.
+            int uiLayer = LayerMask.NameToLayer("UI");
+            if (uiLayer >= 0)
+                foreach (Transform child in uiBase.GetComponentsInChildren<Transform>(true))
+                    child.gameObject.layer = uiLayer;
         }
 
         void EnsureAmmoIcons(int count)
@@ -901,25 +913,25 @@ namespace GunMinigame
 
         static void PrepareResources()
         {
-            backgroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameBackground.png");
-            bandolierBackground = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameBandolierBackground.png");
-            bandolierForeground = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameBandolierForeground.png");
-            ptrBlank = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigamePtr.png");
+            backgroundSprite = Plugin.LoadResource("minigameBackground");
+            bandolierBackground = Plugin.LoadResource("minigameBandolierBackground");
+            bandolierForeground = Plugin.LoadResource("minigameBandolierForeground");
+            ptrBlank = Plugin.LoadResource("minigamePtr");
             if (null == hideSprite)
             {
-                hideSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameHide.png");
-                showSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameShow.png");
+                hideSprite = Plugin.LoadResource("minigameHide");
+                showSprite = Plugin.LoadResource("minigameShow");
             }
-            ammoSelectorSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameAmmoSelector.png");
-            ammoSelectWindowSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameAmmoSelectWindow.png");
-            ammoSelectCursorSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameAmmoSelectCursor.png");
-            fannyPackSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameFannyPack.png");
-            fannyPackZipSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameFannyPackZip.png");
-            traumarigBackgroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameTraumarigBackground.png");
-            traumarigForegroundSprite = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameTraumarigForeground.png");
+            ammoSelectorSprite = Plugin.LoadResource("minigameAmmoSelector");
+            ammoSelectWindowSprite = Plugin.LoadResource("minigameAmmoSelectWindow");
+            ammoSelectCursorSprite = Plugin.LoadResource("minigameAmmoSelectCursor");
+            fannyPackSprite = Plugin.LoadResource("minigameFannyPack");
+            fannyPackZipSprite = Plugin.LoadResource("minigameFannyPackZip");
+            traumarigBackgroundSprite = Plugin.LoadResource("minigameTraumarigBackground");
+            traumarigForegroundSprite = Plugin.LoadResource("minigameTraumarigForeground");
 #if DEBUG
-            debugGreen = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameDebugGreen.png");
-            debugRed = Plugin.LoadSprite("BepInEx/plugins/NewFirearms/Resources/minigameDebugRed.png");
+            debugGreen = Plugin.LoadResource("minigameDebugGreen");
+            debugRed = Plugin.LoadResource("minigameDebugRed");
 #endif
         }
 
@@ -1019,6 +1031,8 @@ namespace GunMinigame
                    else if (null != MagazineScript.currentlyHovering && null != MagazineScript.currentlyHovering.it)
                         {
                             IMinigameMag mag = (MagazineScript.currentlyHovering.it.GetComponent(typeof(IMinigameMag)) as IMinigameMag);
+                            if (mag == null && Plugin.standalone)
+                                mag = StandaloneMagazine.For(MagazineScript.currentlyHovering.it);
                             if (null != mag)
                             {
                                 if (mag.DragOnto(holding))
@@ -1094,6 +1108,7 @@ namespace GunMinigame
             if (racked && (!info.rackedOnlyWhenMagazineEmpty || gun.HasEmptyMagazine() || holdOpen))
                 rackedSpecific.sprite = info.rackedOnlySprite;
        else     rackedSpecific.sprite = info.unrackedOnlySprite;
+            rackedSpecific.enabled = rackedSpecific.sprite != null;
 
             if (info.blockSlideWithEmptyMagazine && gun.HasEmptyMagazine() && gun.IsRacked())
             {
@@ -1365,6 +1380,7 @@ namespace GunMinigame
             if (info.sliderRightClickFireToggle)
             {
                 sliderFrontImage.sprite = sprite;
+                sliderFrontImage.enabled = sprite != null;
             }
        else {
                 fireModeImage.sprite = sprite;
@@ -1975,7 +1991,8 @@ namespace GunMinigame
 
         public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
-            if (myImage == null) return true;
+            // Missing optional masks must not intercept the entire gun window.
+            if (myImage == null || myImage.sprite == null) return false;
 
             // Convert screen point to local position on the RectTransform
             Vector2 localPoint;

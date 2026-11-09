@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-// Ой страшно, я почти не понимаю как это работает
 
 namespace NewFirearms
 {
@@ -153,7 +152,7 @@ namespace NewFirearms
             Finish();
         }
 
-        private void Minigame(JsonMinigameInfo game, int count, int lastMode)
+        private void Minigame(GunMinigame.MinigameConfig game, int count, int lastMode)
         {
             Require(game.roundHeight >= 0f && !float.IsInfinity(game.roundHeight),
                 "minigame.roundHeight", "must be a finite, non-negative height; zero hides the chamber preview and keeps original sizes for ejection/jam visuals.");
