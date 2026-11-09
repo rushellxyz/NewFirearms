@@ -149,7 +149,7 @@
     "minigame":
     {
         "inertiaHandXPosition": -0.33,
-        "inertiaHandYPosition": 0,
+        "inertiaHandYPosition": 0.05,
         "inertiaBarrelXPosition": 0.29,
         "inertiaBarrelYPosition": 0.21,
         "mainExperimentPath": "uiSpriteExpie",

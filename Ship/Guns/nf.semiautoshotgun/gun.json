@@ -156,10 +156,10 @@
     "magazineTexturesPath": { },
     "minigame":
     {
-        "inertiaHandXPosition": -0.33,
-        "inertiaHandYPosition": 0,
-        "inertiaBarrelXPosition": 0.33,
-        "inertiaBarrelYPosition": 0.2,
+        "inertiaHandXPosition": -0.4,
+        "inertiaHandYPosition": 0.06,
+        "inertiaBarrelXPosition": 0.4,
+        "inertiaBarrelYPosition": 0.26,
         "mainExperimentPath": "uiSpriteExpie",
         "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
