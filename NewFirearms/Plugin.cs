@@ -64,7 +64,9 @@ namespace NewFirearms
             ItemLoader.LoadRounds();
             ItemLoader.LoadVanillaAmmoSprites();
             RegisterRunSettings();
+#if DEBUG
             RegisterCourse();
+#endif
             ItemLoader.ClearResourcesDict();
 
             if (togetherMpAvailable)
