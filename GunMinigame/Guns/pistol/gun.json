@@ -138,10 +138,10 @@
 
 
 
-    "fireModesSpritePath": [ "Shared/Guns/nf.glock18/safe", "", "Shared/Guns/nf.hipoint/unsafe", ],
+    "fireModesSpritePath": [ "safe", "", "unsafe", ],
 
     "magazineTexturesPath": { "smallmagazine": "blank", },
-    "bulletsSpritesPath": [ "Shared/Resources/bulletEmpty", "Shared/Resources/bulletCasing", "Shared/Guns/nf.glock18/9mmroundIcon", "Shared/Guns/nf.glock18/9mmhollowIcon", "Shared/Guns/nf.glock18/9mmvenomusIcon" ],
+    "bulletsSpritesPath": [ "bulletEmpty", "bulletCasing", "9mmroundIcon", "9mmhollowIcon", "9mmvenomusIcon" ],
 
     "minigame":
     {

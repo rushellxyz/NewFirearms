@@ -837,6 +837,7 @@ namespace GunMinigame
             ammoSelector.sprite = ammoSelectorSprite;
             ammoSelector.gameObject.AddComponent<ImageHoverror>();
             AddAmmoSelectionPointerTracking(ammoSelector);
+            ammoSelector.gameObject.SetActive(!Plugin.standalone);
 
             ammoIcon = new GameObject("MinigameAmmoIcon").AddComponent<Image>();
             ammoIcon.transform.SetParent(ammoSelector.transform);
@@ -1421,7 +1422,7 @@ namespace GunMinigame
                 HideBandolier();
                 return;
             }
-            ammoSelector.gameObject.SetActive(true);
+            ammoSelector.gameObject.SetActive(!Plugin.standalone);
             bandolierBase.gameObject.SetActive(true);
             if (!shouldntRefreshBandolierCount)
             {

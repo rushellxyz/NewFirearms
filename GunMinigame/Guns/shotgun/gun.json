@@ -142,7 +142,7 @@
 
 
 
-    "bulletsSpritesPath": [ "Shared/Resources/bulletEmpty", "Shared/Resources/bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
+    "bulletsSpritesPath": [ "bulletEmpty", "bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
     "magazineTexturesPath": { },
     //"attachmentTexturesPath: { },
 
