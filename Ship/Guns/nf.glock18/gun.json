@@ -196,6 +196,11 @@
         "fireModePaths": [ "", "", "uiSliderFrontSemi", "uiSliderFrontFull" ],
         "barrelPath": "uiBarrel",
         "barrelXPosition": -0.055,
-        "barrelYPosition": 0.051
+        "barrelYPosition": 0.051,
+        "unrackedOnlyPath": "uiUnrackedOnly",
+        "rackedOnlyPath": "uiRackedOnly",
+        "rackedOnlyWhenMagazineEmpty": true,
+        "backLayerPath": "uiBackLayer",
+        "backLayerFollowsSlider": true,
     }
 }
