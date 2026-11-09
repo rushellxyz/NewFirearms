@@ -119,6 +119,7 @@
         "chargingHandle": true,
         "fireTogglePath": "uiFireToggleTrigger",
         "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi", "uiFireModeFull" ],
+        "roundHeight": 3,
     }
 
 }
