@@ -104,7 +104,7 @@ namespace GunMinigame
         public Sprite magazineDragTrigger;
         public float casingXPosition;
         public float casingYPosition;
-        // Height in local UI units, before the existing screen-dependent visual scale; zero keeps legacy sizes.
+        // Height in local UI units; zero hides the chamber preview and keeps legacy sizes for other visuals.
         public float roundHeight;
         public Sprite[] casingsSprite;
         public bool casingsDrop;
@@ -1195,7 +1195,7 @@ namespace GunMinigame
 
         private void UpdateChamberVisual()
         {
-            if (info.rackByRotation)
+            if (info.rackByRotation || info.roundHeight == 0f)
             {
                 chamberedRoundImage.enabled = false;
                 return;
