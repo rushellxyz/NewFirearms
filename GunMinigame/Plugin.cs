@@ -134,45 +134,4 @@ namespace GunMinigame
         }
     }
 
-    [HarmonyPatch(typeof(PlayerCamera), "Update")]
-    class MarksmanGunHotkeysPatch
-    {
-        static void Postfix(PlayerCamera __instance)
-        {
-            bool rackPressed = Input.GetKeyDown(KeyCode.Z);
-            bool ejectPressed = Input.GetKeyDown(KeyCode.X);
-            if ((!rackPressed && !ejectPressed) ||
-                !Plugin.IsMarksman(__instance.body) ||
-                MinigameManager.IsAnyGameUIOpen() ||
-                !__instance.body.HoldingItem(__instance.body.handSlot))
-                return;
-
-            Item item = __instance.body.GetItem(__instance.body.handSlot);
-            if (!item.Stats.HasTag("gun"))
-                return;
-
-            MinigameManager manager = MinigameManager.instance;
-            IMinigameGun heldGun = item.GetComponent(typeof(IMinigameGun)) as IMinigameGun;
-            if (rackPressed && heldGun is IMinigameRetractableGun retractable && retractable.UsesRetraction())
-            {
-                if (__instance.body.conscious) heldGun.Rack();
-                return;
-            }
-            if (null != manager && manager.active)
-            {
-                if (ReferenceEquals(heldGun, manager.gun) && !manager.hiden)
-                {
-                    manager.HandleMarksmanHotkey(rackPressed ? KeyCode.Z : KeyCode.X);
-                    return;
-                }
-                if (!ReferenceEquals(heldGun, manager.gun))
-                    manager.Hide();
-            }
-
-            if (rackPressed)
-                __instance.GunRack();
-            else
-                __instance.GunEjectMag();
-        }
-    }
 }

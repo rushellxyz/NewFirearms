@@ -1238,14 +1238,14 @@ namespace GunMinigame
             fireToggleTrigger.gameObject.SetActive(null != info.fireToggleTrigger && !racked);
         }
 
-        public void HandleMarksmanHotkey(KeyCode key)
+        public void HandleMarksmanHotkey(bool rack)
         {
             if (!active || hiden || automatedHandAction || holdsSlide || handIsHovered || IsAnyGameUIOpen())
                 return;
 
-            if (key == KeyCode.Z)
+            if (rack)
                 StartCoroutine(AnimateMarksmanRack());
-            else if (key == KeyCode.X && !string.IsNullOrEmpty(gun.CurrentMag()))
+            else if (!string.IsNullOrEmpty(gun.CurrentMag()))
                 StartCoroutine(AnimateMarksmanMagazineRemoval());
         }
 

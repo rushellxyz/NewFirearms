@@ -7,4 +7,3 @@ TODO List - Agents stay away unless stated otherwise
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
  - Make all magazines use nonEmptySpritePath
- - разобраться че нахуй codex написал для полного релиза совместимости
