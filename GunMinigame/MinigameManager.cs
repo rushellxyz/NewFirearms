@@ -193,7 +193,7 @@ namespace GunMinigame
             stagedMagazinePivot = new GameObject("StagedMagazinePivot").transform;
             stagedMagazinePivot.SetParent(gunBase.transform, false);
             stagedMagazinePivot.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition) - rightHalf;
-            stagedMagazinePivot.SetAsFirstSibling();
+            stagedMagazinePivot.SetSiblingIndex(backLayerImage.transform.GetSiblingIndex() + 1);
             stagedMagazineImage.transform.SetParent(stagedMagazinePivot, false);
             stagedMagazineImage.transform.localPosition = rightHalf;
             stagedMagazineAngle = 12.5f;
@@ -1489,7 +1489,7 @@ namespace GunMinigame
         else    insertedMagazine.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
             insertedMagazine.transform.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition);
             insertedMagazine.transform.localRotation = Quaternion.Euler(0f, 0f, info.magazineRotation);
-            insertedMagazine.transform.SetAsFirstSibling();
+            insertedMagazine.transform.SetSiblingIndex(backLayerImage.transform.GetSiblingIndex() + 1);
             insertedMagazine.color = new Color(1f, 1f, 1f, windowAlpha);
         }
 
