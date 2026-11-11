@@ -4,6 +4,25 @@ namespace NewFirearms
     {
         internal uint SnapshotRevision;
         private bool hasReceivedSnapshot;
+        private bool? requestedRackState;
+        private float rackRequestTime;
+
+        private bool RequestManualRackIfClient()
+        {
+            if (!Plugin.MultiplayerActive || Together.Net.IsServer) return false;
+            // Rack is asynchronous on clients. Do not enqueue a toggle every UI frame.
+            if (requestedRackState.HasValue && UnityEngine.Time.unscaledTime - rackRequestTime < 1.5f)
+                return true;
+            requestedRackState = !racked;
+            rackRequestTime = UnityEngine.Time.unscaledTime;
+            return RequestHostIfClient(1);
+        }
+
+        internal void ObserveRackSnapshot(bool state)
+        {
+            if (requestedRackState == state) requestedRackState = null;
+        }
+
 
         internal sbyte ChamberSpentAmmo
         {

@@ -353,7 +353,7 @@ namespace NewFirearms
                 if (Plugin.MultiplayerActive) SyncIfHost(6);
                 return;
             }
-            if (manual && Plugin.MultiplayerActive && RequestHostIfClient(1))
+            if (manual && RequestManualRackIfClient())
                 return;
             if (manual)
             {
@@ -754,6 +754,9 @@ namespace NewFirearms
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(true) as Together.SyncInfoGameObjectTracker);
             writer.Put(tracker.syncId);
             writer.Put((byte)action);
+            // Optional trailing target keeps action 1 compatible with older toggle-only peers.
+            if (action == 1 && prop.feedType != FeedKind.Battery)
+                writer.Put(!racked);
             if (action == 0 || action == 8)
             {
                 writer.Put(transform.position.x);

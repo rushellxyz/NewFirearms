@@ -99,6 +99,7 @@ namespace NewFirearms
                     Sound.Play(rshGun.prop.unrackAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
             }
             rshGun.racked = newRack;
+            rshGun.ObserveRackSnapshot(newRack);
 
             if (shouldUpdateSprite)
                 rshGun.UpdateSprite();
@@ -157,7 +158,14 @@ namespace NewFirearms
                 else rshGun.UpdateClientShotState(pb.body, clientGunPosition, halfRecoil);
             }
        else if (1 == action)
-                rshGun.Rack(manual: true);
+            {
+                // Old clients omit the target and retain the original toggle behavior.
+                bool? target = reader.AvailableBytes > 0 ? (bool?)reader.GetBool() : null;
+                if (rshGun.prop.feedType != FeedKind.Battery && target.HasValue && rshGun.racked == target.Value)
+                    rshGun.SyncIfHost();
+                else
+                    rshGun.Rack(manual: true);
+            }
        else if (2 == action)
             {
                 reader.Get(out ushort ontoSyncId);
