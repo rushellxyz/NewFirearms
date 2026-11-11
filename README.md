@@ -6,6 +6,7 @@ It is splitted into 3 pieces:
  - Ship - .json and .pngs of builtin guns for json loader
  
 
+ - AAAAAAA This repo is such a mess
 
 
 
