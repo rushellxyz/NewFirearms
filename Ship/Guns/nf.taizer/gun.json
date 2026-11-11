@@ -53,7 +53,7 @@
     "batteryDrainPerRetract": 0.025,
     "needRetract": true,
     "desiredGasTime": 0.1,
-    "fireModes": [ 0, 2, ],
+    "fireModes": [ 2 ],
     "magazineType": [ "taizer", ],
     "magazineTexturesPath": { "nf.taizermag": "taizermag", },
     "normalTexturePath": "default",

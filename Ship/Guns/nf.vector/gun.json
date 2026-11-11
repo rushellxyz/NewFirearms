@@ -118,7 +118,7 @@
         },
     ],
     "desiredGasTime": 0.11,
-    "fireModes": [ 0, 2, 3, ],
+    "fireModes": [ 3 ],
     "magazineType": [ "smg", ],
     "barrelOffset": 0.5,
 

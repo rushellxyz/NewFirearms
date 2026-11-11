@@ -138,7 +138,7 @@
         },
     ],
     "desiredGasTime": 0,
-    "fireModes": [ 0, 2, ],
+    "fireModes": [ 2 ],
 
     "barrelOffset": 0.5,
 

@@ -36,7 +36,7 @@
         }
     ],
 
-    "fireModes": [ 0, 1, ],
+    "fireModes": [ 1 ],
     "magazineType": [ "grenade" ],
     "barrelOffset": 0.0,
 

@@ -88,7 +88,7 @@
         },
     ],
 
-    "fireModes": [ 0, 1, ],
+    "fireModes": [ 1 ],
     "magazineType": [  ],
 
     "normalTexturePath": "normal",

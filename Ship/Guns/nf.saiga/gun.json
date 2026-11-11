@@ -118,7 +118,7 @@
         },
     ],
 
-    "fireModes": [ 0, 1, ],
+    "fireModes": [ 1 ],
     "magazineType": [ "saiga" ],
     "barrelOffset": 1.0,
 

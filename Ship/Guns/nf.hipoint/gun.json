@@ -136,7 +136,7 @@
         },
     ],
     "desiredGasTime": 0.075,
-    "fireModes": [ 0, 2, ],
+    "fireModes": [ 2 ],
     "magazineType": [ "hipoint", ],
     "barrelOffset": 0.5,
 

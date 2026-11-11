@@ -146,7 +146,7 @@
         },
     ],
     "desiredGasTime": 0.08,
-    "fireModes": [ 0, 3, ],
+    "fireModes": [ 3 ],
     "magazineType": [ "glock17", "smg", ],
     "barrelOffset": 1,
 
