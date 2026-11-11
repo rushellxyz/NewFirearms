@@ -1,5 +1,7 @@
 {
   "other": {
+    "gamesetgunminigame.togglewindow": "Toggle gun minigame window",
+    "gamesetgunminigame.togglewindowdsc": "Open or close the gun minigame window.",
     "gamesetgunminigame.useminigame": "Gun minigame",
     "gamesetgunminigame.useminigamedsc": "Use minigame for gun handling?",
     "runsetgunminigame.alwaysmarksman": "Always marksman",

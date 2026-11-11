@@ -19,6 +19,7 @@ namespace GunMinigame
     {
         public static bool standalone = false;
         public static bool useMinigame = true;
+        internal const string WindowToggleBind = "gunminigame.togglewindow";
 
         public static PlayerSpecies GetPlayerSpecies()
             => GetPlayerSpecies(PlayerCamera.main != null ? PlayerCamera.main.body : null);
@@ -120,6 +121,12 @@ namespace GunMinigame
                     Plugin.useMinigame = Settings.Get<SettingBool>("gunminigame.useminigame").value;
                 },
                 category = Setting.SettingCategory.Game,
+            });
+            __result.Add(new SettingKeybind
+            {
+                name = Plugin.WindowToggleBind,
+                value = KeyCode.H,
+                category = Setting.SettingCategory.Input,
             });
         }
     }

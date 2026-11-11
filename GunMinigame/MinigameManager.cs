@@ -942,6 +942,9 @@ namespace GunMinigame
                 shouldResetHandSprite = true;
                 return;
             }
+            if (!IsAnyGameUIOpen() && Input.GetKeyDown(KeyBinds.GetBind(Plugin.WindowToggleBind)))
+                HideShow();
+
             Item it = PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot);
             HandleLaser();
             HandleFireModeImage();
