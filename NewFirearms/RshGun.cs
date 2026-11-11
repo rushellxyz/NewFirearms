@@ -285,7 +285,8 @@ namespace NewFirearms
                 body.Ragdoll();
             // even more bug fix vanila one line below
             body.eyeScareTime = Mathf.Max(body.eyeScareTime, 1f);
-            body.hearingLoss += info.loudness * ((body.hearingLoss > 20f) ? 0.2f : 1f);
+            if (!body.HasHearingProtection())
+                body.hearingLoss += info.loudness * ((body.hearingLoss > 20f) ? 0.2f : 1f);
             it.condition -= info.conditionLoss;
             body.armsAnimator.SetFloat("gunangle", body.armsAnimator.GetFloat("gunangle") + muzzleRise * MUZZLE_RISE_MODIFIER);
             if (PlayerCamera.main.body == shooter && GunMinigame.Plugin.useMinigame)
