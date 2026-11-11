@@ -124,6 +124,7 @@ namespace GunMinigame
         public float coverYPosition;
         public bool chargingHandle;
         public bool closeOnMagazineInsert;
+        public bool ejectMagazineOnFullRack;
         public bool p90reload;
         public float inertiaHandXPosition = -0.3f;
         public float inertiaHandYPosition = -0.05f;
@@ -138,6 +139,9 @@ namespace GunMinigame
 
     public partial class MinigameManager : MonoBehaviour
     {
+        private bool automatedRackAction;
+        private bool automatedMagazineRemoval;
+        private bool magazineReleasedAtRear;
         private Item stagedMagazineItem;
         private Image stagedMagazineImage;
         private Transform stagedMagazinePivot;
@@ -1195,6 +1199,7 @@ namespace GunMinigame
             AttachHandToSlider();
             UpdateBackLayerTransform();
             UpdateBarrelTransform();
+            UpdateRearMagazineRelease();
             if (!active || info == null || !info.rackByRotation || info.mosynStyleRack) return;
             // Run after both RotatingSlider.Update and the automated rack coroutine.
             // Keep the sprites as siblings to preserve their separate render layers.
@@ -1248,18 +1253,76 @@ namespace GunMinigame
             if (rack)
                 StartCoroutine(AnimateMarksmanRack());
             else if (!string.IsNullOrEmpty(gun.CurrentMag()))
-                StartCoroutine(AnimateMarksmanMagazineRemoval());
+                StartCoroutine(info.ejectMagazineOnFullRack
+                    ? AnimateMarksmanRack(ejectMagazine: true)
+                    : AnimateMarksmanMagazineRemoval());
         }
 
-        private IEnumerator AnimateMarksmanRack()
+        private void UpdateRearMagazineRelease()
+        {
+            if (info == null || !info.ejectMagazineOnFullRack ||
+                automatedRackAction && !automatedMagazineRemoval ||
+                !(holdsSlide || automatedRackAction ||
+                  info.pumpOutsideWindow && supportGripHeld && outsidePumpRequired))
+            {
+                magazineReleasedAtRear = false;
+                return;
+            }
+            float rear = info.sliderMinimumPosition;
+            float position = info.rackByRotation && !info.mosynStyleRack
+                ? rear + Mathf.DeltaAngle(rear, sliderFrontImage.transform.localEulerAngles.z)
+                : sliderFrontImage.transform.localPosition.x;
+            float tolerance = Mathf.Max(0.001f, Mathf.Abs(rear - info.sliderMaximumPosition) * 0.001f);
+            bool atRear = Mathf.Abs(position - rear) <= tolerance;
+            if (atRear && !magazineReleasedAtRear)
+            {
+                // Latch before requesting the action: a multiplayer host may reply later.
+                magazineReleasedAtRear = true;
+                if (!string.IsNullOrEmpty(gun.CurrentMag())) MagRemoveButton();
+            }
+            else if (!atRear)
+                magazineReleasedAtRear = false;
+        }
+
+        private float MarksmanRearPosition(bool ejectMagazine)
+        {
+            if (!info.ejectMagazineOnFullRack || ejectMagazine)
+                return info.sliderMinimumPosition;
+            // Cycle past the opening threshold while keeping clear of the magazine release.
+            float threshold = SliderRange.Clamp(info.unrackedToRacked,
+                info.sliderMinimumPosition, info.sliderMaximumPosition);
+            float target = Mathf.Lerp(threshold, info.sliderMinimumPosition, 0.5f);
+            float margin = Mathf.Abs(info.sliderMaximumPosition - info.sliderMinimumPosition) * 0.01f;
+            if (Mathf.Abs(target - info.sliderMinimumPosition) < margin)
+                target = Mathf.MoveTowards(info.sliderMinimumPosition, info.sliderMaximumPosition, margin);
+            return target;
+        }
+
+        private IEnumerator AnimateMarksmanRack(bool ejectMagazine = false)
+        {
+            automatedRackAction = true;
+            automatedMagazineRemoval = ejectMagazine;
+            try
+            {
+                yield return AnimateMarksmanRackMotion(ejectMagazine);
+            }
+            finally
+            {
+                automatedRackAction = false;
+                automatedMagazineRemoval = false;
+            }
+        }
+
+        private IEnumerator AnimateMarksmanRackMotion(bool ejectMagazine)
         {
             if (info.mosynStyleRack)
             {
-                yield return AnimateMosynRack();
+                yield return AnimateMosynRack(ejectMagazine);
                 yield break;
             }
             automatedHandAction = true;
             bool wasRacked = gun.IsRacked();
+            bool targetRacked = ejectMagazine || !wasRacked;
             Vector3 gripPoint = GetMarksmanRackGripPoint();
             Vector3 sliderPosition = sliderFrontImage.transform.TransformPoint(gripPoint);
             Vector2 belowSlider = new Vector2(sliderPosition.x, sliderPosition.y - Screen.height * 0.08f);
@@ -1269,9 +1332,10 @@ namespace GunMinigame
             yield return MoveAutomatedHand(new Vector2(sliderPosition.x, sliderPosition.y), 0.09f);
 
             float startPosition = sliderFrontImage.transform.localPosition.x;
-            float targetPosition = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
+            float targetPosition = targetRacked ? MarksmanRearPosition(ejectMagazine) : info.sliderMaximumPosition;
             float startAngle = sliderFrontImage.transform.localEulerAngles.z;
-            float targetAngle = wasRacked ? info.unrackedIdlePosition : info.rackedIdlePosition;
+            float targetAngle = !targetRacked ? info.unrackedIdlePosition
+                : info.ejectMagazineOnFullRack ? MarksmanRearPosition(ejectMagazine) : info.rackedIdlePosition;
             handImage.sprite = MinigameBase.main.handSprites[2];
             RotatingSlider rotatingSlider = sliderFrontImage.GetComponent<RotatingSlider>();
             if (info.rackByRotation)
@@ -1279,7 +1343,7 @@ namespace GunMinigame
 
             const float duration = 0.12f;
             float elapsed = 0f;
-            bool rackRequested = false;
+            bool rackRequested = wasRacked == targetRacked;
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
@@ -1319,6 +1383,7 @@ namespace GunMinigame
                 sliderLastXPos = targetPosition;
             }
 
+            if (ejectMagazine) UpdateRearMagazineRelease();
             handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
             Vector2 belowEnd = handPos + Vector2.down * (Screen.height * 0.08f);
             yield return MoveAutomatedHand(belowEnd, 0.09f);

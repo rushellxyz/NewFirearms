@@ -5,3 +5,7 @@ Dragging a linear slider remains directly controlled by the pointer. Empty-magaz
 Automated rack and hand animations use smooth acceleration/deceleration over their existing durations. The back slider, chamber preview, and `backLayerFollowsSlider` layer follow the animated pose. Switching guns initializes the new gun directly in its own pose.
 
 Animation does not change fire rate, magazine contents, or multiplayer packet layouts. Automatic cycling remains controlled by the gun/host; a manual charging-handle return requests closing only when its animated position crosses the existing closing threshold.
+
+Set `minigame.ejectMagazineOnFullRack` to `true` to eject the magazine when the slider reaches its fully rearward endpoint (`sliderMinimumPosition`). It defaults to `false`. This applies to manual pulls, marksman hotkeys, rotating bolts, and Mosin-style bolts; ordinary idle poses and firing animations do not eject magazines. The request is sent once while the slider stays at the rear, using the normal magazine-removal action and multiplayer authorization.
+
+With `ejectMagazineOnFullRack` enabled, the marksman rack hotkey stops short of the full rear endpoint and keeps the magazine inserted. The unload hotkey grips the bolt and pulls it fully rearward to eject the magazine instead of reaching for the magazine itself. If the action is already open, unloading leaves it open. Without the option, both hotkey animations keep their existing behavior.

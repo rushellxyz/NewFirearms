@@ -20,7 +20,7 @@ def main():
         raise FileNotFoundError(f"Missing standalone resources: {content / 'Resources'}")
     for path in (content / "Resources").rglob("*.png"):
         files[path.relative_to(content).as_posix()] = path
-    for gun in ("pistol", "shotgun", "rifle"):
+    for gun in ("pistol", "shotgun", "rifle", "makeshiftrifle"):
         folder = content / "Guns" / gun
         config = folder / "gun.json"
         if not config.is_file():

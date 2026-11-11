@@ -17,6 +17,7 @@ namespace GunMinigame
             LoadGun("pistol", "9mmround", root, loadSprite, cache, warning);
             LoadGun("shotgun", "12gauge", root, loadSprite, cache, warning);
             LoadGun("rifle", "556round", root, loadSprite, cache, warning);
+            LoadGun("makeshiftrifle", "9mmround", root, loadSprite, cache, warning);
         }
 
         private static void LoadGun(string id, string ammo, string root, Func<string, Sprite> loadSprite,

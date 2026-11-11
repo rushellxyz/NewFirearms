@@ -2,7 +2,7 @@
 
 Extract the archive into the game's directory, keeping its `BepInEx/plugins` structure. It contains `GunMinigame.dll` and the `GunMinigame` content folder. BepInEx is required. NewFirearms, CUCoreLib, Together, and Gunsaw Genetics are not required by this plugin. Do not install a second copy of GunMinigame.dll alongside the bundled one.
 
-The standalone UI supports **vanilla pistol, shotgun, and rifle only**. Makeshiftrifle and other weapons retain their existing UI. Its source configs and PNGs live independently in `GunMinigame/Guns/` and `GunMinigame/Resources/` in this repository. These were imported from the standalone archive, with shared images already stored under local `Shared/` paths. Packaging reads these folders directly and does not read or regenerate content from `Ship/`, so standalone edits are preserved independently of NewFirearms.
+The standalone UI supports **vanilla pistol, shotgun, rifle, and makeshiftrifle**. Other weapons retain their existing UI. Its source configs and PNGs live independently in `GunMinigame/Guns/` and `GunMinigame/Resources/` in this repository. These were imported from the standalone archive, with shared images already stored under local `Shared/` paths. Packaging reads these folders directly and does not read or regenerate content from `Ship/`, so standalone edits are preserved independently of NewFirearms.
 
 Edit `GunMinigame/Guns/<id>/gun.json` in the repository, or `BepInEx/plugins/GunMinigame/Guns/<id>/gun.json` in an installed copy, to configure the UI. Only its minigame configuration and UI sprite paths are read; damage, firing modes, and other NewFirearms weapon settings are not applied.
 

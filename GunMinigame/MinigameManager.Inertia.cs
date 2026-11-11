@@ -21,6 +21,7 @@ namespace GunMinigame
 
         private void ResetInertia()
         {
+            magazineReleasedAtRear = false;
             chargingHandleReturnPending = false;
             chargingHandleCloseRequested = false;
             ResetOutsidePump();

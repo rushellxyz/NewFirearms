@@ -111,7 +111,7 @@ namespace GunMinigame
             sliderLastXPos = position.x;
         }
 
-        private IEnumerator AnimateMosynRack()
+        private IEnumerator AnimateMosynRack(bool ejectMagazine)
         {
             EnsureMosynRack();
             if (mosynRequestedRacked.HasValue) yield break;
@@ -119,6 +119,7 @@ namespace GunMinigame
             try
             {
                 bool wasRacked = gun.IsRacked();
+                bool targetRacked = ejectMagazine || !wasRacked;
                 Vector3 gripPoint = GetMarksmanRackGripPoint();
                 Vector2 sliderPosition = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handPos = sliderPosition + Vector2.down * (Screen.height * 0.08f);
@@ -129,15 +130,16 @@ namespace GunMinigame
                 // Lift before any horizontal travel, then slide to the requested end.
                 yield return MoveMosynSlider(new Vector2(mosynMotion.X, MosynLift), gripPoint, 0.08f);
                 mosynMotion.SetPose(mosynMotion.X, false);
-                float targetX = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
+                float targetX = targetRacked ? MarksmanRearPosition(ejectMagazine) : info.sliderMaximumPosition;
                 yield return MoveMosynSlider(new Vector2(targetX, MosynLift), gripPoint, 0.12f);
                 mosynMotion.SetPose(targetX, false);
-                if (wasRacked)
+                if (!targetRacked)
                 {
                     yield return MoveMosynSlider(new Vector2(targetX, 0f), gripPoint, 0.08f);
                     mosynMotion.SetPose(targetX, true);
                 }
-                RequestMosynRack(!wasRacked);
+                RequestMosynRack(targetRacked);
+                if (ejectMagazine) UpdateRearMagazineRelease();
 
                 handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
                 yield return MoveAutomatedHand(handPos + Vector2.down * (Screen.height * 0.08f), 0.09f);
