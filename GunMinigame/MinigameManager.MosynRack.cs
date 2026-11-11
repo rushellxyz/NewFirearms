@@ -123,24 +123,24 @@ namespace GunMinigame
                 Vector2 sliderPosition = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handPos = sliderPosition + Vector2.down * (Screen.height * 0.08f);
                 handTransform.position = handPos;
-                yield return MoveAutomatedHand(sliderPosition, 0.045f);
+                yield return MoveAutomatedHand(sliderPosition, 0.09f);
                 handImage.sprite = MinigameBase.main.handSprites[2];
 
                 // Lift before any horizontal travel, then slide to the requested end.
-                yield return MoveMosynSlider(new Vector2(mosynMotion.X, MosynLift), gripPoint, 0.04f);
+                yield return MoveMosynSlider(new Vector2(mosynMotion.X, MosynLift), gripPoint, 0.08f);
                 mosynMotion.SetPose(mosynMotion.X, false);
                 float targetX = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
-                yield return MoveMosynSlider(new Vector2(targetX, MosynLift), gripPoint, 0.06f);
+                yield return MoveMosynSlider(new Vector2(targetX, MosynLift), gripPoint, 0.12f);
                 mosynMotion.SetPose(targetX, false);
                 if (wasRacked)
                 {
-                    yield return MoveMosynSlider(new Vector2(targetX, 0f), gripPoint, 0.04f);
+                    yield return MoveMosynSlider(new Vector2(targetX, 0f), gripPoint, 0.08f);
                     mosynMotion.SetPose(targetX, true);
                 }
                 RequestMosynRack(!wasRacked);
 
                 handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
-                yield return MoveAutomatedHand(handPos + Vector2.down * (Screen.height * 0.08f), 0.045f);
+                yield return MoveAutomatedHand(handPos + Vector2.down * (Screen.height * 0.08f), 0.09f);
             }
             finally
             {

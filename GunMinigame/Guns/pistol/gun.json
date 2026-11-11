@@ -6,10 +6,10 @@
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",
-
-
-
-
+        "inertiaHandXPosition": -0.35,
+        "inertiaHandYPosition": 0.05,
+        "inertiaBarrelXPosition": -0.15,
+        "inertiaBarrelYPosition": 0.24,
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
