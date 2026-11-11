@@ -585,6 +585,15 @@ namespace GunMinigame
             gunBase.transform.localPosition = Vector3.zero;
             gunBase.transform.localScale = Vector3.one;
 
+            // Hope that wont break anything
+            sliderBackImage = new GameObject("MinigameSliderBack").AddComponent<Image>();
+            sliderBackImage.raycastTarget = false;
+            sliderBackImage.transform.SetParent(gunBase.transform);
+            sliderBackImage.transform.localPosition = Vector3.zero;
+            sliderBackImage.transform.localScale = Vector3.one;
+            sliderBackImage.GetComponent<RectTransform>().sizeDelta = size;
+            sliderBackImage.enabled = false;
+
             backLayerImage = new GameObject("MinigameBackLayer").AddComponent<Image>();
             backLayerImage.raycastTarget = false;
             backLayerImage.transform.SetParent(gunBase.transform, false);
@@ -596,14 +605,6 @@ namespace GunMinigame
             chamberedRoundImage.preserveAspect = true;
             chamberedRoundImage.raycastTarget = false;
             chamberedRoundImage.enabled = false;
-
-            sliderBackImage = new GameObject("MinigameSliderBack").AddComponent<Image>();
-            sliderBackImage.raycastTarget = false;
-            sliderBackImage.transform.SetParent(gunBase.transform);
-            sliderBackImage.transform.localPosition = Vector3.zero;
-            sliderBackImage.transform.localScale = Vector3.one;
-            sliderBackImage.GetComponent<RectTransform>().sizeDelta = size;
-            sliderBackImage.enabled = false;
 
             rackedSpecific = new GameObject("MinigameRackedSpecific").AddComponent<Image>();
             rackedSpecific.transform.SetParent(gunBase.transform);
