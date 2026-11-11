@@ -1,10 +1,10 @@
 {
     "minigame":
     {
-        "mainExperimentPath": "uiSpriteExpie",
-        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
-        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
-        "mainDunePath": "uiSpriteDune",
+        "mainExperimentPath": "uiSpriteOn",
+        "mainMilkyTriggerOnPath": "uiSpriteOn",
+        "mainMilkyTriggerOffPath": "uiSpriteOff",
+        "mainDunePath": "uiSpriteOn",
         "sliderFrontPath": "uiSliderFront",
         "inertiaHandXPosition": -0.35,
         "inertiaHandYPosition": 0.05,
