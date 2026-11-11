@@ -11,6 +11,12 @@ namespace GunMinigame
         internal bool HalfRecoil { get; private set; }
         internal bool FiredDuringUpdate;
 
+        // чем меньшк просишь нейронку тем она тупее
+        public void Update()
+        {
+            if (CanAct() && gun.safe) PlayerCamera.main.GunToggleSafety();
+        }
+
         internal void Initialize(GunScript source, Item sourceItem, MinigameInfo sourceInfo)
         {
             gun = source;
