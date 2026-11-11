@@ -31,7 +31,7 @@
         "magazinesOffset": 0.04,
         "maximumMagazines": 2,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.036,
+        "casingXPosition": -0.034,
         "casingYPosition": 0.07,
         "casingsPath": [ "uiEjectCasing", "uiEject556round" ],
         "resizeMagazine": true,
