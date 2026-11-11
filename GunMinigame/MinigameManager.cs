@@ -240,6 +240,7 @@ namespace GunMinigame
         public Vector2 sliderHoldOffset;
         public GameObject canvas;
         public GameObject uiBase;
+        private RectTransform windowClip;
         public GameObject gunBase;
         public GameObject maskBase;
         public Image mainImage;
@@ -409,6 +410,7 @@ namespace GunMinigame
             }
             if (null == uiBase)
                 PrepareGunUi();
+            UpdateWindowHandedness();
             PlayerCamera.main.gunMenu.SetActive(false);
 
             info = newInfo;
@@ -555,15 +557,21 @@ namespace GunMinigame
             size = new Vector3((670f/2560f)*Screen.width, (335f/1440f)*Screen.height);
             fitSize = new Vector3(Screen.width, size.y);
 
+            // RectMask2D requires a positive canvas-space rectangle, even when
+            // the window contents are mirrored for the other leading hand.
+            windowClip = new GameObject("MinigameWindowClip", typeof(RectTransform)).GetComponent<RectTransform>();
+            windowClip.SetParent(uiBase.transform, false);
+            windowClip.sizeDelta = size;
+            windowClip.gameObject.AddComponent<RectMask2D>();
+
             maskBase = new GameObject("MaskBase");
-            maskBase.transform.SetParent(uiBase.transform);
+            maskBase.transform.SetParent(windowClip, false);
             maskBase.transform.localPosition = Vector3.zero;
             maskBase.transform.localScale = Vector3.one;
             uiImage = maskBase.AddComponent<Image>();
             uiImage.sprite = backgroundSprite;
             uiImage.GetComponent<RectTransform>().sizeDelta = size;
             maskBase.AddComponent<ImageHoverror>();
-            maskBase.AddComponent<RectMask2D>();
             maskBase.AddComponent<MinigameVisualization>().Initialize(this);
             maskBase.AddComponent<MinigameCoordinates>().Initialize(this);
             maskBase.AddComponent<MinigameJamVisual>().Initialize(this);
@@ -930,8 +938,23 @@ namespace GunMinigame
             mainImage.sprite = info.GetMainSprite(Plugin.GetPlayerSpecies(), handIsHovered);
         }
 
+        private void UpdateWindowHandedness()
+        {
+            if (uiBase == null || PlayerCamera.main == null || body == null) return;
+            float direction = body.handSlot == 1 ? -1f : 1f;
+            Vector3 scale = uiBase.transform.localScale;
+            scale.x = Mathf.Abs(scale.x) * direction;
+            uiBase.transform.localScale = scale;
+            // Cancel the reflection for clipping, then restore it for the contents.
+            windowClip.localScale = new Vector3(direction, 1f, 1f);
+            maskBase.transform.localScale = new Vector3(direction, 1f, 1f);
+            bandolierBase.transform.localScale = new Vector3(direction, 1f, 1f);
+            hideShowButton.transform.localScale = new Vector3(direction, 1f, 1f);
+        }
+
         public void Update()
         {
+            UpdateWindowHandedness();
             UpdateSupportGrip();
             if (!active)
             {

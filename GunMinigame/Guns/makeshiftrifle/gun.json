@@ -14,9 +14,8 @@
         "rackedIdlePosition": -0.015,
         "ammosInHandPaths": [ "uiHand9mmround" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
+        "ammosInPtrPaths": [ "uiPtr9mmround" ],
         "canUseFannyPack": true,
-        "magReleasePath": "uiReleaseTrigger",
         "magazinePaths": { "smallmagazine": "uiSmallmagazine" },
         "ammosInMagazinePaths": { "smallmagazine": [ "uiSmallmagazine9mmround" ] },
         "magazineXPosition": -0.078,
@@ -30,17 +29,8 @@
         "casingXPosition": -0.073,
         "casingYPosition": 0.064,
         "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
-        "unrackedOnlyPath": "uiUnrackedOnly",
-        "rackedOnlyPath": "uiRackedOnly",
-        "rackedOnlyWhenMagazineEmpty": true,
-        "chargingHandle": true,
-        "closeOnMagazineInsert": true,
         "roundHeight": 2.5,
         "backLayerPath": "uiBackLayer",
-        "backLayerFollowsSlider": true,
-        "barrelPath": "uiBarrel",
-        "barrelXPosition": -0.055,
-        "barrelYPosition": 0.051
     }
 
 }

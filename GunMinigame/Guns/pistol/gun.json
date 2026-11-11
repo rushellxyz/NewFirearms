@@ -8,7 +8,7 @@
         "sliderFrontPath": "uiSliderFront",
         "inertiaHandXPosition": -0.35,
         "inertiaHandYPosition": 0.05,
-        "inertiaBarrelXPosition": -0.15,
+        "inertiaBarrelXPosition": -0.18,
         "inertiaBarrelYPosition": 0.24,
         "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
