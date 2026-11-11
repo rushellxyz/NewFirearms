@@ -4,11 +4,11 @@ namespace GunMinigame
 {
     internal static class SliderAnimation
     {
-        // Reach about 95% of an idle-pose transition in 0.1 seconds, independently of frame rate.
+        // Reach about 95% of an idle-pose transition in 0.05 seconds, independently of frame rate.
         internal static float Move(float current, float target, float deltaTime)
         {
             if (deltaTime <= 0f) return current;
-            float value = Mathf.Lerp(current, target, 1f - Mathf.Exp(-30f * deltaTime));
+            float value = Mathf.Lerp(current, target, 1f - Mathf.Exp(-60f * deltaTime));
             return Mathf.Abs(value - target) <= 0.001f ? target : value;
         }
 

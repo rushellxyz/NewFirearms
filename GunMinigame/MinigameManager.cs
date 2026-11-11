@@ -1240,7 +1240,7 @@ namespace GunMinigame
             handPos = belowSlider;
             handTransform.position = handPos;
             handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
-            yield return MoveAutomatedHand(new Vector2(sliderPosition.x, sliderPosition.y), 0.09f);
+            yield return MoveAutomatedHand(new Vector2(sliderPosition.x, sliderPosition.y), 0.045f);
 
             float startPosition = sliderFrontImage.transform.localPosition.x;
             float targetPosition = wasRacked ? info.sliderMaximumPosition : info.sliderMinimumPosition;
@@ -1251,7 +1251,7 @@ namespace GunMinigame
             if (info.rackByRotation)
                 rotatingSlider.automated = true;
 
-            const float duration = 0.12f;
+            const float duration = 0.06f;
             float elapsed = 0f;
             bool rackRequested = false;
             while (elapsed < duration)
@@ -1295,7 +1295,7 @@ namespace GunMinigame
 
             handImage.sprite = MinigameBase.main.handSprites[UnityEngine.Random.Range(0, 2)];
             Vector2 belowEnd = handPos + Vector2.down * (Screen.height * 0.08f);
-            yield return MoveAutomatedHand(belowEnd, 0.09f);
+            yield return MoveAutomatedHand(belowEnd, 0.045f);
             automatedHandAction = false;
         }
 
