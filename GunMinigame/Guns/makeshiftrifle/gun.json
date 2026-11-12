@@ -37,6 +37,7 @@
         "magazineBackLayerPath": "uiMagazineBackLayer",
         "grabTrigger": "uiGrabTrigger",
         "grabType": "Vertical",
+        "magazineDragPath": "uiDragTrigger",
     }
 
 }
