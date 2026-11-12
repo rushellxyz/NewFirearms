@@ -64,6 +64,8 @@ namespace GunMinigame
             supportGripPoint = info.grabOnSlider
                 ? new Vector3(info.inertiaBarrelXPosition * size.x, info.inertiaBarrelYPosition * size.y)
                 : anchor.InverseTransformPoint(pointer);
+            if (!info.grabOnSlider)
+                supportGripPoint.x += size.x * 0.05f;
             supportGripHeld = true;
             gun.SetHalfRecoil(true);
             UpdateSupportGrip();

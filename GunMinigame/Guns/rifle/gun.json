@@ -38,6 +38,8 @@
         "chargingHandle": true,
         "blockSlideWithEmptyMagazine": true,
         "roundHeight": 2.5,
-        "doubleCasingLift": true
+        "doubleCasingLift": true,
+        "grabTrigger": "uiGrabTrigger",
+        "grabType": "Flat",
     }
 }
