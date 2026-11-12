@@ -22,7 +22,7 @@
         "magReleasePath": "uiMagRelease",
         "magazinePaths": { "riflemagazine": "uiRiflemag" },
         "ammosInMagazinePaths": { "riflemagazine": [ "uiRiflemag556round" ] },
-        "magazineXPosition": -0.036,
+        "magazineXPosition": -0.032,
         "magazineYPosition": -0.024,
         "magazineRotation": 0,
         "magazineXSpeed": 0.00,
