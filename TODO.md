@@ -14,3 +14,4 @@ TODO List - Agents stay away unless stated otherwise
  - Random +/- fib on taizer shot
  - Fix client loading mag geting false error
  - Add the muzzle flash onto new firearms engine
+ - Make guards use various weapons, or at least drop loaded
