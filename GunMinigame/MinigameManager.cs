@@ -554,7 +554,7 @@ namespace GunMinigame
             if (null == backgroundSprite)
                 PrepareResources();
             if (null == canvas)
-                canvas = GameObject.Find("Canvas");
+                canvas = PlayerCamera.main.gunMenu.GetComponentInParent<Canvas>(true).rootCanvas.gameObject;
             uiBase = new GameObject("GunMinigame");
             uiBase.transform.SetParent(canvas.transform);
             uiBase.transform.localPosition = new Vector3(0f, -415f, 0f);
