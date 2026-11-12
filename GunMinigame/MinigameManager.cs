@@ -1771,7 +1771,9 @@ namespace GunMinigame
         {
             if (holdingInMinigame == null) return;
             Transform held = holdingInMinigame.transform;
-            held.position = handTransform.TransformPoint(new Vector3(-195f, 600f));
+            // The ammo offset is relative to the hand rect's center, not its fingertip pivot.
+            Vector2 gripOffset = handTransform.rect.center + new Vector2(-195f, 600f);
+            held.position = handTransform.TransformPoint(gripOffset);
             held.localRotation = handTransform.localRotation;
             // Keep the round's proportions even on a non-16:9 screen.
             float scale = Mathf.Abs(handTransform.localScale.y);
