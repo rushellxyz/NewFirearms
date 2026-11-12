@@ -9,7 +9,7 @@ namespace NewFirearms
 
         private bool RequestManualRackIfClient()
         {
-            if (!Plugin.MultiplayerActive || Together.Net.IsServer) return false;
+            if (!Plugin.MultiplayerActive || Plugin.IsHost()) return false;
             // Rack is asynchronous on clients. Do not enqueue a toggle every UI frame.
             if (requestedRackState.HasValue && UnityEngine.Time.unscaledTime - rackRequestTime < 1.5f)
                 return true;
