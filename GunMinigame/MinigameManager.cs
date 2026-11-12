@@ -108,6 +108,7 @@ namespace GunMinigame
         public float roundHeight;
         public Sprite[] casingsSprite;
         public bool casingsDrop;
+        public bool doubleCasingLift;
         public bool fitMainSprite;
         public bool fitLaserImage;
         public bool resizeMagazine;

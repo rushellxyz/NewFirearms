@@ -38,5 +38,6 @@
         "chargingHandle": true,
         "blockSlideWithEmptyMagazine": true,
         "roundHeight": 2.5,
+        "doubleCasingLift": true
     }
 }

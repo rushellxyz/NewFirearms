@@ -53,7 +53,8 @@ namespace GunMinigame
             casing.visual = image;
             casing.owner = manager;
             bool drop = manager.info != null && manager.info.casingsDrop;
-            casing.inertia = Vector3.ClampMagnitude(inherited, 400) + new Vector3(Random.Range(-190f, -110f), drop ? 0f : Random.Range(210f, 290f));
+            float liftMultiplier = manager.info != null && manager.info.doubleCasingLift ? 2f : 1f;
+            casing.inertia = Vector3.ClampMagnitude(inherited, 400) + new Vector3(Random.Range(-190f, -110f), drop ? 0f : Random.Range(210f, 290f) * liftMultiplier);
             casing.spin = Random.Range(-620f, 620f);
         }
 
