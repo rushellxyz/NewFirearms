@@ -936,9 +936,9 @@ namespace GunMinigame
                 hideSprite = Plugin.LoadResource("minigameHide");
                 showSprite = Plugin.LoadResource("minigameShow");
             }
-            ammoSelectorSprite = Plugin.LoadResource("minigameAmmoSelector");
+            ammoSelectorSprite = Plugin.standalone ? null : Plugin.LoadResource("minigameAmmoSelector");
             ammoSelectWindowSprite = Plugin.LoadResource("minigameAmmoSelectWindow");
-            ammoSelectCursorSprite = Plugin.LoadResource("minigameAmmoSelectCursor");
+            ammoSelectCursorSprite = Plugin.standalone ? null : Plugin.LoadResource("minigameAmmoSelectCursor");
             fannyPackSprite = Plugin.LoadResource("minigameFannyPack");
             fannyPackZipSprite = Plugin.LoadResource("minigameFannyPackZip");
             traumarigBackgroundSprite = Plugin.LoadResource("minigameTraumarigBackground");

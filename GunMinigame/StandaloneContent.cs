@@ -81,8 +81,8 @@ namespace GunMinigame
                 game.ammos = new[] { ammo };
                 game.ammosInHand = First(game.ammosInHandPaths);
                 game.ammosInPtr = First(game.ammosInPtrPaths);
-                string[] icons = json["bulletsSpritesPath"]?.ToObject<string[]>();
-                game.ammosIcons = new[] { Sprite(icons != null && icons.Length > 2 ? icons[2] : "COPY__Resources/" + ammo) };
+                // Ammo selection is hidden in standalone; its shared UI slots need no icon.
+                game.ammosIcons = new Sprite[1];
                 if (game.casingsPath == null || game.casingsPath.Length < 2)
                     throw new InvalidDataException("casingsPath needs a spent casing and a vanilla round sprite.");
                 string spent = (string)json["ammoTypes"]?[0]?["minigameCasingSprite"];
