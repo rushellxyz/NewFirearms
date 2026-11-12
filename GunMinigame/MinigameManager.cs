@@ -553,7 +553,7 @@ namespace GunMinigame
 
             laserToggleTrigger.enabled = null != laser;
             laserToggleTrigger.GetComponent<Button>().interactable = null != laser;
-            uiBase.SetActive(true);
+            uiBase.SetActive(!IsCutsceneOrEnding());
         }
 
         void PrepareGunUi()
@@ -991,6 +991,16 @@ namespace GunMinigame
                 shouldResetHandSprite = true;
                 return;
             }
+            bool showWindow = !IsCutsceneOrEnding();
+            if (uiBase.activeSelf != showWindow) uiBase.SetActive(showWindow);
+            if (!showWindow)
+            {
+                EndSupportGrip();
+                holdsSlide = false;
+                handIsHovered = false;
+                ReleaseSliderPull();
+                return;
+            }
             if (!IsAnyGameUIOpen() && Input.GetKeyDown(KeyBinds.GetBind(Plugin.WindowToggleBind)))
                 HideShow();
 
@@ -1215,7 +1225,7 @@ namespace GunMinigame
 
         private void LateUpdate()
         {
-            if (!active) return;
+            if (!active || IsCutsceneOrEnding()) return;
             UpdateChamberVisual();
             HandleInertia();
             AttachHandToSlider();
@@ -1961,8 +1971,14 @@ namespace GunMinigame
             }
         }
 
+        private static bool IsCutsceneOrEnding()
+            => WorldGeneration.world != null && WorldGeneration.world.cutsceneActive ||
+                PlayerCamera.main != null && PlayerCamera.main.endScreen != null &&
+                PlayerCamera.main.endScreen.gameObject.activeInHierarchy;
+
         public static bool IsAnyGameUIOpen()
         {
+            if (IsCutsceneOrEnding()) return true;
             if (ConsoleScript.instance != null && ConsoleScript.instance.active)
             {
                 return true;
