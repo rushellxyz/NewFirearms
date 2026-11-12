@@ -415,6 +415,13 @@ namespace GunMinigame
                 }
                 mosynInitialized = false;
                 ClearStagedMagazine();
+                // Weapons can share a magazine type but use different artwork and placement.
+                magSyncIgnoreTime = 0f;
+                insertedMagazineType = null;
+                if (insertedMagazine != null)
+                    UnityEngine.Object.Destroy(insertedMagazine.gameObject);
+                insertedMagazine = null;
+                shouldUpdateMagazineCount = true;
                 shouldntRefreshBandolierCount = false;
             }
             if (null == uiBase)
