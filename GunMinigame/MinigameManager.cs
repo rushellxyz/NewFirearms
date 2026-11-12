@@ -59,6 +59,7 @@ namespace GunMinigame
             (grabOnSlider ? sliderFrontSprite != null : grabTriggerSprite != null);
         public Sprite sliderBackSprite;
         public Sprite backLayerSprite;
+        public Sprite magazineBackLayerSprite;
         public bool backLayerFollowsSlider;
         public Sprite barrelSprite;
         public float barrelXPosition;
@@ -194,7 +195,7 @@ namespace GunMinigame
             stagedMagazinePivot = new GameObject("StagedMagazinePivot").transform;
             stagedMagazinePivot.SetParent(gunBase.transform, false);
             stagedMagazinePivot.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition) - rightHalf;
-            stagedMagazinePivot.SetSiblingIndex(backLayerImage.transform.GetSiblingIndex() + 1);
+            PlaceMagazineLayer(stagedMagazinePivot);
             stagedMagazineImage.transform.SetParent(stagedMagazinePivot, false);
             stagedMagazineImage.transform.localPosition = rightHalf;
             stagedMagazineAngle = 12.5f;
@@ -241,6 +242,7 @@ namespace GunMinigame
         private Image chamberedRoundImage;
         public Image sliderBackImage;
         private Image backLayerImage;
+        private Image magazineBackLayerImage;
 
         public Vector2 sliderHoldOffset;
         public GameObject canvas;
@@ -461,6 +463,10 @@ namespace GunMinigame
             sliderBackImage.enabled = info.sliderBackSprite != null;
             backLayerImage.sprite = info.backLayerSprite;
             backLayerImage.enabled = info.backLayerSprite != null;
+            magazineBackLayerImage.sprite = info.magazineBackLayerSprite;
+            magazineBackLayerImage.enabled = info.magazineBackLayerSprite != null;
+            if (insertedMagazine != null) PlaceMagazineLayer(insertedMagazine.transform);
+            if (stagedMagazinePivot != null) PlaceMagazineLayer(stagedMagazinePivot);
             barrelImage.sprite = info.barrelSprite;
             barrelImage.enabled = info.barrelSprite != null && (!info.rackByRotation || info.mosynStyleRack);
             receiverTrigger.sprite = info.receiverTrigger;
@@ -598,6 +604,12 @@ namespace GunMinigame
             sliderBackImage.transform.localScale = Vector3.one;
             sliderBackImage.GetComponent<RectTransform>().sizeDelta = size;
             sliderBackImage.enabled = false;
+
+            magazineBackLayerImage = new GameObject("MinigameMagazineBackLayer").AddComponent<Image>();
+            magazineBackLayerImage.transform.SetParent(gunBase.transform, false);
+            magazineBackLayerImage.rectTransform.sizeDelta = size;
+            magazineBackLayerImage.raycastTarget = false;
+            magazineBackLayerImage.enabled = false;
 
             chamberedRoundImage = new GameObject("MinigameChamberedRound").AddComponent<Image>();
             chamberedRoundImage.transform.SetParent(gunBase.transform, false);
@@ -1490,8 +1502,17 @@ namespace GunMinigame
         else    insertedMagazine.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
             insertedMagazine.transform.localPosition = new Vector3(info.magazineXPosition, info.magazineYPosition);
             insertedMagazine.transform.localRotation = Quaternion.Euler(0f, 0f, info.magazineRotation);
-            insertedMagazine.transform.SetSiblingIndex(backLayerImage.transform.GetSiblingIndex() + 1);
+            PlaceMagazineLayer(insertedMagazine.transform);
             insertedMagazine.color = new Color(1f, 1f, 1f, windowAlpha);
+        }
+
+        private void PlaceMagazineLayer(Transform magazine)
+        {
+            Transform behind = info.magazineBackLayerSprite != null
+                ? magazineBackLayerImage.transform : backLayerImage.transform;
+            // Move from the end so inserting after the anchor works from either side.
+            magazine.SetAsLastSibling();
+            magazine.SetSiblingIndex(behind.GetSiblingIndex() + 1);
         }
 
         void MagRemoveButton()
@@ -1850,6 +1871,7 @@ namespace GunMinigame
             sliderFrontImage.color = new Color(1f, 1f, 1f, info.frontSliderInvisble ? 0f : windowAlpha);
             sliderBackImage.color = colo;
             backLayerImage.color = colo;
+            magazineBackLayerImage.color = colo;
             barrelImage.color = colo;
             rackedSpecific.color = colo;
             hideShowButton.color = colo;

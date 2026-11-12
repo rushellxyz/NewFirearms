@@ -191,6 +191,7 @@ namespace NewFirearms
                 "minigame.grabType", "must be Flat, Curved, or Vertical (0, 1, or 2).");
             Sprite(game.sliderBackPath, "minigame.sliderBackPath");
             Sprite(game.backLayerPath, "minigame.backLayerPath");
+            Sprite(game.magazineBackLayerPath, "minigame.magazineBackLayerPath");
             Sprite(game.barrelPath, "minigame.barrelPath");
             Require(string.IsNullOrWhiteSpace(game.barrelPath) || !game.rackByRotation || game.mosynStyleRack,
                 "minigame.barrelPath", "requires a linear slider; disable rackByRotation.");

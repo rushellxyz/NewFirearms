@@ -12,6 +12,7 @@ namespace GunMinigame
         public string grabTrigger;
         public string sliderBackPath;
         public string backLayerPath;
+        public string magazineBackLayerPath;
         public string barrelPath;
         public string rackedOnlyPath;
         public string unrackedOnlyPath;

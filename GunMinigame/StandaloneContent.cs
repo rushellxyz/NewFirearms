@@ -59,6 +59,7 @@ namespace GunMinigame
                 game.sliderFrontSprite = Sprite(game.sliderFrontPath);
                 game.sliderBackSprite = Sprite(game.sliderBackPath);
                 game.backLayerSprite = Sprite(game.backLayerPath);
+                game.magazineBackLayerSprite = Sprite(game.magazineBackLayerPath);
                 game.barrelSprite = Sprite(game.barrelPath);
                 game.rackedOnlySprite = Sprite(game.rackedOnlyPath);
                 game.unrackedOnlySprite = Sprite(game.unrackedOnlyPath);
