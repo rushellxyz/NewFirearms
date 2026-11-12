@@ -71,6 +71,8 @@ namespace NewFirearms
             // не они не omit т
             // Older snapshots omit the chamber's spent-ammo type.
             rshGun.ChamberSpentAmmo = /*reader.AvailableBytes > 0 ?*/ reader.GetSByte() /*: (sbyte)-1*/;
+            /*// Older snapshots predate the laser flag and keep the saved/default state.
+            if (reader.AvailableBytes > 0)*/ rshGun.ApplyLaserState(reader.GetBool());
             bool silentMagazineRemoval = (extraData & RshGun.SilentMagazineRemoval) != 0;
             extraData = (byte)(extraData & ~RshGun.SilentMagazineRemoval);
             if (!silentMagazineRemoval && (magazineRemoved || 1 == extraData))
@@ -110,7 +112,7 @@ namespace NewFirearms
             reader.Get(out ushort syncId);
             reader.Get(out byte action);
 
-            if (9 <= action)
+            if (10 <= action)
             {
                 NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.unknown"));
                 return;
@@ -191,6 +193,8 @@ namespace NewFirearms
                 rshGun.ClearJam();
        else if (7 == action)
                 rshGun.ToggleFlashlight();
+       else if (9 == action && reader.AvailableBytes > 0)
+                rshGun.SetLaserEnabled(reader.GetBool());
         }
 
         public static void ReceiveShoot(LiteNetLib.Utils.NetDataReader reader)

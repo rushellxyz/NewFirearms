@@ -198,8 +198,7 @@ namespace NewFirearms
 
         public void Start()
         {
-            if (TryGetComponent<LaserPointer>(out var laser))
-                laser.enabled = laserEnabled;
+            ApplyLaserState(laserEnabled);
             jamming = WorldGeneration.GetRunSettingBool("newfirearms.gunjamming");
             if (prop.feedType == FeedKind.Battery) racked = false;
             if (!UsesRetraction()) ApplyTetherState(false, Vector2.zero);
@@ -745,7 +744,7 @@ namespace NewFirearms
         * 4 - Toggle fire mode
         * 5 - Stop shooting
         */
-        public bool RequestHostIfClient(byte action, Item second=null)
+        public bool RequestHostIfClient(byte action, Item second=null, bool? laserState=null)
         {
             if (!Plugin.MultiplayerActive) return false;
             if (Together.Net.IsServer)
@@ -754,6 +753,7 @@ namespace NewFirearms
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(true) as Together.SyncInfoGameObjectTracker);
             writer.Put(tracker.syncId);
             writer.Put((byte)action);
+            if (action == 9) writer.Put(laserState ?? laserEnabled);
             // Optional trailing target keeps action 1 compatible with older toggle-only peers.
             if (action == 1 && prop.feedType != FeedKind.Battery)
                 writer.Put(!racked);
@@ -816,6 +816,7 @@ namespace NewFirearms
             GunNetwork.WriteTetherState(this, writer);
             writer.Put(FlashlightEnabled);
             writer.Put(ChamberSpentAmmo);
+            writer.Put(laserEnabled);
 
             LiteNetLib.DeliveryMethod method;
             if (reliable)
@@ -888,6 +889,7 @@ namespace NewFirearms
             {6, "newfirearms.action.clear_jam"},
             {7, "newfirearms.action.toggle_flashlight"},
             {8, "newfirearms.action.shoot"}, // Position/support update during host-driven burst/automatic fire.
+            {9, "newfirearms.action.toggle_laser"},
         };
     }
 }

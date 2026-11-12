@@ -10,7 +10,6 @@ TODO List - Agents stay away unless stated otherwise
  - Port that funny thing where you can shoot yourself onto new firearms engine
  - Refactor, like, the whole gun minigame
  - Fix phantom mags in fannypack for clients
- - Fix laser state desync
  - Fix bug when switch hands between famas and gloсk18
  - Random +/- fib on taizer shot
  - Fix client loading mag geting false error
