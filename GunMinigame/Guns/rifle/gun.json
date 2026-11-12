@@ -40,6 +40,8 @@
         "roundHeight": 2.5,
         "doubleCasingLift": true,
         "grabTrigger": "uiGrabTrigger",
-        "grabType": "Flat",
+        "grabType": "Curved",
+        "grabHandXPosition": 0.01,
+        "grabHandYPosition": 0.06
     }
 }

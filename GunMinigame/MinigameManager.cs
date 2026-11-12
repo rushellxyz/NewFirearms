@@ -54,6 +54,8 @@ namespace GunMinigame
         public Sprite grabHandSprite;
         public GrabType grabType;
         public bool grabOnSlider;
+        public float? grabHandXPosition;
+        public float? grabHandYPosition;
         public bool pumpOutsideWindow;
         public bool HasSupportGrip => grabHandSprite != null &&
             (grabOnSlider ? sliderFrontSprite != null : grabTriggerSprite != null);
@@ -1210,6 +1212,7 @@ namespace GunMinigame
             UpdateChamberVisual();
             HandleInertia();
             AttachHandToSlider();
+            UpdateHeldAmmoTransform();
             UpdateBackLayerTransform();
             UpdateBarrelTransform();
             UpdateRearMagazineRelease();
@@ -1751,15 +1754,28 @@ namespace GunMinigame
             ignoreNextMouseKey = true;
             handImage.sprite = MinigameBase.main.handSprites[3];
             holdingInMinigame = new GameObject("HoldingAmmo");
-            holdingInMinigame.transform.SetParent(handTransform);
-            holdingInMinigame.transform.localScale = Vector3.one;
-            holdingInMinigame.transform.localPosition = new Vector3(-195f, 600f);
+            // A child Image always draws over its parent's hand Image.
+            holdingInMinigame.transform.SetParent(handTransform.parent, false);
+            holdingInMinigame.transform.SetSiblingIndex(handTransform.GetSiblingIndex());
             Image holdingInMinigameImage = holdingInMinigame.AddComponent<Image>();
             holdingInMinigameImage.sprite = info.ammosInHand[info.dCurrentAmmo];
             holdingInMinigameImage.raycastTarget = false;
-            holdingInMinigame.GetComponent<RectTransform>().sizeDelta = new Vector2(80f, 160f);
+            holdingInMinigameImage.preserveAspect = true;
+            holdingInMinigameImage.rectTransform.sizeDelta = new Vector2(80f, 160f);
+            UpdateHeldAmmoTransform();
             receiverTrigger.gameObject.SetActive(true);
             handIsInBandolier = true;
+        }
+
+        private void UpdateHeldAmmoTransform()
+        {
+            if (holdingInMinigame == null) return;
+            Transform held = holdingInMinigame.transform;
+            held.position = handTransform.TransformPoint(new Vector3(-195f, 600f));
+            held.localRotation = handTransform.localRotation;
+            // Keep the round's proportions even on a non-16:9 screen.
+            float scale = Mathf.Abs(handTransform.localScale.y);
+            held.localScale = new Vector3(scale, scale, 1f);
         }
 
         public void BandolierExitPtr()

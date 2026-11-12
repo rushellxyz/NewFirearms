@@ -36,8 +36,10 @@
         "backLayerPath": "uiBackLayer",
         "magazineBackLayerPath": "uiMagazineBackLayer",
         "grabTrigger": "uiGrabTrigger",
-        "grabType": "Vertical",
+        "grabType": "Curved",
         "magazineDragPath": "uiDragTrigger",
+        "grabHandXPosition": 0.01,
+        "grabHandYPosition": 0.07
     }
 
 }
