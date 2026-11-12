@@ -115,7 +115,9 @@ namespace NewFirearms
                 {
                     tetherGun?.AttachTether(raycastHit2D.transform, raycastHit2D.point);
                     ApplyAdditionalStun(info, raycastHit2D.collider);
-                    component.SetHealth(component.GetHealth() - (component.animal ? info.animalDamage * num : info.structureDamage * num));
+                    // Indestructible NPCs keep their collider after CheckDamage runs once.
+                    // Further hits must not drive their displayed health below zero.
+                    component.SetHealth(Mathf.Max(0f, component.GetHealth() - (component.animal ? info.animalDamage * num : info.structureDamage * num)));
                     if (component.animal)
                     {
                         component.gameObject.SendMessage("AnimalHit", info.animalDamage * num);
@@ -161,6 +163,11 @@ namespace NewFirearms
                     vector = raycastHit2D.point;
                     break;
                 }
+                // The native shooting path starts the lab escape on a scientist hit,
+                // independently of BuildingEntity health or PvP settings.
+                if (raycastHit2D.transform.gameObject.CompareTag("Scientist") && EndLabScript.instance != null)
+                    EndLabScript.instance.BeginEscapeSequence();
+
                 if ((bool)raycastHit2D.rigidbody)
                 {
                     raycastHit2D.rigidbody.AddForceAtPosition(dir * info.structureDamage, raycastHit2D.point, ForceMode2D.Impulse);
