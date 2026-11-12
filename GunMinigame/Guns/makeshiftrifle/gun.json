@@ -34,7 +34,9 @@
         "casingsPath": [ "uiEjectCasing", "uiEject9mmround" ],
         "roundHeight": 2.5,
         "backLayerPath": "uiBackLayer",
-        "magazineBackLayerPath": "uiMagazineBackLayer"
+        "magazineBackLayerPath": "uiMagazineBackLayer",
+        "grabTrigger": "uiGrabTrigger",
+        "grabType": "Vertical",
     }
 
 }
