@@ -27,6 +27,7 @@
         "nf.12gaugeslug",
     ],
 
+    "nonEmptySpritePath": "nonempty",
 
 
 }

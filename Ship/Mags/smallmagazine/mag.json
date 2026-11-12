@@ -26,6 +26,7 @@
         "nf.9mmvenomus",
     ],
 
+    "nonEmptySpritePath": "nonempty",
 
 
 }

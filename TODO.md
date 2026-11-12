@@ -6,7 +6,7 @@ TODO List - Agents stay away unless stated otherwise
  - And hot reloading!
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
- - Make all magazines use nonEmptySpritePath
+ - Make gun minigfame standalone have empty magazine sprites
  - Port that funny thing where you can shoot yourself onto new firearms engine
  - Refactor, like, the whole gun minigame
  - Fix phantom mags in fannypack for clients
