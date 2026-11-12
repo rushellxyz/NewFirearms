@@ -14,7 +14,8 @@ namespace GunMinigame
         // чем меньшк просишь нейронку тем она тупее
         public void Update()
         {
-            if (CanAct() && gun.safe) PlayerCamera.main.GunToggleSafety();
+            if (CanAct() && gun.safe && null == info.fireToggleTrigger && !info.sliderFireToggle)
+                PlayerCamera.main.GunToggleSafety();
         }
 
         internal void Initialize(GunScript source, Item sourceItem, MinigameInfo sourceInfo)
