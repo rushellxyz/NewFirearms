@@ -5,14 +5,14 @@ namespace NewFirearms
 {
     public partial class RshGun
     {
-        private enum GunJam : byte { None, Ejection, Feed }
+        public enum GunJam : byte { None, Ejection, Feed }
 
         [JsonProperty("jam")]
-        private GunJam jam;
+        public GunJam jam;
         [JsonProperty("jamChamber")]
-        private ushort jamChamber;
+        public ushort jamChamber;
         [JsonProperty("jamAmmo")]
-        private sbyte jamAmmo = -1;
+        public sbyte jamAmmo = -1;
 
         public bool IsJammed => jam != GunJam.None;
 

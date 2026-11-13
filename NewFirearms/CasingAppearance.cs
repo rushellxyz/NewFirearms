@@ -10,9 +10,9 @@ namespace NewFirearms
         internal const string MessageId = "NewFirearms_CasingAppearance";
 
         [JsonProperty("gunId")]
-        private string gunId;
+        public string gunId;
         [JsonProperty("ammoIndex")]
-        private sbyte ammoIndex;
+        public sbyte ammoIndex;
 
         private Sprite sprite;
         private SpriteRenderer spriteRenderer;

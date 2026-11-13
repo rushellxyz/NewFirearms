@@ -46,6 +46,7 @@ namespace NewFirearms
 
         internal event Action<GameObject> MagazineCreated; // :hmm:
 
+        // SaveSystem restores JSON members via Type.GetField(name), which only finds public fields.
         [JsonProperty("existed")]
         public bool existed;
         [JsonProperty("mag")]
@@ -53,7 +54,7 @@ namespace NewFirearms
         [JsonProperty("rounds")]
         public List<sbyte> rounds = new List<sbyte>();
         [JsonProperty("spentAmmoTypes")]
-        private Dictionary<int, sbyte> spentAmmoTypes = new Dictionary<int, sbyte>();
+        public Dictionary<int, sbyte> spentAmmoTypes = new Dictionary<int, sbyte>();
         [JsonProperty("fireMode")]
         public byte fireMode;
         [JsonProperty("racked")]

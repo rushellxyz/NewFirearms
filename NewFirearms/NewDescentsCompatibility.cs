@@ -50,8 +50,8 @@ namespace NewFirearms
                 {
                     var contents = target.GetComponent<ThornslingerMagazineContents>() ??
                         target.gameObject.AddComponent<ThornslingerMagazineContents>();
-                    contents.MagazineId = source.id;
-                    contents.RoundIds = roundIds;
+                    contents.magazineId = source.id;
+                    contents.roundIds = roundIds;
                     magazine.rounds.Clear();
                     magazine.enabled = false;
                 }
@@ -79,10 +79,10 @@ namespace NewFirearms
                 int count = Mathf.Clamp(__instance.roundsInMag, 0, definition.capacity);
                 var rounds = Enumerable.Repeat((sbyte)ammoIndex, count).ToList();
                 var stored = __instance.GetComponent<ThornslingerMagazineContents>();
-                if (stored != null && stored.MagazineId == id && stored.RoundIds != null && stored.RoundIds.Count >= count)
+                if (stored != null && stored.magazineId == id && stored.roundIds != null && stored.roundIds.Count >= count)
                 {
                     // Native chambering consumes rounds from the front of the magazine.
-                    rounds = stored.RoundIds.Skip(stored.RoundIds.Count - count)
+                    rounds = stored.roundIds.Skip(stored.roundIds.Count - count)
                         .Select(round => definition.ammoTypes.IndexOf(round))
                         .Select(index => (sbyte)(index >= 0 ? index : ammoIndex)).ToList();
                 }
@@ -106,8 +106,8 @@ namespace NewFirearms
                 }
                 if (stored != null)
                 {
-                    stored.MagazineId = null;
-                    stored.RoundIds = null;
+                    stored.magazineId = null;
+                    stored.roundIds = null;
                 }
                 __instance.hasMag = false;
                 __instance.roundsInMag = 0;
@@ -130,8 +130,8 @@ namespace NewFirearms
     internal sealed class ThornslingerMagazineContents : MonoBehaviour
     {
         [JsonProperty("magazineId")]
-        internal string MagazineId;
+        public string magazineId;
         [JsonProperty("roundIds")]
-        internal List<string> RoundIds;
+        public List<string> roundIds;
     }
 }

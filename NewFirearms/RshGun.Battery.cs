@@ -7,7 +7,7 @@ namespace NewFirearms
     public partial class RshGun
     {
         [JsonProperty("magazineBatteries")]
-        internal List<BatteryCell> magazineBatteries = new List<BatteryCell>();
+        public List<BatteryCell> magazineBatteries = new List<BatteryCell>();
 
         private bool HasBatteryPower => HasBatteryCharge(prop.batteryDrainPerShot);
 
