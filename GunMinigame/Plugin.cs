@@ -112,6 +112,10 @@ namespace GunMinigame
     {
         static void Postfix(ref List<Setting> __result)
         {
+            if (!__result.Exists(setting => setting.name == "marksmanrack"))
+                __result.Add(new SettingKeybind { name = "marksmanrack", value = KeyCode.E, category = Setting.SettingCategory.Input });
+            if (!__result.Exists(setting => setting.name == "marksmanunload"))
+                __result.Add(new SettingKeybind { name = "marksmanunload", value = KeyCode.G, category = Setting.SettingCategory.Input });
             __result.Add(new SettingBool
             {
                 name = "gunminigame.useminigame",

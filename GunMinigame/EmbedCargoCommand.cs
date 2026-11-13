@@ -18,7 +18,8 @@ namespace GunMinigame
                         Debug.LogWarning("[GunMinigame] nf_embedcargo requires an active player.");
                         return;
                     }
-                    PlayerCamera.main.body.EmbedCargo();
+                    if (!NativeGameFeatures.TryEmbedCargo(PlayerCamera.main.body))
+                        Debug.LogWarning("[GunMinigame] nf_embedcargo is unavailable in this game version.");
                 }, new Dictionary<int, List<string>>()));
         }
     }

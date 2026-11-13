@@ -1,5 +1,9 @@
 {
   "other": {
+    "gamesetmarksmanrack": "Marksman: operate bolt",
+    "gamesetmarksmanrackdsc": "Operate the held gun's bolt using marksman handling.",
+    "gamesetmarksmanunload": "Marksman: eject magazine",
+    "gamesetmarksmanunloaddsc": "Remove the held gun's magazine using marksman handling.",
     "gamesetgunminigame.togglewindow": "Toggle gun minigame window",
     "gamesetgunminigame.togglewindowdsc": "Open or close the gun minigame window.",
     "gamesetgunminigame.useminigame": "Gun minigame",

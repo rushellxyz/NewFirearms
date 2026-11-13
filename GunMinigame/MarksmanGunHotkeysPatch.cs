@@ -8,10 +8,12 @@ namespace GunMinigame
     [HarmonyPatch(typeof(PlayerCamera), "HandleInput")]
     internal static class MarksmanGunHotkeysPatch
     {
+        private static bool nativeRackHotkey, nativeUnloadHotkey;
         // Route Milky's native hotkey calls through the animation, without also
         // operating the gun immediately. Other callers keep the normal gun API.
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            nativeRackHotkey = nativeUnloadHotkey = false;
             var rack = AccessTools.Method(typeof(PlayerCamera), nameof(PlayerCamera.GunRack));
             var unload = AccessTools.Method(typeof(PlayerCamera), nameof(PlayerCamera.GunEjectMag));
             var rackHotkey = AccessTools.Method(typeof(MarksmanGunHotkeysPatch), nameof(RackHotkey));
@@ -20,6 +22,8 @@ namespace GunMinigame
             {
                 if (instruction.Calls(rack) || instruction.Calls(unload))
                 {
+                    if (instruction.Calls(rack)) nativeRackHotkey = true;
+                    else nativeUnloadHotkey = true;
                     var replacement = new CodeInstruction(instruction);
                     replacement.opcode = OpCodes.Call;
                     replacement.operand = instruction.Calls(rack) ? rackHotkey : unloadHotkey;
@@ -32,16 +36,16 @@ namespace GunMinigame
 
         static void Postfix(PlayerCamera __instance)
         {
-            // Milky already reads these bindings in HandleInput. Extend that
-            // behavior to the other species when Always marksman is enabled.
+            // The demo has no native marksman input. The release already reads
+            // these bindings for Milky; avoid executing those actions twice.
             if (__instance != PlayerCamera.main || __instance.body == null ||
-                Plugin.GetPlayerSpecies(__instance.body) == PlayerSpecies.Milky ||
                 !Plugin.IsMarksman(__instance.body))
                 return;
 
-            if (Input.GetKeyDown(KeyBinds.GetBind("marksmanrack")))
+            bool milky = Plugin.GetPlayerSpecies(__instance.body) == PlayerSpecies.Milky;
+            if ((!milky || !nativeRackHotkey) && Input.GetKeyDown(KeyBinds.GetBind("marksmanrack")))
                 RackHotkey(__instance);
-            if (Input.GetKeyDown(KeyBinds.GetBind("marksmanunload")))
+            if ((!milky || !nativeUnloadHotkey) && Input.GetKeyDown(KeyBinds.GetBind("marksmanunload")))
                 UnloadHotkey(__instance);
         }
 

@@ -165,8 +165,7 @@ namespace NewFirearms
                 }
                 // The native shooting path starts the lab escape on a scientist hit,
                 // independently of BuildingEntity health or PvP settings.
-                if (raycastHit2D.transform.gameObject.CompareTag("Scientist") && EndLabScript.instance != null)
-                    EndLabScript.instance.BeginEscapeSequence();
+                NativeGameFeatures.NotifyScientistHit(raycastHit2D.transform.gameObject);
 
                 if ((bool)raycastHit2D.rigidbody)
                 {

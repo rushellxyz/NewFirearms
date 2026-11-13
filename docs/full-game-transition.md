@@ -1,5 +1,9 @@
 # Full-game transition audit
 
+## Demo runtime compatibility — 2026-11-13
+
+Release-built DLLs now guard release-only API with capability checks and NoInlining helpers. See [demo compatibility](demo-compatibility.md) for fallbacks and validation. The earlier audit below describes the migration at the time it was performed.
+
 ## Full release verified on 2026-11-09
 
 `/home/rushell/Documents/CU` now contains the full-release game assemblies. Both projects compile against these assemblies in Debug and Release.

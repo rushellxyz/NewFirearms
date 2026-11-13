@@ -23,3 +23,5 @@ python3 scripts/build_standalone.py
 ```
 
 The output is `dist/GunMinigame-Standalone.zip`. Build dependencies use the game's local assemblies as configured in `GunMinigame.csproj`; the archive ships no game or optional-mod DLLs.
+
+The same release-built DLL also supports the demo API using guarded native feature checks. See [demo compatibility](demo-compatibility.md) in the repository for details.

@@ -1987,7 +1987,7 @@ namespace GunMinigame
         }
 
         private static bool IsCutsceneOrEnding()
-            => WorldGeneration.world != null && WorldGeneration.world.cutsceneActive ||
+            => NativeGameFeatures.IsCutsceneActive() ||
                 PlayerCamera.main != null && PlayerCamera.main.endScreen != null &&
                 PlayerCamera.main.endScreen.gameObject.activeInHierarchy;
 
