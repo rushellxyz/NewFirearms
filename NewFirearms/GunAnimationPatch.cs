@@ -63,7 +63,8 @@ namespace NewFirearms
 
         private static float LerpGunAim(float current, float target, float amount, Body body)
         {
-            if (HeldCustomGun(body) == null) return Mathf.Lerp(current, target, amount);
+            if (HeldCustomGun(body) == null || RshGun.IsPiggybackAiming(body))
+                return Mathf.Lerp(current, target, amount);
             // Match CU2's demo: aim from the torso and let the arms pose orient the gun.
             float facing = body.isRight ? 1f : -1f;
             Transform torso = body.limbs[1].transform;
@@ -77,7 +78,7 @@ namespace NewFirearms
         private static void SetGunAimAngles(Transform target, Vector3 angles, Body body)
         {
             Item held = HeldCustomGun(body);
-            if (held != null && target == held.transform)
+            if (held != null && target == held.transform && !RshGun.IsPiggybackAiming(body))
                 target.localEulerAngles = new Vector3(0f, 0f, held.Stats.slotRotation);
             else
                 target.eulerAngles = angles;

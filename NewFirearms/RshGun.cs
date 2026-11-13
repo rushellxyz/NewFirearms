@@ -154,40 +154,6 @@ namespace NewFirearms
             }
         }
 
-        public void FixedUpdate()
-        {   // TODO Move that into Update?
-            if (!Plugin.MultiplayerActive)
-                return;
-            if (null == transform.parent || !transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot) || slot.slot != slot.body.handSlot)
-                return;
-            if (!IsOnBack(slot.body))
-                return;
-            Limb limb = slot.limb;
-            float num = (limb.body.isRight ? 1f : (-1f));
-            Vector2 vector = (Vector2)limb.body.targetLookPos - limb.rb.position;
-            if (vector.sqrMagnitude > 2f)
-            {
-                float num2 = Mathf.Atan2(vector.x, 0f - vector.y) * 57.29578f;
-                float f = num2 - limb.rb.rotation;
-                float num3 = 400f * Time.fixedDeltaTime * limb.totalForce * Mathf.Clamp01(1f - gasTime * 4f);
-                float angle = Mathf.MoveTowardsAngle(limb.rb.rotation, num2, num3 * (30f + Mathf.Abs(f)));
-                limb.rb.MoveRotation(angle);
-                Limb limb2 = limb.connectedLimbs[0];
-                Limb limb3 = limb2.connectedLimbs[0];
-                limb2.rb.MoveRotation(Mathf.MoveTowardsAngle(limb2.rb.rotation, num2 + 20f * num, num3 * 8f));
-                limb3.rb.MoveRotation(Mathf.MoveTowardsAngle(limb3.rb.rotation, num2 - 20f * num, num3 * 12f));
-                limb.rb.MoveRotation(angle);
-            }
-        }
-
-        bool IsOnBack(Body body)
-        {
-            Together.ScavPlayer plr = Together.ScavPlayer.GetPlayerFromBody(body);
-            if (!Together.NetBody.TryGetNetBodyFromId(plr.playerId, out var netBody))
-                return false;
-            return null != netBody.piggybacking_on;
-        }
-
         public override void LoadDefinition()
         {
             Item item = GetComponent<Item>();

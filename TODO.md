@@ -16,4 +16,3 @@ TODO List - Agents stay away unless stated otherwise
  - Add the muzzle flash onto new firearms engine
  - Make guards use various weapons, or at least drop loaded
  - Escape ending: gurads drop weapons, and may be using other weapons too
- - TEST HOW THE OLD AIMING WORKS WITH MULTIPLAYER
