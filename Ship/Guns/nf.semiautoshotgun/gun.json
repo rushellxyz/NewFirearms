@@ -180,7 +180,7 @@
         "canUseFannyPack": false,
         "casingXPosition": -0.038,
         "casingYPosition": 0.065,
-        "casingsPath": [ "COPY__Guns/nf.saiga/uiCasingEmpty", "COPY__Guns/nf.sawedoff/uiEject12gauge", "COPY__Guns/nf.sawedoff/uiEject12gaugebird", "COPY__Guns/nf.sawedoff/uiEject12gaugeslug" ],
+        "casingsPath": [ "COPY__Guns/nf.sawedoff/uiEjectDefault", "COPY__Guns/nf.sawedoff/uiEject12gauge", "COPY__Guns/nf.sawedoff/uiEject12gaugebird", "COPY__Guns/nf.sawedoff/uiEject12gaugeslug" ],
         "fitMainSprite": true,
         "roundHeight": 3,
     }

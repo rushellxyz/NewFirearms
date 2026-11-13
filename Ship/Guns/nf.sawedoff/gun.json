@@ -189,7 +189,7 @@
         "canUseFannyPack": false,
         "casingXPosition": -0.03,
         "casingYPosition": 0.06,
-        "casingsPath": [ "COPY__Guns/nf.saiga/uiCasingEmpty", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
+        "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
     }
 
 }
