@@ -28,7 +28,7 @@
         "magazineXSpeed": 0.00,
         "magazineYSpeed": -0.525,
         "magazineAnimationTime": 0.2,
-        "magazinesOffset": 0.04,
+        "magazinesOffset": 0.045,
         "maximumMagazines": 2,
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.032,
@@ -42,6 +42,10 @@
         "grabTrigger": "uiGrabTrigger",
         "grabType": "Curved",
         "grabHandXPosition": 0.01,
-        "grabHandYPosition": 0.06
+        "grabHandYPosition": 0.06,
+        "fannyPackMagazinesStartXPosition": 0.045,
+        "fannyPackMagazinesStartYPosition": -0.073,
+        "traumarigMagazinesStartXPosition": 0.013,
+        "traumarigMagazinesStartYPosition": -0.073
     }
 }

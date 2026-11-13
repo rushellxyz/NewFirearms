@@ -103,6 +103,12 @@ namespace GunMinigame
         public float magazineYSpeed;
         public float magazineAnimationTime;
         public float magazinesOffset;
+        public float magazinesStartXPosition = 85f / 2560f;
+        public float magazinesStartYPosition = -60f / 1440f;
+        public float? fannyPackMagazinesStartXPosition;
+        public float? fannyPackMagazinesStartYPosition;
+        public float? traumarigMagazinesStartXPosition;
+        public float? traumarigMagazinesStartYPosition;
         public int maximumMagazines;
         public Sprite magazineDragTrigger;
         public float casingXPosition;
@@ -1590,6 +1596,7 @@ namespace GunMinigame
 
         void HandleFannyPack()
         {
+            // Какой блин activate windows че я писал
             bool activateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("fannypack");
             bool goToSettingsToActivateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("traumarig");
             fannyPack.gameObject.SetActive(activateWindows || goToSettingsToActivateWindows);
@@ -1611,9 +1618,15 @@ namespace GunMinigame
             {
                 MagazineDragTrigger.isHovering = false;
                 shouldUpdateMagazineCount = false;
-                int placed = 0;
-                if (goToSettingsToActivateWindows)
-                    placed = -1;
+                bool traumaRig = !activateWindows && goToSettingsToActivateWindows;
+                int firstIndex = traumaRig ? -1 : 0;
+                int placed = firstIndex;
+                float startX = traumaRig
+                    ? info.traumarigMagazinesStartXPosition ?? info.magazinesStartXPosition - info.magazinesOffset
+                    : info.fannyPackMagazinesStartXPosition ?? info.magazinesStartXPosition;
+                float startY = traumaRig
+                    ? info.traumarigMagazinesStartYPosition ?? info.magazinesStartYPosition
+                    : info.fannyPackMagazinesStartYPosition ?? info.magazinesStartYPosition;
 
                 foreach (Image go in placedMagazines)
                     if (null != go)
@@ -1637,7 +1650,9 @@ namespace GunMinigame
                         transistor.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
                     }
                else     transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
-                    transistor.transform.localPosition = new Vector3(((85f/2560f) + (placed * info.magazinesOffset)) *Screen.width, (-60f/1440f)*Screen.height);
+                    transistor.transform.localPosition = new Vector3(
+                        (startX + (placed - firstIndex) * info.magazinesOffset) * Screen.width,
+                        startY * Screen.height);
                     transistor.sprite = sprite;
                     transistor.alphaHitTestMinimumThreshold = 0.1f;
                     MagazineScript magazine = transistor.gameObject.AddComponent<MagazineScript>();
