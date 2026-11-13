@@ -13,3 +13,5 @@ Inside the existing `minigame` object, configure each pouch separately:
 Each pair places the first visible magazine relative to its pouch center. X uses a fraction of screen width; Y uses a fraction of screen height. Positive X moves the row right; positive Y moves it up. `magazinesOffset` keeps controlling horizontal spacing. Magazine capacities retain their existing behavior.
 
 Omitted/null coordinates fall back independently to the legacy `magazinesStartXPosition` / `magazinesStartYPosition` fields (defaults: 85/2560 and -60/1440). The trauma rig's legacy X also subtracts one `magazinesOffset`, preserving its original placement. Explicit trauma-rig X places its first magazine directly at that coordinate, without that extra shift. Works in bundled and standalone mode.
+
+Set `minigame.traumarigDoublePairSpacing` to `true` to double the gap between pairs of magazines in the trauma rig. With spacing `d = magazinesOffset`, the row positions relative to its start are `0, d, 3d, 4d, 6d, 7d, ...`. The first magazine stays at the configured start. The option defaults to `false`; fanny-pack spacing is unaffected.

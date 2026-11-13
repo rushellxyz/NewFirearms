@@ -109,6 +109,7 @@ namespace GunMinigame
         public float? fannyPackMagazinesStartYPosition;
         public float? traumarigMagazinesStartXPosition;
         public float? traumarigMagazinesStartYPosition;
+        public bool traumarigDoublePairSpacing;
         public int maximumMagazines;
         public Sprite magazineDragTrigger;
         public float casingXPosition;
@@ -1618,7 +1619,7 @@ namespace GunMinigame
                 MagazineDragTrigger.isHovering = false;
                 shouldUpdateMagazineCount = false;
                 bool traumaRig = !activateWindows && goToSettingsToActivateWindows;
-                int firstIndex = traumaRig ? -1 : 0;
+                int firstIndex = traumaRig ? info.maximumMagazines / -2 : 0;
                 int placed = firstIndex;
                 float startX = traumaRig
                     ? info.traumarigMagazinesStartXPosition ?? info.magazinesStartXPosition - info.magazinesOffset
@@ -1649,8 +1650,12 @@ namespace GunMinigame
                         transistor.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
                     }
                else     transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
+                    int rowIndex = placed - firstIndex;
+                    float rowOffset = rowIndex * info.magazinesOffset;
+                    if (traumaRig && info.traumarigDoublePairSpacing)
+                        rowOffset += (rowIndex / 2) * info.magazinesOffset;
                     transistor.transform.localPosition = new Vector3(
-                        (startX + (placed - firstIndex) * info.magazinesOffset) * Screen.width,
+                        (startX + rowOffset) * Screen.width,
                         startY * Screen.height);
                     transistor.sprite = sprite;
                     transistor.alphaHitTestMinimumThreshold = 0.1f;

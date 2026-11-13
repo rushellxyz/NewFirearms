@@ -28,7 +28,7 @@
         "magazineXSpeed": -0.175,
         "magazineYSpeed": -0.525,
         "magazineAnimationTime": 0.2,
-        "magazinesOffset": 0.025,
+        "magazinesOffset": 0.02,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.073,
@@ -44,7 +44,8 @@
         "backLayerFollowsSlider": true,
         "barrelPath": "uiBarrel",
         "barrelXPosition": -0.055,
-        "barrelYPosition": 0.051
+        "barrelYPosition": 0.051,
+        "traumarigDoublePairSpacing": false
     }
 
 }
