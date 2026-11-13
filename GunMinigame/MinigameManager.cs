@@ -1429,8 +1429,81 @@ namespace GunMinigame
             automatedHandAction = false;
         }
 
+        private Sprite marksmanGripSprite;
+        private Vector2 marksmanGripCenter;
+        private bool marksmanGripHasPixels;
+
         private Vector3 GetMarksmanRackGripPoint()
         {
+            Sprite sprite = sliderFrontImage.sprite;
+            if (sprite != marksmanGripSprite)
+            {
+                marksmanGripSprite = sprite;
+                marksmanGripHasPixels = false;
+                if (sprite != null && sprite.texture.isReadable)
+                {
+                    Rect spriteRect = sprite.rect;
+                    Color32[] pixels = sprite.texture.GetPixels32();
+                    int width = Mathf.RoundToInt(spriteRect.width);
+                    int height = Mathf.RoundToInt(spriteRect.height);
+                    int originX = Mathf.RoundToInt(spriteRect.x);
+                    int originY = Mathf.RoundToInt(spriteRect.y);
+                    int minX = width, minY = height, maxX = -1, maxY = -1;
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            // Match the slider's alpha hit-test threshold; ignore transparent padding.
+                            if (pixels[(originY + y) * sprite.texture.width + originX + x].a < 26) continue;
+                            minX = Mathf.Min(minX, x);
+                            minY = Mathf.Min(minY, y);
+                            maxX = Mathf.Max(maxX, x);
+                            maxY = Mathf.Max(maxY, y);
+                        }
+                    }
+                    if (maxX >= minX && maxY >= minY)
+                    {
+                        Vector2 center = new Vector2((minX + maxX + 1f) * 0.5f, (minY + maxY + 1f) * 0.5f);
+                        if (pixels[(originY + Mathf.FloorToInt(center.y)) * sprite.texture.width
+                            + originX + Mathf.FloorToInt(center.x)].a < 26)
+                        {
+                            // A hollow or irregular slider may have a transparent center.
+                            Vector2 nearest = center;
+                            float nearestDistance = float.PositiveInfinity;
+                            for (int y = minY; y <= maxY; y++)
+                            {
+                                for (int x = minX; x <= maxX; x++)
+                                {
+                                    if (pixels[(originY + y) * sprite.texture.width + originX + x].a < 26) continue;
+                                    Vector2 point = new Vector2(x + 0.5f, y + 0.5f);
+                                    float distance = (point - center).sqrMagnitude;
+                                    if (distance >= nearestDistance) continue;
+                                    nearest = point;
+                                    nearestDistance = distance;
+                                }
+                            }
+                            center = nearest;
+                        }
+                        marksmanGripCenter = new Vector2(center.x / width, center.y / height);
+                        marksmanGripHasPixels = true;
+                    }
+                }
+            }
+
+            if (sprite != null && marksmanGripHasPixels)
+            {
+                Rect rect = sliderFrontImage.GetPixelAdjustedRect();
+                if (sliderFrontImage.preserveAspect)
+                {
+                    Vector2 fitted = sprite.rect.size * Mathf.Min(
+                        rect.width / sprite.rect.width, rect.height / sprite.rect.height);
+                    rect.position += Vector2.Scale(rect.size - fitted, sliderFrontImage.rectTransform.pivot);
+                    rect.size = fitted;
+                }
+                return new Vector3(rect.x + marksmanGripCenter.x * rect.width,
+                    rect.y + marksmanGripCenter.y * rect.height);
+            }
+
             Vector3 barrelPosition = gunBase.transform.TransformPoint(new Vector2(
                 info.inertiaBarrelXPosition * size.x, info.inertiaBarrelYPosition * size.y));
             return sliderFrontImage.transform.InverseTransformPoint(barrelPosition);
