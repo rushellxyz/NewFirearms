@@ -200,8 +200,11 @@ namespace NewFirearms
         public static bool Prefix(PlayerCamera __instance)
         {
             if (__instance.body.HoldingItem(__instance.body.handSlot) && __instance.body.GetItem(__instance.body.handSlot).TryGetComponent<RshGun>(out var component))
+            {
                 component.ToggleFireMode();
-            return false;
+                return false;
+            }
+            return true;
         }
     }
 
