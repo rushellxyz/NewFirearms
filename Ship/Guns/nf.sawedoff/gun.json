@@ -160,9 +160,9 @@
 
     "rackSpritePath": "rack",
     "unrackSpritePath": "unrack",
-    "removeMagSpritePath": "removeMag",
+    "removeMagSpritePath": "COPY__Guns/nf.makeshiftpistol/removeMag",
 
-    "fireModesSpritePath": [ "safe", "unsafe", "unsafe", ],
+    "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "COPY__Guns/nf.hipoint/unsafe", "COPY__Guns/nf.hipoint/unsafe", ],
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
     "removeMagazineOnRack": true,
     "minigame":
@@ -189,7 +189,7 @@
         "canUseFannyPack": false,
         "casingXPosition": -0.03,
         "casingYPosition": 0.06,
-        "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
+        "casingsPath": [ "COPY__Guns/nf.saiga/uiCasingEmpty", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
     }
 
 }

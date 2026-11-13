@@ -97,7 +97,7 @@
         {
             "round": "nf.9mmvenomus",
             "casingSprite": "9mmvenomusCasing",
-            "minigameCasingSprite": "uiEject9mmvenomusCasing",
+            "minigameCasingSprite": "uiEject9mmroundCasing",
             "structureDamage": 50,
             "animalDamage": 150,
 
@@ -156,7 +156,7 @@
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",
-        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOnPath": "uiSpriteExpie",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
 

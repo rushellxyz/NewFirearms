@@ -33,8 +33,8 @@
     [
         {
             "round": "12gauge",
-            "casingSprite": "12gaugeCasing",
-            "minigameCasingSprite": "uiEject12gaugeCasing",
+            "casingSprite": "COPY__Guns/nf.sawedoff/12gaugeCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.sawedoff/uiEject12gaugeCasing",
             "structureDamage": 60,
             "animalDamage": 60,
             "playerDamage":
@@ -68,8 +68,8 @@
         },
         {
             "round": "nf.12gaugebird",
-            "casingSprite": "12gaugebirdCasing",
-            "minigameCasingSprite": "uiEject12gaugebirdCasing",
+            "casingSprite": "COPY__Guns/nf.sawedoff/12gaugebirdCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.sawedoff/uiEject12gaugebirdCasing",
             "structureDamage": 14.375,
             "animalDamage": 14.375,
             "playerDamage":
@@ -103,8 +103,8 @@
         },
         {
             "round": "nf.12gaugeslug",
-            "casingSprite": "12gaugeslugCasing",
-            "minigameCasingSprite": "uiEject12gaugeslugCasing",
+            "casingSprite": "COPY__Guns/nf.sawedoff/12gaugeslugCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.sawedoff/uiEject12gaugeslugCasing",
             "structureDamage": 400,
             "animalDamage": 400,
             "playerDamage":
@@ -152,7 +152,7 @@
 
 
 
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "12gaugeIcon", "12gaugebirdIcon", "12gaugeslugIcon" ],
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.sawedoff/12gaugeIcon", "COPY__Guns/nf.sawedoff/12gaugebirdIcon", "COPY__Guns/nf.sawedoff/12gaugeslugIcon" ],
     "magazineTexturesPath": { },
     "minigame":
     {
@@ -174,13 +174,13 @@
         "unrackedToRacked": -0.02,
         "rackedToUnracked": -0.005,
         "rackedIdlePosition": -0.025,
-        "ammosInHandPaths": [ "uiHand12gauge", "uiHand12gaugebird", "uiHand12gaugeslug", ],
+        "ammosInHandPaths": [ "COPY__Guns/nf.sawedoff/uiHand12gauge", "COPY__Guns/nf.sawedoff/uiHand12gaugebird", "COPY__Guns/nf.sawedoff/uiHand12gaugeslug", ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "uiPTR12gauge", "uiPTR12gaugebird", "uiPTR12gaugeslug",  ],
+        "ammosInPtrPaths": [ "COPY__Guns/nf.sawedoff/uiPTR12gauge", "COPY__Guns/nf.sawedoff/uiPTR12gaugebird", "COPY__Guns/nf.sawedoff/uiPTR12gaugeslug",  ],
         "canUseFannyPack": false,
         "casingXPosition": -0.038,
         "casingYPosition": 0.065,
-        "casingsPath": [ "uiEjectDefault", "uiEject12gauge", "uiEject12gaugebird", "uiEject12gaugeslug" ],
+        "casingsPath": [ "COPY__Guns/nf.saiga/uiCasingEmpty", "COPY__Guns/nf.sawedoff/uiEject12gauge", "COPY__Guns/nf.sawedoff/uiEject12gaugebird", "COPY__Guns/nf.sawedoff/uiEject12gaugeslug" ],
         "fitMainSprite": true,
         "roundHeight": 3,
     }

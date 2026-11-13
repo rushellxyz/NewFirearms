@@ -19,8 +19,8 @@
     [
         {
             "round": "556round",
-            "casingSprite": "556roundCasing",
-            "minigameCasingSprite": "uiEject556roundCasing",
+            "casingSprite": "COPY__Guns/makeshiftrifle/556roundCasing",
+            "minigameCasingSprite": "COPY__Guns/makeshiftrifle/uiEject556roundCasing",
             "structureDamage": 250,
             "animalDamage": 250,
             "playerDamage":
@@ -53,8 +53,8 @@
         },
         {
             "round": "nf.556piercing",
-            "casingSprite": "556piercingCasing",
-            "minigameCasingSprite": "uiEject556piercingCasing",
+            "casingSprite": "COPY__Guns/makeshiftrifle/556piercingCasing",
+            "minigameCasingSprite": "COPY__Guns/makeshiftrifle/uiEject556piercingCasing",
             "structureDamage": 300,
             "animalDamage": 200,
             "playerDamage":
@@ -101,7 +101,7 @@
 
 
 
-    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "556roundIcon", "556piercingIcon"],//, "12gaugeslugIcon" ], TODO
+    "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/makeshiftrifle/556roundIcon", "COPY__Guns/makeshiftrifle/556piercingIcon"],//, "12gaugeslugIcon" ], TODO
 
 
 
@@ -120,9 +120,9 @@
         "unrackedToRacked": -0.025,
         "rackedToUnracked": -0.025,
         "rackedIdlePosition": -0.05,
-        "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
+        "ammosInHandPaths": [ "COPY__Guns/makeshiftrifle/uiHand556round", "COPY__Guns/makeshiftrifle/uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
+        "ammosInPtrPaths": [ "COPY__Guns/makeshiftrifle/uiPtr556round", "COPY__Guns/makeshiftrifle/uiPtr556piercing"],//, "",  ], TODO
         "canUseFannyPack": true,
         "magReleasePath": "uiMagReleaseTrigger",
         "magazinePaths": { "riflemagazine": "uiRiflemagazine" },
@@ -137,7 +137,7 @@
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.11,
         "casingYPosition": 0.0575,
-        "casingsPath": [ "uiEject556roundCasing", "uiEject556round", "uiEject556piercing"],//, "uiEject12gaugeslug" ],
+        "casingsPath": [ "COPY__Guns/makeshiftrifle/uiEject556roundCasing", "COPY__Guns/makeshiftrifle/uiEject556round", "COPY__Guns/makeshiftrifle/uiEject556piercing"],//, "uiEject12gaugeslug" ],
         "fitMainSprite": true,
         "resizeMagazine": true,
         "fireTogglePath": "uiFireToggleTrigger",

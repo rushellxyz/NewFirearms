@@ -61,7 +61,7 @@
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",
-        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOnPath": "uiSpriteExpie",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",

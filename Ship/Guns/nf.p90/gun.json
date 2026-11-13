@@ -20,7 +20,7 @@
         {
             "round": "9mmround",
             "casingSprite": "COPY__Guns/nf.glock18/9mmroundCasing",
-            "minigameCasingSprite": "uiEject9mmroundCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.glock18/uiEject9mmroundCasing",
             "structureDamage": 90,
             "animalDamage": 120,
 
@@ -53,7 +53,7 @@
         {
             "round": "nf.9mmhollow",
             "casingSprite": "COPY__Guns/nf.glock18/9mmhollowCasing",
-            "minigameCasingSprite": "uiEject9mmvenomusCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.glock18/uiEject9mmroundCasing",
             "structureDamage": 60,
             "animalDamage": 150,
 
@@ -86,7 +86,7 @@
         {
             "round": "nf.9mmvenomus",
             "casingSprite": "COPY__Guns/nf.glock18/9mmvenomusCasing",
-            "minigameCasingSprite": "uiEject9mmvenomusCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.glock18/uiEject9mmroundCasing",
             "structureDamage": 50,
             "animalDamage": 150,
 
@@ -148,7 +148,7 @@
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",
-        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOnPath": "uiSpriteExpie",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",
@@ -159,9 +159,9 @@
         "unrackedToRacked": -0.0125,
         "rackedToUnracked": -0.0125,
         "rackedIdlePosition": -0.025,
-        "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
+        "ammosInHandPaths": [ "COPY__Guns/nf.glock18/uiHand9mmround", "COPY__Guns/nf.glock18/uiHand9mmhollow", "COPY__Guns/nf.glock18/uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
+        "ammosInPtrPaths": [ "COPY__Guns/nf.glock18/uiPtr9mmround", "COPY__Guns/nf.glock18/uiPtr9mmhollow", "COPY__Guns/nf.glock18/uiPtr9mmvenomus" ],
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
         "magazinePaths": { "nf.p90mag": "uiP90mag" },
@@ -177,7 +177,7 @@
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.1,
         "casingYPosition": -0.01,
-        "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
+        "casingsPath": [ "COPY__Guns/nf.glock18/uiEject9mmroundCasing", "COPY__Guns/nf.glock18/uiEject9mmround", "COPY__Guns/nf.glock18/uiEject9mmhollow", "COPY__Guns/nf.glock18/uiEject9mmvenomus" ],
         "resizeMagazine": true,
         "fitMainSprite": true,
         "p90reload": true,

@@ -48,7 +48,7 @@
         {
             "round": "9mmround",
             "casingSprite": "COPY__Guns/nf.glock18/9mmroundCasing",
-            "minigameCasingSprite": "uiEject9mmroundCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.glock18/uiEject9mmroundCasing",
             "structureDamage": 81,
             "animalDamage": 108,
 
@@ -81,7 +81,7 @@
         {
             "round": "nf.9mmhollow",
             "casingSprite": "COPY__Guns/nf.glock18/9mmhollowCasing",
-            "minigameCasingSprite": "uiEject9mmvenomusCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.glock18/uiEject9mmroundCasing",
             "structureDamage": 54,
             "animalDamage": 135,
 
@@ -114,7 +114,7 @@
         {
             "round": "nf.9mmvenomus",
             "casingSprite": "COPY__Guns/nf.glock18/9mmvenomusCasing",
-            "minigameCasingSprite": "uiEject9mmvenomusCasing",
+            "minigameCasingSprite": "COPY__Guns/nf.glock18/uiEject9mmroundCasing",
             "structureDamage": 45,
             "animalDamage": 135,
 
@@ -167,14 +167,14 @@
     "rackSpritePath": "COPY__Guns/nf.mp5/rack",
 
 
-    "fireModesSpritePath": [ "safe", "", "", "unsafe", ],
+    "fireModesSpritePath": [ "COPY__Guns/nf.glock18/safe", "", "", "COPY__Guns/nf.hipoint/unsafe", ],
 
     "magazineTexturesPath": { "smallmagazine": "blank", "nf.smgmag": "smgmag" },
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.glock18/9mmroundIcon", "COPY__Guns/nf.glock18/9mmhollowIcon", "COPY__Guns/nf.glock18/9mmvenomusIcon" ],
     "minigame":
     {
         "mainExperimentPath": "uiSpriteExpie",
-        "mainMilkyTriggerOnPath": "uiSpriteMilkyOn",
+        "mainMilkyTriggerOnPath": "uiSpriteExpie",
         "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
         "mainDunePath": "uiSpriteDune",
         "sliderFrontPath": "uiSliderFront",
@@ -186,13 +186,13 @@
         "unrackedToRacked": -0.015,
         "rackedToUnracked": -0.005,
         "rackedIdlePosition": -0.02,
-        "ammosInHandPaths": [ "uiHand9mmround", "uiHand9mmhollow", "uiHand9mmvenomus" ],
+        "ammosInHandPaths": [ "COPY__Guns/nf.glock18/uiHand9mmround", "COPY__Guns/nf.glock18/uiHand9mmhollow", "COPY__Guns/nf.glock18/uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "uiPtr9mmround", "uiPtr9mmhollow", "uiPtr9mmvenomus" ],
+        "ammosInPtrPaths": [ "COPY__Guns/nf.glock18/uiPtr9mmround", "COPY__Guns/nf.glock18/uiPtr9mmhollow", "COPY__Guns/nf.glock18/uiPtr9mmvenomus" ],
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
-        "magazinePaths": { "nf.smgmag": "uiSmgmag" },
-        "ammosInMagazinePaths": { "nf.smgmag": [ "uiSmgmag9mmround", "uiSmgmag9mmhollow", "uiSmgmag9mmvenomus" ] },
+        "magazinePaths": { "nf.smgmag": "COPY__Guns/nf.mp5/uiSmgmag" },
+        "ammosInMagazinePaths": { "nf.smgmag": [ "COPY__Guns/nf.mp5/uiSmgmag9mmround", "COPY__Guns/nf.mp5/uiSmgmag9mmhollow", "COPY__Guns/nf.mp5/uiSmgmag9mmvenomus" ] },
         "magazineXPosition": -0.064,
         "magazineYPosition": -0.034,
         "magazineXSpeed": -0.0,
@@ -203,7 +203,7 @@
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.061,
         "casingYPosition": 0.055,
-        "casingsPath": [ "uiEject9mmroundCasing", "uiEject9mmround", "uiEject9mmhollow", "uiEject9mmvenomus" ],
+        "casingsPath": [ "COPY__Guns/nf.glock18/uiEject9mmroundCasing", "COPY__Guns/nf.glock18/uiEject9mmround", "COPY__Guns/nf.glock18/uiEject9mmhollow", "COPY__Guns/nf.glock18/uiEject9mmvenomus" ],
         "resizeMagazine": true,
         "roundHeight": 2.5,
     }

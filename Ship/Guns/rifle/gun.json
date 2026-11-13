@@ -118,9 +118,9 @@
         "unrackedToRacked": -0.025,
         "rackedToUnracked": -0.005,
         "rackedIdlePosition": -0.03,
-        "ammosInHandPaths": [ "uiHand556round", "uiHand556piercing"],//, "", ], TODO
+        "ammosInHandPaths": [ "COPY__Guns/makeshiftrifle/uiHand556round", "COPY__Guns/makeshiftrifle/uiHand556piercing"],//, "", ], TODO
         "receiverPath": "uiReceiver",
-        "ammosInPtrPaths": [ "uiPtr556round", "uiPtr556piercing"],//, "",  ], TODO
+        "ammosInPtrPaths": [ "COPY__Guns/makeshiftrifle/uiPtr556round", "COPY__Guns/makeshiftrifle/uiPtr556piercing"],//, "",  ], TODO
         "canUseFannyPack": true,
         "magReleasePath": "uiMagRelease",
         "magazinePaths": { "riflemagazine": "uiRiflemag" },
@@ -136,7 +136,7 @@
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.041,
         "casingYPosition": 0.07,
-        "casingsPath": [ "uiEject556roundCasing", "uiEject556round", "uiEject556piercing"],//, "uiEject12gaugeslug" ],
+        "casingsPath": [ "COPY__Guns/makeshiftrifle/uiEject556roundCasing", "COPY__Guns/makeshiftrifle/uiEject556round", "COPY__Guns/makeshiftrifle/uiEject556piercing"],//, "uiEject12gaugeslug" ],
         "resizeMagazine": true,
         "chargingHandle": true,
         "blockSlideWithEmptyMagazine": true,
