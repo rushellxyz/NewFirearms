@@ -215,6 +215,7 @@ namespace NewFirearms
                 Sound.Play(rshGun.prop.shootAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(si.item), pitchShift: false);
             if (null != rshGun && null != rshGun.transform.parent && rshGun.transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot))
             {
+                NativeGameFeatures.UnlockFiringAchievement(slot.body);
                 float num = slot.body.isRight ? 1f : (-1f);
                 slot.body.rb.velocity -= (Vector2)rshGun.transform.right * num * knockback;
                 slot.body.lastTimeStepVelocity -= (Vector2)rshGun.transform.right * num * knockback;

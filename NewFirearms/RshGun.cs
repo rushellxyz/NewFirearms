@@ -290,6 +290,7 @@ namespace NewFirearms
             body.armsAnimator.SetFloat("gunangle", body.armsAnimator.GetFloat("gunangle") + muzzleRise * MUZZLE_RISE_MODIFIER);
             if (PlayerCamera.main.body == shooter && GunMinigame.Plugin.useMinigame)
                 GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(info.knockback, muzzleRise);
+            NativeGameFeatures.UnlockFiringAchievement(body);
             if (prop.feedType == FeedKind.Battery)
             {
                 FinishBatteryShot();

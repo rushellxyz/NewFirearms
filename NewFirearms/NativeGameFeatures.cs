@@ -12,6 +12,16 @@ namespace NewFirearms
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool ReadHearingProtection(Body body) => body.HasHearingProtection();
 
+        internal static void UnlockFiringAchievement(Body shooter)
+        {
+            if (GameBuildInfo.IsFullGame && PlayerCamera.main != null && shooter == PlayerCamera.main.body)
+                UnlockPlayingWithFire();
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void UnlockPlayingWithFire()
+            => SteamManager.TryUnlockAchievement("PLAYINGWITHFIRE");
+
         internal static void NotifyScientistHit(GameObject target)
         {
             // The Scientist tag is also absent from the demo.
