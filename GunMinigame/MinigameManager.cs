@@ -389,8 +389,7 @@ namespace GunMinigame
             muzzleRise = Mathf.Abs(muzzleRise);
             BeginOutsidePumpAfterShot();
             inertia.ImpulseAtMuzzle(new Vector2(-knockback * 0.12f, muzzleRise * 0.055f));
-            if (fannyPack.gameObject.activeSelf)
-                fannyPackZipInertia += muzzleRise;
+            AddFannyPackZipImpulse(muzzleRise * 10f);
         }
 
         public void Hide()
@@ -819,7 +818,7 @@ namespace GunMinigame
 
             fannyPackZip = new GameObject("MinigameFannyPackZip").AddComponent<Image>();
             fannyPackZip.transform.SetParent(fannyPack.transform);
-            fannyPackZip.transform.localPosition = new Vector3((75f/2560f)*Screen.width, (-60f/1440f)*Screen.height);
+            fannyPackZip.transform.localPosition = new Vector3((60f/2560f)*Screen.width, (-45f/1440f)*Screen.height);
             fannyPackZip.transform.localScale = Vector3.one;
             fannyPackZip.sprite = fannyPackZipSprite;
             fannyPackZip.raycastTarget = false;
@@ -1694,13 +1693,7 @@ namespace GunMinigame
                 fannyPackZip.transform.SetAsLastSibling();
             }
 
-            if (fannyPack.gameObject.activeSelf)
-            {
-                fannyPackZipInertia = Mathf.MoveTowardsAngle(fannyPackZipInertia, -fannyPackZip.transform.eulerAngles.z, Time.deltaTime * 25f);
-                fannyPackZip.transform.Rotate(0, 0, fannyPackZipInertia);
-                if (160f < fannyPackZip.transform.eulerAngles.z && 200f > fannyPackZip.transform.eulerAngles.z)//160-200
-                    fannyPackZipInertia = 0f;
-            }
+            UpdateFannyPackZip();
         }
 
         public void SpinBandolied()

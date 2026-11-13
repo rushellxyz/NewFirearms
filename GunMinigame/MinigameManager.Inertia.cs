@@ -21,6 +21,7 @@ namespace GunMinigame
 
         private void ResetInertia()
         {
+            ResetFannyPackZip();
             magazineReleasedAtRear = false;
             chargingHandleReturnPending = false;
             chargingHandleCloseRequested = false;
@@ -58,6 +59,8 @@ namespace GunMinigame
             if (!active || body == null) return;
             float side = Mathf.Abs(body.rb.velocity.x) > 0.1f ? Mathf.Sign(body.rb.velocity.x) : 0f;
             inertia.ImpulseAtGrip(new Vector2(-side * 0.012f, -0.035f) * Mathf.Clamp(volume, 0f, 3f) * inertia.Mass);
+            zipStepDirection = -zipStepDirection;
+            AddFannyPackZipImpulse(zipStepDirection * Mathf.Clamp(volume, 0f, 3f) * 18f);
         }
 
         internal void BeginSliderPull()
@@ -131,7 +134,10 @@ namespace GunMinigame
             }
             Vector2 handVelocity = inertiaHand != null ? inertiaHand.velocity - velocity : Vector2.zero;
             if (dt > 0.25f || (body.rb.position - lastBodyPosition).sqrMagnitude > 400f)
+            {
                 inertia.Reset(); // Loading/teleportation is not a physical impact.
+                ResetFannyPackZip();
+            }
             else
             {
                 // Velocity changes capture acceleration, braking, jumps, landings and external impacts.
@@ -139,6 +145,9 @@ namespace GunMinigame
                     Vector2.ClampMagnitude(handVelocity - lastHandVelocity, 15f) * -0.008f;
                 impulse.y -= Mathf.Clamp(body.rb.angularVelocity - lastBodyAngularVelocity, -360f, 360f) * 0.0001f;
                 inertia.ImpulseAtGrip(impulse * inertia.Mass);
+                Vector2 movementChange = Vector2.ClampMagnitude(velocity - lastBodyVelocity, 30f);
+                AddFannyPackZipImpulse(-movementChange.x * 10f + movementChange.y * 2f +
+                    Mathf.Clamp(body.rb.angularVelocity - lastBodyAngularVelocity, -180f, 180f) * 0.05f);
             }
             lastBodyVelocity = velocity;
             lastHandVelocity = handVelocity;
