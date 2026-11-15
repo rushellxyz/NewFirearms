@@ -57,11 +57,15 @@ namespace NewFirearms
 
     // patch to make rounds/mag draggable onto gun pt.2
     [HarmonyPatch(typeof(Body), "CombineItems")]
-    [HarmonyBefore("CasualtiesMP")]
+    [HarmonyAfter("CasualtiesMP")]
     public class BodyPatch3
     {
-        public static bool Prefix(Body __instance, Item it1, Item it2)
+        public static bool Prefix(Body __instance, Item it1, Item it2, bool __runOriginal = true)
         {
+            // HarmonyX still runs prefixes after Together has handled the combine.
+            // Its copied combine routine already routes our items through this loader.
+            if (!__runOriginal) return false;
+
             if (NewDescentsCompatibility.IsMagazinePair(it1, it2))
             {
                 NewDescentsCompatibility.LoadMagazine(it1, it2);
