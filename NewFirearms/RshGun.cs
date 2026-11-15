@@ -73,16 +73,6 @@ namespace NewFirearms
         public Body shooter;
 
         private static bool jamming;
-        /*
-         * 2. If vanilla code looks up GetRunSetting in Update loops, should you change it?
-         * If the vanilla game code does it, you don't strictly have to change it, but it is still highly recommended.
-         * Here is why:
-         * The Vanilla Tax: Games built with Unity often feature unoptimized code because the developers didn't have time to clean it up.
-         * The Modder's Constraint: A player might play the vanilla game fine. But when they install 50 different mods, and every single mod adds extra string-dictionary lookups inside Update(), the frame rate tanks.
-         * The Verdict: Caching WorldGeneration.GetRunSettingBool("newfirearms.gunjamming") inside Start() takes 10 seconds to write, costs zero extra memory, and guarantees your mod won't contribute to micro-stutters. It is a hallmark of high-quality mod writing.
-         *
-         * yup, i use ai to analyze my code, and id recomend you too
-         */
 
         [Obsolete("you stupid! dont use that overload")]
         public void Rack()
@@ -166,7 +156,7 @@ namespace NewFirearms
         public void Start()
         {
             ApplyLaserState(laserEnabled);
-            jamming = WorldGeneration.GetRunSettingBool("newfirearms.gunjamming");
+            jamming = RunSettingsCompatibility.GetBool("newfirearms.gunjamming", true);
             if (prop.feedType == FeedKind.Battery) racked = false;
             if (!UsesRetraction()) ApplyTetherState(false, Vector2.zero);
             if (!existed)
@@ -264,7 +254,7 @@ namespace NewFirearms
                 if (needsRetraction) StopFiring();
                 return true;
             }
-            if (info.caseless || !WorldGeneration.GetRunSettingBool("newfirearms.gunejectcasing"))
+            if (info.caseless || !RunSettingsCompatibility.GetBool("newfirearms.gunejectcasing", true))
             {
                 rounds[0] = -2;
                 spentAmmoTypes.Remove(0);

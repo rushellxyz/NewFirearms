@@ -83,8 +83,10 @@ namespace GunMinigame
                 "Resources", name + ".png"));
 
         public static bool IsMarksman(Body body)
-            => WorldGeneration.GetRunSettingBool("gunminigame.alwaysmarksman") ||
-                GetPlayerSpecies(body) == PlayerSpecies.Milky;
+            => GetPlayerSpecies(body) == PlayerSpecies.Milky ||
+                (WorldGeneration.runSettings != null &&
+                 WorldGeneration.runSettings.TryGetValue("gunminigame.alwaysmarksman", out var value) &&
+                 value is bool alwaysMarksman && alwaysMarksman);
 
         private void PrepareStandaloneMode()
         {

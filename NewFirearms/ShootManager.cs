@@ -91,7 +91,7 @@ namespace NewFirearms
             RaycastHit2D[] array = Physics2D.RaycastAll(pos, dir, 200f, LayerMask.GetMask("Ground", "Body", "Limb", "Descriptor"));
             Physics2D.queriesHitTriggers = false;
             Vector2 vector = pos + dir * 200f;
-            float num = WorldGeneration.GetRunSettingFloat("newfirearms.gundmgmult") * UnityEngine.Random.Range(0.85f, 1.15f);
+            float num = RunSettingsCompatibility.GetFloat("newfirearms.gundmgmult", 1f) * UnityEngine.Random.Range(0.85f, 1.15f);
             List<Body> list = new List<Body>();
             int blocksHit = 0;
             for (int i = 0; i < array.Length; i++)

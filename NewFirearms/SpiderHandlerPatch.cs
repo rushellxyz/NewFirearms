@@ -26,7 +26,7 @@ namespace NewFirearms
             stunHitbox.transform.localPosition = Vector3.zero;
             stunHitbox.transform.localScale = Vector3.one;
             CircleCollider2D col = stunHitbox.AddComponent<CircleCollider2D>();
-            col.radius = origCol.radius *  WorldGeneration.GetRunSettingFloat("newfirearms.stunhitbox");
+            col.radius = origCol.radius *  RunSettingsCompatibility.GetFloat("newfirearms.stunhitbox", 2.5f);
             col.isTrigger = true;
         }
     }
