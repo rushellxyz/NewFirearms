@@ -6,6 +6,7 @@ namespace NewFirearms
     // CCL can't properly override some vanilla item behavior, so this shim exists.
     // The project intentionally keeps the compatibility layer small and explicit.
     [HarmonyPatch(typeof(Item), "SetupItems")]
+    [HarmonyAfter("CasualtiesMP")]
     public static class CCLWorkaround
     {
         public static Dictionary<string, (string, string)> itemsToDesc;

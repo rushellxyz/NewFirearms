@@ -28,6 +28,7 @@ namespace NewFirearms
         public static bool togetherMpAvailable;
         public static bool MultiplayerActive => togetherMpAvailable && IsNetworkRunning();
         public static bool catPatchActive;
+        internal static bool nativeClientCompatibilityAvailable;
 
         // There because CUCoreLib overwrites CustomData on multiplayer clients. Блять, а нахуя
 
@@ -46,6 +47,7 @@ namespace NewFirearms
 
             togetherMpAvailable = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("CasualtiesMP") && 0 == PlayerPrefs.GetInt("CasualtiesMP_FORCE_DISABLE_MP_MOD");
             catPatchActive = togetherMpAvailable && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("meow.catpatch");
+            nativeClientCompatibilityAvailable = togetherMpAvailable && VanillaClientNetwork.CanInstall();
             NewDescentsCompatibility.Enabled = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("net.jimmyking.newdescents");
 
             var harmony = new Harmony("com.rushellxyz.newfirearms");
@@ -61,6 +63,7 @@ namespace NewFirearms
             ItemLoader.LoadFallbackResources();
             ItemLoader.LoadGuns();
             ItemLoader.LoadMags();
+            VanillaGunProxy.FinalizeDefinitions();
             ItemLoader.LoadRounds();
             ItemLoader.LoadVanillaAmmoSprites();
             RegisterRunSettings();
@@ -170,6 +173,7 @@ namespace NewFirearms
                 onlyHoldInHands = info.onlyHoldInHands,
 
                 Icon = sprite,
+                Gun = nativeClientCompatibilityAvailable ? VanillaGunProxy.CreateDefinition(prop, sprite) : null,
                 VisualOffset = new Vector2(prop.itemSpriteXOffset, prop.itemSpriteYOffset),
                 SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" }
             };
@@ -181,6 +185,9 @@ namespace NewFirearms
                 cuInfo.qualities.Add(CUCoreLib.Helpers.CUCoreUtils.CreateCraftingQuality("gun", "Gun"));
             cuInfo.SetTags();
             CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
+            // CUCoreLib installs the native attack delegate for network-only peers.
+            // Locally our existing inventory action must keep operating RshGun.
+            cuInfo.useAction = info.useAction;
             if (vanillaItems.Contains(id))
                 CCLWorkaround.itemsToDesc.Add(id, (info.description, info.fullName));
         }
@@ -227,6 +234,7 @@ namespace NewFirearms
 
         void MpOperations(Harmony harmony)
         {
+            VanillaClientNetwork.Install(harmony);
             if (!catPatchActive)
                 PatchPrefix(harmony, "Together.YOU_SHOULD_KILL_YOURSELF_NOOOW", "Client_SelfHarmMinigameMinigameEnd", "NewFirearms.YOU_SHOULD_KILL_YOURSELF_NOOOWPatch");
             Together.Multiplayer.RegisterCustomServerReceiver(SelfHarmerPatch.MSGID_SUICIDE_REQUEST, YOU_SHOULD_KILL_YOURSELF_NOOOWPatch.ReciveGunSuicideRequest);

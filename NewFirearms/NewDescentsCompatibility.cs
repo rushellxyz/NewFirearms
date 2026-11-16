@@ -35,7 +35,9 @@ namespace NewFirearms
             var magazine = source.GetComponent<RshMag>();
             if (Plugin.MultiplayerActive && magazine.RequestHostIfClient(2, target)) return;
             var gun = target.GetComponent<GunScript>();
-            var adapter = source.GetComponent<AmmoScript>() ?? source.gameObject.AddComponent<AmmoScript>();
+            var adapter = source.GetComponent<AmmoScript>();
+            bool temporaryAdapter = adapter == null;
+            if (temporaryAdapter) adapter = source.gameObject.AddComponent<AmmoScript>();
             adapter.ammoType = source.id == "smallmagazine" ? GunScript.AmmoType.Pistol : GunScript.AmmoType.Rifle;
             adapter.itemType = AmmoScript.AmmoItemType.Magazine;
             adapter.maxRounds = magazine.prop.capacity;
@@ -56,7 +58,7 @@ namespace NewFirearms
                     magazine.enabled = false;
                 }
             }
-            finally { UnityEngine.Object.Destroy(adapter); }
+            finally { if (temporaryAdapter) UnityEngine.Object.Destroy(adapter); }
         }
 
         [HarmonyPatch(typeof(GunScript), nameof(GunScript.UnloadMag))]

@@ -128,8 +128,16 @@ namespace NewFirearms
                 SendShotStateUpdate();
                 return;
             }
-            if (IsJammed) return;
-            if (gasTime <= 0f) return;
+            if (IsJammed)
+            {
+                queuedNativeShooter = null;
+                return;
+            }
+            if (gasTime <= 0f)
+            {
+                UpdateNativeShot();
+                return;
+            }
             gasTime -= Time.deltaTime;
             if (gasTime <= 0f)
             {
@@ -142,6 +150,7 @@ namespace NewFirearms
                         Rack(manual: false);
                 }
                 ContinueFiring();
+                UpdateNativeShot();
             }
         }
 
@@ -176,6 +185,7 @@ namespace NewFirearms
                 MpStartOp();
             }
             UpdateSprite();
+            VanillaGunProxy.Attach(this);
         }
 
         public void MpStartOp()
@@ -288,7 +298,9 @@ namespace NewFirearms
             return true;
         }
 
-        public void Rack(bool manual)
+        public void Rack(bool manual) => Rack(manual, null);
+
+        public void Rack(bool manual, Body actor)
         {
             if (prop.feedType == FeedKind.Battery)
             {
@@ -314,6 +326,7 @@ namespace NewFirearms
                 return;
             if (manual)
             {
+                queuedNativeShooter = null;
                 StopFiring();
                 gasTime = 0f;
             }
@@ -340,12 +353,8 @@ namespace NewFirearms
             }
             if (IsJammed) return;
 
-            /*
-             The ejection runs on the host and syncs to clients, but there’s a bug: `RemoveMag(null)` falls back to `PlayerCamera.main.body` on the host, so a client’s ejected magazine could go into the host’s inventory.
-             The rack request needs to pass the requesting player’s body through to `RemoveMag`. Live MP hasn’t been tested yet.
-            */
             if (manual && prop.removeMagazineOnRack)
-                RemoveMag(null, playSound: false);
+                RemoveMag(actor, playSound: false);
             if (Plugin.MultiplayerActive)
             {
                 if (manual)
@@ -823,6 +832,7 @@ namespace NewFirearms
         {
             if (!Plugin.MultiplayerActive || !Together.Net.IsServer)
                 return;
+            VanillaClientNetwork.RelayShot(this, shooter, visuals.start);
             LiteNetLib.Utils.NetDataWriter writer = Together.Multiplayer.CreateNamedWriter(MSGID_SHOOT_VISUALS);
             Together.SyncInfoGameObjectTracker tracker = (GetMpTracker(false) as Together.SyncInfoGameObjectTracker);
             if (null == tracker)

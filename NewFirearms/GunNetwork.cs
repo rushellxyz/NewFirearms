@@ -166,7 +166,7 @@ namespace NewFirearms
                 if (rshGun.prop.feedType != FeedKind.Battery && target.HasValue && rshGun.racked == target.Value)
                     rshGun.SyncIfHost();
                 else
-                    rshGun.Rack(manual: true);
+                    rshGun.Rack(manual: true, actor: pb.body);
             }
        else if (2 == action)
             {

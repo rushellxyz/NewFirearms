@@ -18,7 +18,9 @@ namespace NewFirearms
 
         static bool Prefix(PlayerCamera __instance)
         {
-            if (__instance.body.HoldingItem(__instance.body.handSlot) && null != __instance.body.GetItem(__instance.body.handSlot).GetComponent<GunScript>())
+            if (__instance.body.HoldingItem(__instance.body.handSlot) &&
+                __instance.body.GetItem(__instance.body.handSlot).GetComponent<RshGun>() == null &&
+                __instance.body.GetItem(__instance.body.handSlot).GetComponent<GunScript>() != null)
             {
                 if (null != GunMinigame.MinigameManager.instance && GunMinigame.MinigameManager.instance.active)
                     GunMinigame.MinigameManager.instance.Hide();
@@ -226,6 +228,10 @@ namespace NewFirearms
                 __result.Item2 += ModLocale.Get("newfirearms.magazine.charge", Mathf.Clamp01(item.condition) * 100f) + "\n";
                 return;
             }
+
+            // Native magazine proxies already contribute the game's own counter.
+            if (item.TryGetComponent<AmmoScript>(out var native) && native.itemType == AmmoScript.AmmoItemType.Magazine)
+                return;
 
             __result.Item2 += "<color=#ff8fb0><sprite index=8 tint=1>" + rshMag.TotalRounds() + "/" + (rshMag.prop?.capacity ?? rshMag.rounds?.Count ?? 0) + " " + Locale.GetOther("magazinerounds") + "\n";
         }

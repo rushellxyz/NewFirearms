@@ -72,6 +72,7 @@ namespace NewFirearms
             if (Plugin.MultiplayerActive)
                 MpStartOp();
             UpdateSprite();
+            VanillaMagazineProxy.Attach(this);
         }
 
         public void MpStartOp()

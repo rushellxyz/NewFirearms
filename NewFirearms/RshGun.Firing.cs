@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewFirearms
@@ -10,9 +11,65 @@ namespace NewFirearms
         private float nextShotStateUpdate;
         private Body clientHalfRecoilBody;
         private float clientHalfRecoilUntil;
+        private float nextNativeShotTime;
+        private Body queuedNativeShooter;
+        private readonly Queue<float> nativeRackEchoes = new Queue<float>();
+        private Body nativeRackEchoBody;
 
         public bool Shoot(Body body = null)
             => Shoot(body, null);
+
+        // Native clients report each shot, including automatic fire. Never start
+        // our held-trigger loop: those peers cannot send our release packet.
+        internal bool ShootNativeRound(Body body)
+        {
+            if (burstShotsRemaining > 0) return false;
+            if (Time.time < nextNativeShotTime || gasTime > 0f)
+            {
+                // A native client's cycle can finish a frame before the host's.
+                // Queue one early shot without shortening the authoritative cooldown.
+                if (queuedNativeShooter != null || IsJammed ||
+                    Mathf.Max(gasTime, nextNativeShotTime - Time.time) > 0.03f) return false;
+                queuedNativeShooter = body;
+                return true;
+            }
+            clientShotPosition = null;
+            bool fired = FireRound(body);
+            if (fired) nextNativeShotTime = Time.time + Mathf.Max(0.05f, prop.desiredGasTime);
+            StopFiring();
+            return fired;
+        }
+
+        private void UpdateNativeShot()
+        {
+            if (queuedNativeShooter == null || gasTime > 0f || Time.time < nextNativeShotTime) return;
+            Body body = queuedNativeShooter;
+            queuedNativeShooter = null;
+            if (body.conscious && (body.GetItem(0) == it || body.GetItem(1) == it)) ShootNativeRound(body);
+        }
+
+        internal void RecordNativeRackEcho(Body body)
+        {
+            // Together sends one rack-state acknowledgement after every native
+            // shot. That packet is not a manual rack or a request to clear a jam.
+            if (body != nativeRackEchoBody)
+            {
+                nativeRackEchoes.Clear();
+                nativeRackEchoBody = body;
+            }
+            if (nativeRackEchoes.Count >= 64) nativeRackEchoes.Dequeue();
+            nativeRackEchoes.Enqueue(Time.time + 2f);
+        }
+
+        internal bool ConsumeNativeRackEcho(Body body)
+        {
+            if (body != nativeRackEchoBody) return false;
+            while (nativeRackEchoes.Count > 0 && nativeRackEchoes.Peek() < Time.time)
+                nativeRackEchoes.Dequeue();
+            if (nativeRackEchoes.Count == 0) return false;
+            nativeRackEchoes.Dequeue();
+            return true;
+        }
 
         internal bool Shoot(Body body, Vector2? clientGunPosition, bool? clientHalfRecoil = null)
         {

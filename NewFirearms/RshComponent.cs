@@ -16,9 +16,15 @@ namespace NewFirearms
             it = GetComponent<Item>();
             LoadDefinition();
             if (gameObject.TryGetComponent<GunScript>(out GunScript gs))
-                UnityEngine.Object.Destroy(gs);
+            {
+                if (this is RshGun && Plugin.nativeClientCompatibilityAvailable) gs.enabled = false;
+                else UnityEngine.Object.Destroy(gs);
+            }
             if (gameObject.TryGetComponent<AmmoScript>(out AmmoScript ass))
-                UnityEngine.Object.Destroy(ass);
+            {
+                if (this is RshMag && Plugin.nativeClientCompatibilityAvailable) ass.enabled = false;
+                else UnityEngine.Object.Destroy(ass);
+            }
         }
 
         public abstract void LoadDefinition();
