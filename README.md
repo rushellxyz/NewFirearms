@@ -1,25 +1,28 @@
 A source code for mod of mine [New Firearms](https://www.nexusmods.com/scavprototype/mods/122)
 
-It is splitted into 3 pieces:
- - NewFirearms - the main .dll json loader
- - GunMinigame - the plugin responsable for minigame, it is planned to later made a standalone mod from it
- - Ship - .json and .pngs of builtin guns for json loader
- 
+Setting up compile:
 
- - AAAAAAA This repo is such a mess
+Export CU_PATH to be path to game folder
+E.g. C:\Program Files (x86)\Steam\steamapps\common\Casualties Unknown\
 
+You need a release with Together
 
+`dotnet build NewFirearms/`
 
+It would compile gunminigame And newfirearms
 
+Symbolic link the
+GunMinigame/bin/Debug/GunMinigame.dll -> CU_PATH/BepInEx/plugins/GunMinigame.dll
+GunMinigame/bin/Debug/GunMinigame.pdb -> CU_PATH/BepInEx/plugins/GunMinigame.pdb
+NewFirearms/bin/Debug/NewFirearms.dll -> CU_PATH/BepInEx/plugins/NewFirearms.dll
+NewFirearms/bin/Debug/NewFirearms.pdb -> CU_PATH/BepInEx/plugins/NewFirearms.pdb
+Ship -> CU_PATH/BepInEx/plugins/NewFirearms/
+GunMinigame/Resources -> CU_PATH/BepInEx/plugins/NewFirearms/Resources/
+GunMinigame/Guns -> CU_PATH/BepInEx/plugins/NewFirearms/Guns/
 
+Move out the NewFirearms.dll to test standalone version
 
- 
-AI Usage for code
+smth like this
 
-I added it temporary to help with very messy codebase i wrote, dont worry, i review every line
+The normal description is on nexus
 
-Here since 1.6.5 update
-
-
-
-Aalso, not gonna call names, but a lot of popular mods for scav use AI from day 0, why do you think they close source?
