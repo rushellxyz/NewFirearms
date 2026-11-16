@@ -74,13 +74,20 @@
                 "disfigureChance": 2.0,
 
             },
+
+            "knockback": 6,
+            "muzzleRise": 5,
+
+            "verticalSpread": 0.001,
+            "loudness": 6.0,
+            "conditionLoss": 0.002,
         }
     ],
     "desiredGasTime": 0.11,
     "spawnUnracked": true,
     "fireModes": [ 0, 2, 3, ],
     "magazineType": [ "rifflemagazine", ],
-    "barrelOffset": 0.8,
+    "barrelOffset": 0.3,
     "hasLaser": true,
 
     "itemSpriteXOffset": 0.2,

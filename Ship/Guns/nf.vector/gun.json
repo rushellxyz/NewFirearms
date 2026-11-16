@@ -47,7 +47,7 @@
             "muzzleRise": 0.5,
 
             "verticalSpread": 0.005,
-            "loudness": 2,
+            "loudness": 0.5,
             "conditionLoss": 0.001,
         },
         {
@@ -80,7 +80,7 @@
             "muzzleRise": 0.5,
 
             "verticalSpread": 0.01,
-            "loudness": 2,
+            "loudness": 0.5,
             "conditionLoss": 0.001,
         },
         {
@@ -113,7 +113,7 @@
             "muzzleRise": 0.5,
 
             "verticalSpread": 0.015,
-            "loudness": 1.8,
+            "loudness": 0.4,
             "conditionLoss": 0.001,
         },
     ],
