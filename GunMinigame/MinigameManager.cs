@@ -569,6 +569,7 @@ namespace GunMinigame
             if (null == canvas)
                 canvas = PlayerCamera.main.gunMenu.GetComponentInParent<Canvas>(true).rootCanvas.gameObject;
             uiBase = new GameObject("GunMinigame");
+            uiBase.AddComponent<MinigameMenuInputFilter>();
             uiBase.transform.SetParent(canvas.transform);
             uiBase.transform.localPosition = new Vector3(0f, -415f, 0f);
 
@@ -2093,7 +2094,7 @@ namespace GunMinigame
             {
                 return true;
             }
-            return PauseHandler.main.isPaused;
+            return PauseHandler.main != null && PauseHandler.main.isPaused;
         }
 
         private void HandleAmmoSelection()
@@ -2181,6 +2182,12 @@ namespace GunMinigame
                 coverChange = 0;
        else     coverImage.sprite = info.coverAnimation[coverIndex];
         }
+    }
+
+    internal sealed class MinigameMenuInputFilter : MonoBehaviour, ICanvasRaycastFilter
+    {
+        public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
+            => PlayerCamera.main != null && PlayerCamera.main.body != null && !MinigameManager.IsAnyGameUIOpen();
     }
 
     public class ImageHoverror : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
