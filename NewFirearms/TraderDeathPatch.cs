@@ -1,5 +1,4 @@
 using HarmonyLib;
-using System.Reflection;
 using UnityEngine;
 using CUCoreLib.Helpers;
 
@@ -25,10 +24,7 @@ namespace NewFirearms
 
             Body body = PlayerCamera.main.body;
             body.skills.AddExp(1, 60f);
-            body.happiness -= 10f;
-            body.traumaAmount += 30f;
-            body.sicknessAmount += 30f;
-            body.StartCoroutine(body.Cry());
+            NativeGameFeatures.ApplyTraderDeathConsequences(body);
             body.talker.Talk(Locale.GetCharacter("murderregret"));
             __instance.build.description = Locale.GetBuilding("traderdscdead");
             __instance.build.fullName = Locale.GetBuilding("corpseseen");

@@ -22,6 +22,32 @@ namespace NewFirearms
         private static void UnlockPlayingWithFire()
             => SteamManager.TryUnlockAchievement("PLAYINGWITHFIRE");
 
+        internal static void ApplyTraderDeathConsequences(Body body)
+        {
+            if (GameBuildInfo.IsFullGame)
+                ApplyFullGameTraderDeathConsequences(body);
+            else
+                ApplyTraderDeathMood(body, 30f);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ApplyFullGameTraderDeathConsequences(Body body)
+        {
+            // Match the release's character exemption and mindwipe sickness reduction.
+            if (body.charType != 2)
+                ApplyTraderDeathMood(body, body.mindWipe ? 15f : 30f);
+
+            SteamManager.TryUnlockAchievement("MYSURVIVALOVERYOURS");
+        }
+
+        private static void ApplyTraderDeathMood(Body body, float sickness)
+        {
+            body.happiness -= 10f;
+            body.traumaAmount += 30f;
+            body.sicknessAmount += sickness;
+            body.StartCoroutine(body.Cry());
+        }
+
         internal static void NotifyScientistHit(GameObject target)
         {
             // The Scientist tag is also absent from the demo.
