@@ -189,7 +189,7 @@ namespace NewFirearms
             // Locally our existing inventory action must keep operating RshGun.
             cuInfo.useAction = info.useAction;
             if (vanillaItems.Contains(id))
-                CCLWorkaround.itemsToDesc.Add(id, (info.description, info.fullName));
+                CCLWorkaround.itemsToDesc[id] = (info.description, info.fullName);
         }
 
         public static void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)

@@ -281,7 +281,7 @@ namespace GunMinigame
 
         private float sliderLastXPos;
         private bool automatedHandAction;
-        internal bool IsManipulatingGun => holdsSlide || automatedHandAction;
+        public bool IsManipulatingGun => holdsSlide || automatedHandAction;
 
         public Image rackedSpecific;
 

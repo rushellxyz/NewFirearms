@@ -2,7 +2,6 @@ TODO List - Agents stay away unless stated otherwise
 
  - Do something about RshGun.RemoveMagPart2WhenCuCore
  - Name for loading order
- - And hot reloading!
  - Gunsaw genetics voyager hashset?
  - When publish 2.0.0 mention delete old folder to clean up newfirearms. items
  - Make gun minigfame standalone have empty magazine sprites

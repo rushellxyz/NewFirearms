@@ -1,5 +1,13 @@
 {
   "other": {
+    "newfirearms.command.reload.description": "Reload a gun's JSON, sprites and audio from disk: nf_reload [id] [--destroy]. --destroy removes existing guns to allow structural changes. Single-player only. May corrupt your save! For development use only. Restart the game afterwards",
+    "newfirearms.command.reload.usage": "Usage: nf_reload [registered gun id] [--destroy]. Without an id, hold a NewFirearms gun in your leading hand.",
+    "newfirearms.command.reload.multiplayer": "Doesn't work in multiplayer",
+    "newfirearms.command.reload.busy": "Release minigame first",
+    "newfirearms.command.reload.structure": "Live guns require the same feedType, internalCapacity, ammo IDs/order, magazineType, hasLaser and needRetract. Use --destroy to remove existing guns and apply structural changes.",
+    "newfirearms.command.reload.success": "Reimported {0}; refreshed {1} existing gun(s). Audio finishes loading asynchronously.",
+    "newfirearms.command.reload.destroyed": "Reimported {0}; destroyed {1} existing gun(s), including their loaded ammunition. Spawn a new instance to test the new structure.",
+    "newfirearms.command.reload.failed": "Could not reimport {0}: {1}",
     "gamesetnewfirearms.fireboth": "Fire both guns",
     "gamesetnewfirearms.firebothdsc": "Hold to fire both guns",
     "newfirearms.magazine.charge": "Battery charge: {0:0}%",

@@ -10,6 +10,19 @@ namespace NewFirearms
     public static class ItemLoader
     {
         private static Dictionary<string, Sprite> sprites;
+        private static bool reimporting;
+
+        internal static void BeginReimport()
+        {
+            SetupResourcesDict();
+            reimporting = true;
+        }
+
+        internal static void EndReimport()
+        {
+            reimporting = false;
+            ClearResourcesDict();
+        }
 
         public static AudioClip shootAudioFallback;
         public static AudioClip unshootAudioFallback;
@@ -127,7 +140,9 @@ namespace NewFirearms
         }
 
         private static ConfigValidation CreateValidation(string folder)
-            => new ConfigValidation(folder, key => sprites != null && sprites.ContainsKey(key));
+            => new ConfigValidation(folder, key => sprites != null && sprites.ContainsKey(key) ||
+                reimporting && key.StartsWith("COPY__", StringComparison.Ordinal) &&
+                File.Exists(Path.Combine("BepInEx/plugins/NewFirearms", key.Substring(6) + ".png")));
 
         private static void LoadConfigs<T>(string category, string fileName, Action<string, string, T> load)
         {
@@ -174,6 +189,12 @@ namespace NewFirearms
         }
 
         public static void LoadGun(string itemId, string folder, GunJson prop)
+        {
+            PrepareGun(folder, prop);
+            RegisterPreparedGun(itemId, prop);
+        }
+
+        internal static void PrepareGun(string folder, GunJson prop)
         {
             CreateValidation(folder).Gun(prop);
             for (int i = 0; i < prop.ammoTypes.Count; i++)
@@ -400,7 +421,10 @@ namespace NewFirearms
                         prop.minigame.coverAnimation[i] = LoadConfigSprite(folder, prop.minigame.coverAnimationPaths[i], $"minigame.coverAnimationPaths[{i}]");
                 }
             }
+        }
 
+        internal static void RegisterPreparedGun(string itemId, GunJson prop)
+        {
             ItemInfo info = new ItemInfo
             {
                 category = prop.category,
@@ -425,9 +449,11 @@ namespace NewFirearms
 
             Plugin.RegisterGunCuCore(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
 
+            Plugin.milkyGuns.Remove(itemId);
             if (prop.milkyCanSell)
                 Plugin.milkyGuns.Add(itemId);
 
+            Plugin.recipes.RemoveAll(recipe => recipe.result.id == itemId);
             if (!prop.craftable)
                 return;
 
@@ -691,6 +717,8 @@ namespace NewFirearms
             {
                 if (sprites.TryGetValue(path, out Sprite sprite))
                     return sprite;
+                if (reimporting)
+                    return LoadSprite("BepInEx/plugins/NewFirearms", path.Substring(6), ppu);
                 throw new Exception($"[NewFirearms] {path} refer to non-existing asset! Did you got the loading order wrong?");
             }
 
