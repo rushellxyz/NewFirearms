@@ -322,6 +322,8 @@ namespace NewFirearms
                 if (Plugin.MultiplayerActive) SyncIfHost(6);
                 return;
             }
+            if (manual && prop.minigame?.locksSliderOnSafety == true && !racked && fireMode == 0)
+                return;
             if (manual && RequestManualRackIfClient())
                 return;
             if (manual)
@@ -654,6 +656,8 @@ namespace NewFirearms
 
         public void ToggleFireMode()
         {
+            if (prop.minigame?.locksSliderOnSafety == true && IsRacked())
+                return;
             if (Plugin.MultiplayerActive && RequestHostIfClient(4))
                 return;
 

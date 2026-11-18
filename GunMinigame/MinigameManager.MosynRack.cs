@@ -71,7 +71,7 @@ namespace GunMinigame
             Vector2 previousPosition = sliderFrontImage.transform.localPosition;
             if (holdsSlide)
             {
-                bool? target = mosynMotion.Drag(MosynPointer, racked, info.sliderMinimumPosition,
+                bool? target = mosynMotion.Drag(MosynPointer, racked, ClampSliderForSafety(info.sliderMinimumPosition),
                     info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked, MosynLift);
                 if (target.HasValue) RequestMosynRack(target.Value);
             }
@@ -82,7 +82,7 @@ namespace GunMinigame
 
         private void RequestMosynRack(bool target)
         {
-            if (mosynRequestedRacked.HasValue || gun.IsRacked() == target) return;
+            if (mosynRequestedRacked.HasValue || gun.IsRacked() == target || target && IsSliderOpeningBlocked) return;
             mosynRequestedRacked = target;
             mosynRequestTime = Time.unscaledTime;
             gun.Rack();

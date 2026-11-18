@@ -136,7 +136,7 @@
         },
     ],
     "desiredGasTime": 0.075,
-    "fireModes": [ 2 ],
+    "fireModes": [ 0, 2 ],
     "magazineType": [ "hipoint", ],
     "barrelOffset": 0.5,
 
@@ -170,12 +170,12 @@
 
 
 
-        "sliderMinimumPosition": -0.03,
+        "sliderMinimumPosition": -0.025,
         "sliderMaximumPosition": 0,
         "unrackedIdlePosition": 0,
-        "unrackedToRacked": -0.025,
+        "unrackedToRacked": -0.02,
         "rackedToUnracked": -0.005,
-        "rackedIdlePosition": -0.02,
+        "rackedIdlePosition": -0.015,
         "ammosInHandPaths": [ "COPY__Guns/nf.glock18/uiHand9mmround", "COPY__Guns/nf.glock18/uiHand9mmhollow", "COPY__Guns/nf.glock18/uiHand9mmvenomus" ],
         "receiverPath": "uiReceiver",
         "ammosInPtrPaths": [ "COPY__Guns/nf.glock18/uiPtr9mmround", "COPY__Guns/nf.glock18/uiPtr9mmhollow", "COPY__Guns/nf.glock18/uiPtr9mmvenomus" ],
@@ -198,6 +198,9 @@
         "blockSlideWithEmptyMagazine": true,
         "resizeMagazine": true,
         "roundHeight": 2.5,
+        "fireTogglePath": "uiFireToggleTrigger",
+        "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi" ],
+        "locksSliderOnSafety": true,
     }
 
 }

@@ -64,7 +64,8 @@ namespace GunMinigame
             float progress = outsidePump.Progress(Input.mousePosition);
             float position = Mathf.Lerp(info.unrackedIdlePosition, info.rackedIdlePosition, progress);
             position = SliderRange.Clamp(position, info.sliderMinimumPosition, info.sliderMaximumPosition);
-            if (!outsidePumpRequest.HasValue && SliderRange.ShouldToggle(position, racked,
+            position = ClampSliderForSafety(position);
+            if (!IsSliderOpeningBlocked && !outsidePumpRequest.HasValue && SliderRange.ShouldToggle(position, racked,
                 info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
             {
                 outsidePumpRequest = !racked;

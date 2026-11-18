@@ -15,7 +15,7 @@ namespace GunMinigame
         public void Update()
         {
             if (CanAct() && gun.safe && null == info.fireToggleTrigger && !info.sliderFireToggle)
-                PlayerCamera.main.GunToggleSafety();
+                ToggleFireMode();
         }
 
         internal void Initialize(GunScript source, Item sourceItem, MinigameInfo sourceInfo)
@@ -48,10 +48,18 @@ namespace GunMinigame
         }
 
         // Together patches the camera actions; preserve those entry points.
-        public void Rack() { if (CanAct()) PlayerCamera.main.GunRack(); }
+        public void Rack()
+        {
+            if (CanAct() && !(info.locksSliderOnSafety && !gun.racked && gun.safe))
+                PlayerCamera.main.GunRack();
+        }
         public void RemoveMag() { if (CanAct()) PlayerCamera.main.GunEjectMag(); }
         // Vanilla supports a safety, not selectable NewFirearms firing modes.
-        public void ToggleFireMode() { if (CanAct()) PlayerCamera.main.GunToggleSafety(); }
+        public void ToggleFireMode()
+        {
+            if (CanAct() && !(info.locksSliderOnSafety && gun.racked))
+                PlayerCamera.main.GunToggleSafety();
+        }
 
         public bool DragOnto(Item ammunition)
         {

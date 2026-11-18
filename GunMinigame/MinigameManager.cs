@@ -142,6 +142,8 @@ namespace GunMinigame
         public float inertiaBarrelXPosition = 0.2f;
         public float inertiaBarrelYPosition = 0.1f;
         public bool blockSlideWithEmptyMagazine;
+        // Interlock: fire selector requires a closed action; safety prevents opening it.
+        public bool locksSliderOnSafety;
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -670,14 +672,6 @@ namespace GunMinigame
             coverImage.transform.localScale = new Vector3(0.15f, 0.15f);
             coverImage.GetComponent<RectTransform>().sizeDelta = size;
 
-            fireModeImage = new GameObject("MinigameFireModeImage").AddComponent<Image>();
-            fireModeImage.transform.SetParent(gunBase.transform);
-            fireModeImage.transform.localPosition = Vector3.zero;
-            fireModeImage.transform.localScale = Vector3.one;
-            fireModeImage.GetComponent<RectTransform>().sizeDelta = size;
-            fireModeImage.raycastTarget = false;
-            fireModeImage.enabled = false;
-
             sliderFrontImage = new GameObject("MinigameSliderFront").AddComponent<Image>();
             sliderFrontImage.transform.SetParent(gunBase.transform);
             sliderFrontImage.transform.localPosition = Vector3.zero;
@@ -696,6 +690,15 @@ namespace GunMinigame
                     SliderRightClick(pointer.position);
             });
             sliderTrigger.triggers.Add(sliderDownEntry);
+
+            // Hope that wont break anything
+            fireModeImage = new GameObject("MinigameFireModeImage").AddComponent<Image>();
+            fireModeImage.transform.SetParent(gunBase.transform);
+            fireModeImage.transform.localPosition = Vector3.zero;
+            fireModeImage.transform.localScale = Vector3.one;
+            fireModeImage.GetComponent<RectTransform>().sizeDelta = size;
+            fireModeImage.raycastTarget = false;
+            fireModeImage.enabled = false;
 
             magReleaseTrigger = new GameObject("MinigameMagRelease").AddComponent<Image>();
             magReleaseTrigger.transform.SetParent(gunBase.transform);
@@ -718,6 +721,7 @@ namespace GunMinigame
             {
                 if (!active || hiden || automatedHandAction || IsAnyGameUIOpen() || !PlayerCamera.main.body.conscious) return;
                 if (info.onlyUnrackedToRacked && gun.IsRacked()) return;
+                if (IsSliderOpeningBlocked) return;
                 gun.Rack();
                 EventSystem.current.SetSelectedGameObject(null);
             });
@@ -764,9 +768,7 @@ namespace GunMinigame
             fireToggleTrigger.gameObject.AddComponent<AlphaRaycastFilter>(); // :hmm:
             fireToggleTrigger.color = new Color(1f, 1f, 1f, 0f);
             fireToggleTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() => {
-                gun.ToggleFireMode();
-                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
-                EventSystem.current.SetSelectedGameObject(null);
+                TryToggleFireMode();
             });
 
             receiverTrigger = new GameObject("MinigameReceiverTrigger").AddComponent<Image>();
@@ -1198,7 +1200,8 @@ namespace GunMinigame
                 Vector2 pointer = gunBase.transform.InverseTransformPoint(SliderPointer);
                 xPos = (pointer.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
-                if (!closingBlocked && SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
+                xPos = ClampSliderForSafety(xPos);
+                if (!closingBlocked && !IsSliderOpeningBlocked && SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
                 {
                     gun.Rack();
                 }
@@ -1290,6 +1293,7 @@ namespace GunMinigame
             if (!active || hiden || automatedHandAction || holdsSlide || handIsHovered || IsAnyGameUIOpen())
                 return;
 
+            if (IsSliderOpeningBlocked && (rack || info.ejectMagazineOnFullRack)) return;
             if (rack)
                 StartCoroutine(AnimateMarksmanRack());
             else if (!string.IsNullOrEmpty(gun.CurrentMag()))
@@ -1340,6 +1344,7 @@ namespace GunMinigame
 
         private IEnumerator AnimateMarksmanRack(bool ejectMagazine = false)
         {
+            if (IsSliderOpeningBlocked) yield break;
             automatedRackAction = true;
             automatedMagazineRemoval = ejectMagazine;
             try
@@ -1818,15 +1823,46 @@ namespace GunMinigame
         public void SliderClickDown()
             => SliderClickDown(handPos);
 
+        internal bool IsSliderOpeningBlocked => info != null && info.locksSliderOnSafety &&
+            gun != null && !gun.IsRacked() && gun.CurrentFireMode() == 0;
+
+        internal float ClampSliderForSafety(float position)
+        {
+            if (!IsSliderOpeningBlocked) return position;
+            float stop = SliderRange.Clamp(info.unrackedToRacked,
+                info.sliderMinimumPosition, info.sliderMaximumPosition);
+            return SliderRange.Clamp(position, stop, info.sliderMaximumPosition);
+        }
+
+        private void TryToggleFireMode()
+        {
+            if (!active || hiden || hiding || automatedHandAction || IsAnyGameUIOpen() ||
+                !PlayerCamera.main.body.conscious) return;
+            if (info.locksSliderOnSafety && (gun.IsRacked() || holdsSlide || !IsSliderClosed())) return;
+            gun.ToggleFireMode();
+            PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        private bool IsSliderClosed()
+        {
+            float tolerance = Mathf.Max(0.001f,
+                Mathf.Abs(info.sliderMaximumPosition - info.sliderMinimumPosition) * 0.001f);
+            if (info.rackByRotation && !info.mosynStyleRack)
+                return Mathf.Abs(Mathf.DeltaAngle(sliderFrontImage.transform.localEulerAngles.z,
+                    info.unrackedIdlePosition)) <= tolerance;
+            Vector3 position = sliderFrontImage.transform.localPosition;
+            return Mathf.Abs(position.x - info.unrackedIdlePosition) <= tolerance &&
+                (!info.mosynStyleRack || Mathf.Abs(position.y) <= tolerance);
+        }
+
         private void SliderRightClick(Vector2 pointer)
         {
             if (!active || hiden || hiding || automatedHandAction || holdsSlide || supportGripHeld ||
                 IsAnyGameUIOpen()) return;
             if (info.sliderRightClickFireToggle)
             {
-                gun.ToggleFireMode();
-                PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Click);
-                EventSystem.current.SetSelectedGameObject(null);
+                TryToggleFireMode();
             }
             else if (info.grabOnSlider)
                 BeginSupportGrip(pointer);
@@ -2299,6 +2335,7 @@ namespace GunMinigame
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
             if (!minigame.holdsSlide) minigame.SliderClickDown(eventData.position);
+            if (!minigame.holdsSlide) return;
             // Find where the pointer is relative to the center when the drag first starts
             lastPointerAngle = GetPointerAngle();
             float idle = minigame.gun.IsRacked() ? minigame.info.rackedIdlePosition : minigame.info.unrackedIdlePosition;
@@ -2332,9 +2369,10 @@ namespace GunMinigame
             // 3. Add that movement to our total tracked angle and clamp it
             currentTrackedAngle += angleDelta;
             currentTrackedAngle = SliderRange.Clamp(currentTrackedAngle, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition);
+            currentTrackedAngle = minigame.ClampSliderForSafety(currentTrackedAngle);
 
             bool racked = minigame.gun.IsRacked();
-            if (SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.unrackedToRacked, minigame.info.rackedToUnracked))
+            if (!minigame.IsSliderOpeningBlocked && SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.unrackedToRacked, minigame.info.rackedToUnracked))
             {
                 minigame.gun.Rack();
             }
