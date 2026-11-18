@@ -43,6 +43,9 @@ Limits of the current CUCoreLib/native protocol:
   dragging still cannot recognize those pairs.
   Custom magazines also have no transferable native unload action; for example,
   `nf.smgmag` must currently be unloaded by the host or a modded player.
+  Their network definitions advertise `usable=false`, so clients without the mod
+  cannot call a missing unload delegate. Modded clients retain usability when
+  their local magazine definition has a use action; the host's action is unchanged.
 - There is no minigame, ammunition selector, custom fire-mode selector, laser or
   flashlight control. Native safety restores the definition's highest firing
   mode. Three-round burst falls back to one shot per native trigger press.
@@ -65,6 +68,8 @@ components just because its registry definition changed.
 If a client already received replacement definitions with missing vanilla
 magazine actions, fully restart that client after updating the host. Reconnecting
 alone may retain the broken registry entries in memory.
+Also fully restart clients that previously received custom magazines with
+`usable=true`: their cached definitions can still expose the missing action.
 
 Validation on 2026-11-16: host plus `client1` without NewFirearms, Together 5.5.2
 and CUCoreLib 1.1. Live MCP checks and player feedback confirmed the MP5's native
