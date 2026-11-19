@@ -23,7 +23,6 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections;
 using System;
@@ -229,14 +228,6 @@ namespace GunMinigame
             if (!gun.DragOnto(stagedMagazineItem))
                 PlayerCamera.main.PlayUISound(PlayerCamera.UISoundType.Deny);
             ClearStagedMagazine();
-            // Destroy(Item) is deferred until the end of the frame. Refresh after it is gone.
-            StartCoroutine(RefreshMagazinesAfterInsertion());
-        }
-
-        private IEnumerator RefreshMagazinesAfterInsertion()
-        {
-            yield return null;
-            shouldUpdateMagazineCount = true;
         }
 
         public bool active;
@@ -348,6 +339,7 @@ namespace GunMinigame
         public Item pendingJump;
 
         private List<Image> placedMagazines;
+        private readonly List<Item> visiblePouchMagazines = new List<Item>();
 
         public Image magazineDragTrigger;
         public static Vector3 size;
@@ -398,6 +390,7 @@ namespace GunMinigame
         public void Hide()
         {
             EndSupportGrip();
+            EndMagazineDrag();
             if (active) ResetInertia();
             mosynInitialized = false;
             ClearStagedMagazine();
@@ -414,6 +407,7 @@ namespace GunMinigame
             if (!ReferenceEquals(gun, newGun) || !ReferenceEquals(info, newInfo))
             {
                 EndSupportGrip();
+                EndMagazineDrag();
                 if (info != null && info.mosynStyleRack && !newInfo.mosynStyleRack && sliderFrontImage != null)
                 {
                     Vector3 position = sliderFrontImage.transform.localPosition;
@@ -1005,6 +999,7 @@ namespace GunMinigame
             if (!showWindow)
             {
                 EndSupportGrip();
+                EndMagazineDrag();
                 holdsSlide = false;
                 handIsHovered = false;
                 ReleaseSliderPull();
@@ -1675,109 +1670,132 @@ namespace GunMinigame
 
         void HandleFannyPack()
         {
-            // Какой блин activate windows че я писал
-            bool activateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("fannypack");
-            bool goToSettingsToActivateWindows = info.canUseFannyPack && PlayerCamera.main.body.HasWearable("traumarig");
-            fannyPack.gameObject.SetActive(activateWindows || goToSettingsToActivateWindows);
-            if (activateWindows)
+            var pouch = info.canUseFannyPack ? body.GetWearableBySlotID("torsofront") : null;
+            bool traumaRig = pouch != null && pouch.id == "traumarig";
+            bool hasPouch = traumaRig || pouch != null && pouch.id == "fannypack";
+            fannyPack.SetActive(hasPouch);
+            if (!hasPouch)
             {
-                fannyPackImage.sprite = fannyPackSprite;
-                fannyPackZip.gameObject.SetActive(true);
-                traumarigBackground.gameObject.SetActive(false);
+                EndMagazineDrag();
+                ClearStagedMagazine();
+                visiblePouchMagazines.Clear();
+                ClearPouchMagazines();
+                UpdateFannyPackZip();
+                return;
             }
-       else if (goToSettingsToActivateWindows)
-            {
-                fannyPackImage.sprite = traumarigForegroundSprite;
-                fannyPackZip.gameObject.SetActive(false);
-                traumarigBackground.gameObject.SetActive(true);
-            }
-
-            shouldUpdateMagazineCount = shouldUpdateMagazineCount || 0f >= windowAlpha;
-            if (shouldUpdateMagazineCount&&(activateWindows || goToSettingsToActivateWindows) && 0f < windowAlpha)
-            {
-                MagazineDragTrigger.isHovering = false;
-                shouldUpdateMagazineCount = false;
-                bool traumaRig = !activateWindows && goToSettingsToActivateWindows;
-                int firstIndex = traumaRig ? info.maximumMagazines / -2 : 0;
-                int placed = firstIndex;
-                float startX = traumaRig
-                    ? info.traumarigMagazinesStartXPosition ?? info.magazinesStartXPosition - info.magazinesOffset
-                    : info.fannyPackMagazinesStartXPosition ?? info.magazinesStartXPosition;
-                float startY = traumaRig
-                    ? info.traumarigMagazinesStartYPosition ?? info.magazinesStartYPosition
-                    : info.fannyPackMagazinesStartYPosition ?? info.magazinesStartYPosition;
-
-                foreach (Image go in placedMagazines)
-                    if (null != go)
-                        UnityEngine.Object.Destroy(go.gameObject);
-                placedMagazines.Clear();
-
-                foreach (Transform trans in PlayerCamera.main.body.GetWearableBySlotID("torsofront").transform)
-                {
-                    if (!trans.TryGetComponent<Item>(out Item it))
-                        continue;
-                    if (it == stagedMagazineItem)
-                        continue;
-                    if (!info.magazineSprites.TryGetValue(it.id, out Sprite sprite))
-                        continue;
-
-                    Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
-                    transistor.transform.SetParent(fannyPack.transform);
-                    if (info.resizeMagazine)
-                    {
-                        transistor.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
-                        transistor.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
-                    }
-               else     transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
-                    int rowIndex = placed - firstIndex;
-                    float rowOffset = rowIndex * info.magazinesOffset;
-                    if (traumaRig && info.traumarigDoublePairSpacing)
-                        rowOffset += (rowIndex / 2) * info.magazinesOffset;
-                    transistor.transform.localPosition = new Vector3(
-                        (startX + rowOffset) * Screen.width,
-                        startY * Screen.height);
-                    transistor.sprite = sprite;
-                    transistor.alphaHitTestMinimumThreshold = 0.1f;
-                    MagazineScript magazine = transistor.gameObject.AddComponent<MagazineScript>();
-                    magazine.it = it;
-                    if (it == pendingJump)
-                    {
-                        magazine.Jump();
-                        pendingJump = null;
-                    }
-                    placedMagazines.Add(transistor);
-
-                    if (null != info.ammosInMagazine)
-                    {
-                        string ammo = bulletToShow(it);
-                        if (!string.IsNullOrEmpty(ammo))
-                        {
-                            int index = Array.IndexOf(info.ammos, ammo);
-                            if (-1 != index)
-                            {
-                                Image ammoFillup = new GameObject("FannyPackMagazineFillup").AddComponent<Image>();
-                                ammoFillup.transform.SetParent(transistor.transform);
-                                ammoFillup.transform.localScale = Vector3.one;
-                                ammoFillup.transform.localPosition = Vector3.zero;
-                                if (info.resizeMagazine)
-                                    ammoFillup.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
-                                ammoFillup.sprite = info.ammosInMagazine[it.id][index];
-                                ammoFillup.raycastTarget = false;
-                            }
-                       else     UnityEngine.Debug.LogWarning($"[NewFirearms] Magazine {it.id} doesnt have a ammo fillup for {ammo}");
-                        }
-                    }
-
-                    placed += 1;
-                    if (placed >= info.maximumMagazines)
-                        break;
-                }
-
-                fannyPackImage.transform.SetAsLastSibling();
-                fannyPackZip.transform.SetAsLastSibling();
-            }
-
+            if (traumarigBackground.gameObject.activeSelf != traumaRig)
+                shouldUpdateMagazineCount = true;
+            fannyPackImage.sprite = traumaRig ? traumarigForegroundSprite : fannyPackSprite;
+            fannyPackZip.gameObject.SetActive(!traumaRig);
+            traumarigBackground.gameObject.SetActive(traumaRig);
             UpdateFannyPackZip();
+
+            if (windowAlpha <= 0f || magazineDragTrigger.gameObject.activeSelf)
+                return;
+            if (stagedMagazineItem != null && stagedMagazineItem.transform.parent != pouch.transform)
+                ClearStagedMagazine();
+            int firstIndex = traumaRig ? info.maximumMagazines / -2 : 0;
+            // A host response can change the pouch after the drag has already ended.
+            if (!CollectPouchMagazines(pouch.transform, Mathf.Max(1, info.maximumMagazines - firstIndex)) && !shouldUpdateMagazineCount)
+                return;
+            RefreshPouchMagazines(traumaRig);
+        }
+
+        private void RefreshPouchMagazines(bool traumaRig)
+        {
+            shouldUpdateMagazineCount = false;
+            float startX = traumaRig
+                ? info.traumarigMagazinesStartXPosition ?? info.magazinesStartXPosition - info.magazinesOffset
+                : info.fannyPackMagazinesStartXPosition ?? info.magazinesStartXPosition;
+            float startY = traumaRig
+                ? info.traumarigMagazinesStartYPosition ?? info.magazinesStartYPosition
+                : info.fannyPackMagazinesStartYPosition ?? info.magazinesStartYPosition;
+
+            ClearPouchMagazines();
+
+            for (int rowIndex = 0; rowIndex < visiblePouchMagazines.Count; rowIndex++)
+            {
+                Item it = visiblePouchMagazines[rowIndex];
+                Sprite sprite = info.magazineSprites[it.id];
+                Image transistor = new GameObject("FannyPackMagazine").AddComponent<Image>();
+                transistor.transform.SetParent(fannyPack.transform);
+                if (info.resizeMagazine)
+                {
+                    transistor.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
+                    transistor.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
+                }
+           else     transistor.transform.localScale = new Vector3((1f/2560f)*Screen.width, (1f/1440f)*Screen.height);
+                float rowOffset = rowIndex * info.magazinesOffset;
+                if (traumaRig && info.traumarigDoublePairSpacing)
+                    rowOffset += (rowIndex / 2) * info.magazinesOffset;
+                transistor.transform.localPosition = new Vector3(
+                    (startX + rowOffset) * Screen.width,
+                    startY * Screen.height);
+                transistor.sprite = sprite;
+                transistor.alphaHitTestMinimumThreshold = 0.1f;
+                MagazineScript magazine = transistor.gameObject.AddComponent<MagazineScript>();
+                magazine.it = it;
+                if (it == pendingJump)
+                {
+                    magazine.Jump();
+                    pendingJump = null;
+                }
+                placedMagazines.Add(transistor);
+
+                if (null != info.ammosInMagazine)
+                {
+                    string ammo = bulletToShow(it);
+                    if (!string.IsNullOrEmpty(ammo))
+                    {
+                        int index = Array.IndexOf(info.ammos, ammo);
+                        if (-1 != index)
+                        {
+                            Image ammoFillup = new GameObject("FannyPackMagazineFillup").AddComponent<Image>();
+                            ammoFillup.transform.SetParent(transistor.transform);
+                            ammoFillup.transform.localScale = Vector3.one;
+                            ammoFillup.transform.localPosition = Vector3.zero;
+                            if (info.resizeMagazine)
+                                ammoFillup.GetComponent<RectTransform>().sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
+                            ammoFillup.sprite = info.ammosInMagazine[it.id][index];
+                            ammoFillup.raycastTarget = false;
+                        }
+                   else     UnityEngine.Debug.LogWarning($"[NewFirearms] Magazine {it.id} doesnt have a ammo fillup for {ammo}");
+                    }
+                }
+            }
+
+            fannyPackImage.transform.SetAsLastSibling();
+            fannyPackZip.transform.SetAsLastSibling();
+        }
+
+        private bool CollectPouchMagazines(Transform pouch, int limit)
+        {
+            visiblePouchMagazines.Clear();
+            if (info.magazineSprites != null)
+            {
+                for (int i = 0; i < pouch.childCount && visiblePouchMagazines.Count < limit; i++)
+                {
+                    if (pouch.GetChild(i).TryGetComponent<Item>(out var item) && item != stagedMagazineItem &&
+                        info.magazineSprites.ContainsKey(item.id))
+                        visiblePouchMagazines.Add(item);
+                }
+            }
+
+            if (placedMagazines.Count != visiblePouchMagazines.Count) return true;
+            for (int i = 0; i < visiblePouchMagazines.Count; i++)
+                if (placedMagazines[i] == null || placedMagazines[i].GetComponent<MagazineScript>().it != visiblePouchMagazines[i])
+                    return true;
+            return false;
+        }
+
+        private void ClearPouchMagazines()
+        {
+            if (placedMagazines.Count == 0) return;
+            foreach (Image icon in placedMagazines)
+                if (icon != null)
+                    UnityEngine.Object.Destroy(icon.gameObject);
+            placedMagazines.Clear();
+            MagazineScript.currentlyHovering = null;
         }
 
         public void SpinBandolied()
@@ -2048,6 +2066,7 @@ namespace GunMinigame
                 i.color = colo;
             foreach (Image i in placedMagazines)
             {
+                if (i == null) continue;
                 i.color = colo;
                 if (0 < i.transform.childCount)
                 {
@@ -2189,14 +2208,12 @@ namespace GunMinigame
             EventSystem.current.SetSelectedGameObject(null);
         }
 
-        public void DelayUpdateMagazineCount()
+        internal void EndMagazineDrag()
         {
-            var _ = ааа();
-        }
-
-        private async Task ааа()
-        {
-            await Task.Delay(50);
+            if (magazineDragTrigger == null || !magazineDragTrigger.gameObject.activeSelf)
+                return;
+            magazineDragTrigger.gameObject.SetActive(false);
+            MagazineDragTrigger.isHovering = false;
             shouldUpdateMagazineCount = true;
         }
 

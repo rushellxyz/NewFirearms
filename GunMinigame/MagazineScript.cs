@@ -9,10 +9,15 @@ namespace GunMinigame
     {
         public Item it;
         public static MagazineScript currentlyHovering;
+        private Container dragSource;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            dragSource = it != null ? it.ParentContainer() : null;
+            if (dragSource == null) return;
+
             MinigameManager mang = MinigameManager.GetOrAddInstance();
+            MagazineDragTrigger.isHovering = false;
             mang.magazineDragTrigger.gameObject.SetActive(true);
             GetComponent<RectTransform>().SetParent(mang.handTransform);
             GetComponent<Image>().raycastTarget = false; // scary fix
@@ -31,12 +36,17 @@ namespace GunMinigame
         public void OnEndDrag(PointerEventData eventData)
         {
             MinigameManager mang = MinigameManager.GetOrAddInstance();
-            if (MagazineDragTrigger.isHovering)
-                mang.DropMagazine(it, GetComponent<Image>());
-       else if (!FannyPackScript.isHovering && !Plugin.IsMarksman(PlayerCamera.main.body))
-                it.transform.parent.GetComponent<Container>().UnloadItem(it);
-            mang.magazineDragTrigger.gameObject.SetActive(false);
-            mang.DelayUpdateMagazineCount();
+            if (!mang.magazineDragTrigger.gameObject.activeSelf) return;
+
+            if (dragSource != null && it != null && it.ParentContainer() == dragSource)
+            {
+                if (MagazineDragTrigger.isHovering)
+                    mang.DropMagazine(it, GetComponent<Image>());
+                else if (!FannyPackScript.isHovering && !Plugin.IsMarksman(PlayerCamera.main.body))
+                    dragSource.UnloadItem(it);
+            }
+            dragSource = null;
+            mang.EndMagazineDrag();
             UnityEngine.Object.Destroy(gameObject);
         }
 
