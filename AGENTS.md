@@ -7,17 +7,20 @@ This repository contains a BepInEx mod for Casualties: Unknown split across two 
 - `NewFirearms/` — main mod logic, item registration, JSON loading, gameplay patches, and compatibility shims.
 - `GunMinigame/` — minigame subsystem and its standalone/API-only support path.
 - `Ship/` — built-in gun and magazine JSON data plus runtime asset resources.
+- `GunMinigame/Resources` `GunMinigame/Guns` - resources for standalone mode.
+- `doc/` - documentation on every new feature of the mod
 
 The project is meant to stay functional even when optional integrations are not installed. The main plugin and the minigame must degrade gracefully when optional mods are absent.
 
 ## Golden rules
 
-- Rewrite old code freely when it is wrong, brittle, or hard to maintain.
-- Keep the mod working without optional dependencies such as Together/KrokMP, GunsawGenetics, or other compatibility layers being present.
+- Keep the mod working without optional dependencies such as Together, New Descents, or other compatibility layers being present.
+- Keep the mod working on both demo and full release of the game.
 - Prefer clean, direct APIs over reflection-heavy hacks. Use Harmony/AccessTools only where necessary and keep patches explicit and readable.
-- Multiplayer rules are host-authorized. Follow the existing Together/KrokMP pattern rather than introducing client-authorized behavior.
+- Multiplayer rules are host-authorized. Follow the existing Together pattern rather than introducing client-authorized behavior.
 - Preserve compatibility with older JSON configs and older multiplayer data unless a change explicitly requires breaking it.
 - The GunMinigame API is still evolving. It is acceptable to break internal API compatibility as long as the shipped runtime remains coherent and the latest minigame assembly stays aligned with the latest main plugin release.
+- Keep documentation and localization english only
 
 ## Architecture and compatibility expectations
 
@@ -38,6 +41,7 @@ The project is meant to stay functional even when optional integrations are not 
 ## Build and validation notes
 
 - This repo references game assemblies and mod dependencies from the local game install, so build validation depends on the environment where those files exist.
+- If the build fails because Together.dll is absent, download latest release from `https://github.com/creaturefeaturelarry/casualties-together` and notify user.
 - Do not introduce new hard dependencies on optional packages, helper libraries, or platform-specific assumptions.
 - When changing mod logic, favor minimal, focused edits that maintain the existing runtime contract and compatibility story.
 
