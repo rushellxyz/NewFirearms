@@ -76,6 +76,8 @@ namespace NewFirearms
 
     public static class ShootManager
     {
+        public static bool AllowSingleplayerDamage;
+
         // shooter is null when commiting suicide
         public static void ShootLogic(AmmoInfo info, Vector2 pos, Vector2 dir, Body shooter, ref ShootVisuals visuals)
             => ShootLogic(info, pos, dir, shooter, ref visuals, null);
@@ -172,7 +174,7 @@ namespace NewFirearms
                     raycastHit2D.rigidbody.AddForceAtPosition(dir * info.structureDamage, raycastHit2D.point, ForceMode2D.Impulse);
                 }
                 PlayerCamera.main.body.CreateCloudSmall(raycastHit2D.point, Vector2.zero);
-                if (!Plugin.MultiplayerActive || !IsPvpEnabled())
+                if ((!Plugin.MultiplayerActive || !IsPvpEnabled()) && !AllowSingleplayerDamage)
                 {
                     continue;
                 }
