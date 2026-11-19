@@ -172,11 +172,17 @@ namespace NewFirearms
             {
                 rounds = Enumerable.Repeat((sbyte)-2, prop.internalCapacity).ToList();
                 fireMode = prop.fireModes.Min();
+                bool isGuardDrop = TryGetComponent<GuardPistolContents>(out var guardDrop);
+                if (isGuardDrop)
+                {
+                    existed = GuardPistolContents.Apply(this, guardDrop.Ammo);
+                    UnityEngine.Object.Destroy(guardDrop);
+                }
                 if (Plugin.MultiplayerActive)
                     MpStartOp();
-           else if (prop.feedType != FeedKind.Battery && !prop.spawnUnracked)
+           else if (!existed && prop.feedType != FeedKind.Battery && !prop.spawnUnracked)
                     Rack(manual: true);
-                if (prop.halfDurability)
+                if (prop.halfDurability && !isGuardDrop)
                     it.condition *= 0.5f;
                 existed = true;
             }

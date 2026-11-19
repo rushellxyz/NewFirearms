@@ -9,5 +9,5 @@ TODO List - Agents stay away unless stated otherwise
  - Fix client loading mag geting false error
  - Add the muzzle flash onto new firearms engine
  - Make guards use various weapons, or at least drop loaded
- - Escape ending: gurads drop weapons, and may be using other weapons too
+ - Escape ending: and may be using other weapons too?
  - Marksmen animation speed depends on concustions
