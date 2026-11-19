@@ -14,7 +14,7 @@ namespace GunMinigame
         Dune
     }
 
-    [BepInPlugin("com.rushellxyz.gunminigame", "Gun Minigame", "1.0.1")]
+    [BepInPlugin("com.rushellxyz.gunminigame", "Gun Minigame", "1.0.2")]
     public class Plugin : BaseUnityPlugin
     {
         public static bool standalone = false;
