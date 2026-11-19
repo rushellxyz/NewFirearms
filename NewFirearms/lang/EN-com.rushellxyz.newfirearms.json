@@ -59,6 +59,8 @@
     "runsetnewfirearms.gunjammingdsc": "Do guns jam?",
     "runsetnewfirearms.stunhitbox": "Stun hitbox size",
     "runsetnewfirearms.stunhitboxdsc": "Shots passing just above or below an enemy can still stun it. Sets the size of the stun hitbox.",
+    "runsetnewfirearms.gunaimspeed": "Gun aim speed",
+    "runsetnewfirearms.gunaimspeeddsc": "How quickly the arms turn a New Firearms weapon toward the aim point. 8 is demo vanilla, 25 is release vanilla",
     "newfirearms.course.dialogue.intro": "Welcome to firearm handling. First of all, lets pin first aid knowledge",
     "newfirearms.course.dialogue.medical": "You know how to treat it.",
     "newfirearms.course.dialogue.medicalComplete": "Good job Experiment #{0}, now, lets move on to when you are the one firing",

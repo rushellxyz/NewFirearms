@@ -125,6 +125,11 @@ namespace NewFirearms
                     limits = new RangeF(1f, Plugin.sett.maxSliderValue + 1f),
                     postfix = "x",
                 });
+                RunSettings.settingTypes.Insert(i + 1, new RunSettingFloat(GunAnimationPatch.AimSpeedSetting)
+                {
+                    limits = new RangeF(GunAnimationPatch.MinAimSpeed, GunAnimationPatch.MaxAimSpeed),
+                    wholeNum = true,
+                });
                 RunSettings.settingTypes.Insert(i + 1, new RunSettingBool("newfirearms.gunjamming"));
                 RunSettings.settingTypes.Insert(i + 1, new RunSettingBool("newfirearms.gunejectcasing"));
                 break;
@@ -133,22 +138,31 @@ namespace NewFirearms
             RunSettings.presets[0].presetValues.Add("newfirearms.gundmgmult", 1f);
             RunSettings.presets[0].presetValues.Add("newfirearms.stunhitbox", 2.5f);
             RunSettings.presets[0].presetValues.Add("newfirearms.gunejectcasing", true);
+            RunSettings.presets[0].presetValues.Add(GunAnimationPatch.AimSpeedSetting, GunAnimationPatch.DefaultAimSpeed);
+
             RunSettings.presets[1].presetValues.Add("newfirearms.gunjamming", false);
             RunSettings.presets[1].presetValues.Add("newfirearms.gundmgmult", 1.2f);
             RunSettings.presets[1].presetValues.Add("newfirearms.stunhitbox", 3f);
             RunSettings.presets[1].presetValues.Add("newfirearms.gunejectcasing", true);
+            RunSettings.presets[1].presetValues.Add(GunAnimationPatch.AimSpeedSetting, 12f);
+
             RunSettings.presets[2].presetValues.Add("newfirearms.gunjamming", false);
             RunSettings.presets[2].presetValues.Add("newfirearms.gundmgmult", 1.5f);
             RunSettings.presets[2].presetValues.Add("newfirearms.stunhitbox", 4f);
             RunSettings.presets[2].presetValues.Add("newfirearms.gunejectcasing", true);
+            RunSettings.presets[2].presetValues.Add(GunAnimationPatch.AimSpeedSetting, 14f);
+
             RunSettings.presets[3].presetValues.Add("newfirearms.gunjamming", true);
             RunSettings.presets[3].presetValues.Add("newfirearms.gundmgmult", 0.8f);
             RunSettings.presets[3].presetValues.Add("newfirearms.stunhitbox", 1.5f);
             RunSettings.presets[3].presetValues.Add("newfirearms.gunejectcasing", true);
+            RunSettings.presets[3].presetValues.Add(GunAnimationPatch.AimSpeedSetting, 8f);
+
             RunSettings.presets[4].presetValues.Add("newfirearms.gunjamming", true);
             RunSettings.presets[4].presetValues.Add("newfirearms.gundmgmult", 1f);
             RunSettings.presets[4].presetValues.Add("newfirearms.stunhitbox", 2.5f);
             RunSettings.presets[4].presetValues.Add("newfirearms.gunejectcasing", true);
+            RunSettings.presets[4].presetValues.Add(GunAnimationPatch.AimSpeedSetting, GunAnimationPatch.DefaultAimSpeed);
         }
 
         private static readonly HashSet<string> vanillaItems = new HashSet<string> { "boxof12gauge", "riflemagazine", "smallmagazine", "pistol", "shotgun", "rifle", "makeshiftrifle" };

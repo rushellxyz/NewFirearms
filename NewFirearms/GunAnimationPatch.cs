@@ -10,6 +10,11 @@ namespace NewFirearms
     [HarmonyPatch(typeof(Body), "HandleVisuals")]
     internal static class GunAnimationPatch
     {
+        internal const string AimSpeedSetting = "newfirearms.gunaimspeed";
+        internal const float DefaultAimSpeed = 10f;
+        internal const float MinAimSpeed = 1f;
+        internal const float MaxAimSpeed = 25f;
+
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase __originalMethod)
         {
             var code = new List<CodeInstruction>(instructions);
@@ -72,7 +77,9 @@ namespace NewFirearms
             if (torsoAngle > 180f) torsoAngle -= 360f;
             float demoTarget = Vector2.SignedAngle(body.transform.right * facing,
                 (body.targetLookPos - torso.position).normalized) * facing - torsoAngle * facing;
-            return Mathf.Lerp(current, demoTarget, Time.deltaTime * 8f * body.slots[body.handSlot].armPowerMult);
+            float aimSpeed = RunSettingsCompatibility.GetFloat(AimSpeedSetting, DefaultAimSpeed);
+            aimSpeed = float.IsNaN(aimSpeed) ? DefaultAimSpeed : Mathf.Clamp(aimSpeed, MinAimSpeed, MaxAimSpeed);
+            return Mathf.Lerp(current, demoTarget, Time.deltaTime * aimSpeed * body.slots[body.handSlot].armPowerMult);
         }
 
         private static void SetGunAimAngles(Transform target, Vector3 angles, Body body)

@@ -1,6 +1,8 @@
 # Demo-style aiming for NewFirearms
 
-Custom `RshGun` weapons use the aiming behavior from `/home/rushell/Documents/CU2`: the arms animator aims from the torso with `Mathf.Lerp(current, target, Time.deltaTime * 8 * armPowerMult)`, without the release's added `bonusRot` term. The gun retains `Item.Stats.slotRotation` in its inventory slot so the animated hand controls its world orientation.
+Custom `RshGun` weapons use demo-style aiming. The arms animator aims from the torso with `Mathf.Lerp(current, target, Time.deltaTime * aimSpeed * armPowerMult)`. The gun retains `Item.Stats.slotRotation` in its inventory slot so the animated hand controls its world orientation.
+
+**Gun aim speed** can be adjusted from 1 to 25 in the custom run settings. Paradise starts at 14, Relaxed at 12, Normal and Unchipped at 10, and Desolate at 8. Endless and saves without this setting use 10.
 
 `GunAnimationPatch` targets only the gun-angle interpolation and direct gun world-rotation setter inside `Body.HandleVisuals`, while retaining its existing null-safe GunScript-transform fallback. Native GunScript weapons keep the release's original interpolation parameters and direct aiming. No projectile, recoil impulse, inventory, or multiplayer-authority rules change.
 
