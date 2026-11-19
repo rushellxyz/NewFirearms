@@ -186,7 +186,6 @@ namespace NewFirearms
                 description = info.description,
                 onlyHoldInHands = info.onlyHoldInHands,
 
-                Icon = sprite,
                 Gun = nativeClientCompatibilityAvailable ? VanillaGunProxy.CreateDefinition(prop, sprite) : null,
                 VisualOffset = new Vector2(prop.itemSpriteXOffset, prop.itemSpriteYOffset),
                 SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" }
@@ -198,7 +197,7 @@ namespace NewFirearms
             if (NewDescentsCompatibility.Enabled && !cuInfo.qualities.Any(quality => quality.id == "gun"))
                 cuInfo.qualities.Add(CUCoreLib.Helpers.CUCoreUtils.CreateCraftingQuality("gun", "Gun"));
             cuInfo.SetTags();
-            CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
+            CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo, sprite, prop.spawnFrequency);
             // CUCoreLib installs the native attack delegate for network-only peers.
             // Locally our existing inventory action must keep operating RshGun.
             cuInfo.useAction = info.useAction;
@@ -226,16 +225,20 @@ namespace NewFirearms
                 fullName = info.fullName,
                 description = info.description,
 
-                Icon = sprite,
                 SpawnComponents = new List<string> { "NewFirearms.RshMag, NewFirearms.dll" }
             };
             cuInfo.SetTags();
-            CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo);
+            CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo, sprite, prop.spawnFrequency);
         }
 
         public static void RegisterRoundCuCore(string id, ItemInfo info, Sprite sprite)
         {
             CUCoreLib.Registries.ItemRegistry.Register(id, info, sprite);
+        }
+
+        internal static void RegisterRoundCuCore(string id, ItemInfo info, Sprite sprite, float spawnFrequency)
+        {
+            CUCoreLib.Registries.ItemRegistry.Register(id, info, sprite, spawnFrequency);
         }
 
         void RegisterCourse()

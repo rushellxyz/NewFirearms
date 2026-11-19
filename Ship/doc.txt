@@ -16,6 +16,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "weight": 0.0,
     "value": 0,
     "recognition": 0, // INT to recognize
+    "spawnFrequency": 1.0, // Modifier of how often gun would appear in loot
     "milkyCanSell": true,
 
     "craftable": false,
@@ -133,6 +134,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "weight": 0.0,
     "value": 0,
     "recognition": 0, // INT to recognize
+    "spawnFrequency": 1.0, // Modifier of how often gun would appear in loot
     "milkyCanSell": true, // Also determines if can be spawned in collapsed pod
 
     "craftable": false,
@@ -163,6 +165,7 @@ Another thing that changed: m1911 got removed and its mag, this one, is not cove
     "weight": 0.0,
     "value": 0,
     "recognition": 0, // INT to recognize
+    "spawnFrequency": 1.0, // Modifier of how often gun would appear in loot
 
     "craftable": false,
     "recipe": [ "string", ], // ignores if craftable is false

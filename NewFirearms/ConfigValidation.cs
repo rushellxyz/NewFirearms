@@ -78,9 +78,16 @@ namespace NewFirearms
             if (craftable) Ids(recipe, "recipe", false);
         }
 
+        private void SpawnFrequency(float frequency)
+        {
+            Require(frequency >= 0f && (double)frequency <= int.MaxValue, "spawnFrequency",
+                "must be finite, non-negative, and fit an integer loot pool entry count.");
+        }
+
         internal void Gun(GunJson gun)
         {
             if (gun == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
+            SpawnFrequency(gun.spawnFrequency);
             Require(Enum.IsDefined(typeof(FeedKind), gun.feedType), "feedType",
                 "expected Magazine (1), Tube (2), Barrel (3), Revolver (4), or Battery (5).");
             Require(!gun.needRetract || gun.feedType == FeedKind.Battery, "needRetract", "requires feedType 5 (battery magazine).");
@@ -243,6 +250,7 @@ namespace NewFirearms
         internal void Magazine(MagJson mag)
         {
             if (mag == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
+            SpawnFrequency(mag.spawnFrequency);
             Require(Enum.IsDefined(typeof(MagazineKind), mag.type), "type", "expected regular, pseudo, or battery.");
             Require(mag.capacity > 0 && mag.capacity <= ushort.MaxValue, "capacity", "must be between 1 and 65535 (battery slots for battery magazines).");
             Ids(mag.ammoTypes, "ammoTypes", true);
@@ -258,6 +266,7 @@ namespace NewFirearms
         internal void Round(RoundJson round)
         {
             if (round == null) throw new ConfigValidationException(new[] { "$: expected a JSON object, got null." });
+            SpawnFrequency(round.spawnFrequency);
             Recipe(round.craftable, round.recipe);
             Require(!round.craftable || round.craftAmount > 0, "craftAmount", "must be greater than zero when craftable is true.");
             Sprite("item", "item sprite", true);

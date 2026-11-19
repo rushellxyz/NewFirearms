@@ -28,6 +28,7 @@ namespace NewFirearms
         public float weight;
         public int value;
         public int recognition;
+        public float spawnFrequency = 1f;
         public bool milkyCanSell = true;
         public bool onlyHoldInHands;
         public bool halfDurability;
@@ -176,6 +177,7 @@ namespace NewFirearms
         public float weight;
         public int value;
         public int recognition;
+        public float spawnFrequency = 1f;
         public bool milkyCanSell = true;
 
         public bool craftable;
@@ -206,6 +208,7 @@ namespace NewFirearms
         public float weight;
         public int value = 0;
         public int recognition;
+        public float spawnFrequency = 1f;
 
         public bool craftable;
         public List<string> recipe;

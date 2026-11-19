@@ -6,6 +6,7 @@
     "weight": 0.6,
     "value": 25,
     "recognition": 10,
+    "spawnFrequency": 0.5,
     "milkyCanSell": true,
     "halfDurability": true,
 

@@ -623,7 +623,7 @@ namespace NewFirearms
             };
             info.SetTags();
 
-            Plugin.RegisterRoundCuCore(itemId, info, LoadConfigSprite(folder, "item", "item sprite"));
+            Plugin.RegisterRoundCuCore(itemId, info, LoadConfigSprite(folder, "item", "item sprite"), prop.spawnFrequency);
 
             if (!prop.craftable)
                 return;

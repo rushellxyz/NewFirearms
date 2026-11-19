@@ -6,6 +6,7 @@
     "weight": 0.5,
     "value": 32,
     "recognition": 10,
+    "spawnFrequency": 1,
 
     "craftable": true,
     "recipe":

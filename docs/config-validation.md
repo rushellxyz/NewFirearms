@@ -1,5 +1,7 @@
 ItemLoader validates guns, magazines, and rounds before loading assets or registering items. Validation reports the config filename and all detected bad fields together. JSON syntax/type errors retain Newtonsoft.Json's field path and line information. Unexpected failures include their stack trace; sprite/texture decoding errors also identify the source field.
 
+`spawnFrequency` is an optional non-negative number in `gun.json`, `mag.json`, and `round.json`. It defaults to `1`, and `0` removes the item from its CUCoreLib loot pool. During world generation, CUCoreLib adds one entry per whole unit and rolls once per item and pool for the fractional part. For example, `0.5` gives a 50% chance of adding one entry to the pool. NewFirearms uses `milkyCanSell` separately for its Milky trader and collapsed pod selections.
+
 Array requirements:
 
 - `ammoTypes` must contain non-null entries with a `round` ID.

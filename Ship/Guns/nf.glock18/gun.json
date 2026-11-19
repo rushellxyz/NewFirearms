@@ -6,6 +6,7 @@
     "weight": 0.8,
     "value": 40,
     "recognition": 11,
+    "spawnFrequency": 0.5,
     "milkyCanSell": true,
 
     "craftable": true,

@@ -6,6 +6,7 @@
     "weight": 0.8,
     "value": 55,
     "recognition": 11,
+    "spawnFrequency": 1,
 
     "craftable": false,
 
