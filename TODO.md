@@ -11,3 +11,4 @@ TODO List - Agents stay away unless stated otherwise
  - Make guards use various weapons, or at least drop loaded
  - Escape ending: and may be using other weapons too?
  - Marksmen animation speed depends on concustions
+ - Milky quick load from box

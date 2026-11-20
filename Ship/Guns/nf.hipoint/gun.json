@@ -192,7 +192,7 @@
         "magazinesOffset": 0.025,
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
-        "casingXPosition": -0.076,
+        "casingXPosition": -0.081,
         "casingYPosition": 0.059,
         "casingsPath": [ "COPY__Guns/nf.glock18/uiEject9mmroundCasing", "COPY__Guns/nf.glock18/uiEject9mmround", "COPY__Guns/nf.glock18/uiEject9mmhollow", "COPY__Guns/nf.glock18/uiEject9mmvenomus" ],
         "chargingHandle": true,
@@ -202,6 +202,7 @@
         "fireTogglePath": "uiFireToggleTrigger",
         "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi" ],
         "locksSliderOnSafety": true,
+        "backLayerPath": "uiBackLayer",
     }
 
 }
