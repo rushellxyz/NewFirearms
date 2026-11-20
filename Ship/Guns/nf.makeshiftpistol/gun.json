@@ -182,5 +182,6 @@
         "onlyUnrackedToRacked": true,
         "unrackedOnlyPath": "uiUnrackedOnly",
         "rackedOnlyPath": "uiRackedOnly",
+        "lockOpen": true
     }
 }

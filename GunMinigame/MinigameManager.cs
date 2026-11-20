@@ -143,6 +143,7 @@ namespace GunMinigame
         public bool blockSlideWithEmptyMagazine;
         // Interlock: fire selector requires a closed action; safety prevents opening it.
         public bool locksSliderOnSafety;
+        public bool lockOpen; // block rotation open
 
         // should never be declared in json
         public ushort dCurrentAmmo;
@@ -2338,7 +2339,9 @@ namespace GunMinigame
                     minigame.ReleaseSliderPull();
                     return;
                 }
-                UpdateDrag();
+                UnityEngine.Debug.Log($"{minigame.info.lockOpen};{minigame.gun.IsRacked()};{!(minigame.info.lockOpen && !minigame.gun.IsRacked())}");
+                if (!(minigame.info.lockOpen && !minigame.gun.IsRacked()))
+                    UpdateDrag();
                 return;
             }
 
@@ -2362,7 +2365,7 @@ namespace GunMinigame
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (eventData.button != PointerEventData.InputButton.Left) return;
+            if (null != eventData && eventData.button != PointerEventData.InputButton.Left) return;
             dragged = false;
             minigame.holdsSlide = false;
             minigame.ReleaseSliderPull();
@@ -2371,7 +2374,9 @@ namespace GunMinigame
         public void OnDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
-            if (dragged && minigame.holdsSlide && !MinigameManager.IsAnyGameUIOpen()) UpdateDrag();
+            if (dragged && minigame.holdsSlide && !MinigameManager.IsAnyGameUIOpen())
+                if (!(minigame.info.lockOpen && !minigame.gun.IsRacked()))
+                    UpdateDrag();
         }
 
         private void UpdateDrag()
@@ -2392,6 +2397,8 @@ namespace GunMinigame
             if (!minigame.IsSliderOpeningBlocked && SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.unrackedToRacked, minigame.info.rackedToUnracked))
             {
                 minigame.gun.Rack();
+                if (minigame.info.lockOpen)
+                    OnEndDrag(null);
             }
 
             // 4. Apply the safe, limited angle to the UI element

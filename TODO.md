@@ -12,3 +12,4 @@ TODO List - Agents stay away unless stated otherwise
  - Escape ending: and may be using other weapons too?
  - Marksmen animation speed depends on concustions
  - Milky quick load from box
+ - Port that thing when you can shoot with brain damage onto new firearms
