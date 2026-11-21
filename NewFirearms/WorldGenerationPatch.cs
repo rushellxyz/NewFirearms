@@ -57,7 +57,10 @@ namespace NewFirearms
                 if (UnityEngine.Random.value < 0.9f)
                 {
                     GameObject component = Utils.Create(Plugin.milkyMags.PickRandom(), vector, UnityEngine.Random.value * 360f);
-                    component.GetComponent<Item>().condition = UnityEngine.Random.value;
+                    Item it = component.GetComponent<Item>();
+                    if (null != it)
+                        it.condition = UnityEngine.Random.value;
+               else     UnityEngine.Debug.Log("[NewFirearms] Utils.Create in broken pods distribution returned a GameObject without Item component! Cpu Optimization doing funny business?");
                 }
                 for (int l = 0; l < 3; l++)
                 {
