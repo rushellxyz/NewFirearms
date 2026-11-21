@@ -63,9 +63,8 @@ namespace NewFirearms
 
         public void Toggle()
         {
-            enabled = !enabled;
-            //if (null != gun) null should be impossible here
-                gun.laserEnabled = enabled;
+            if (gun == null && !TryGetComponent(out gun)) return;
+            gun.SetLaserEnabled(!gun.laserEnabled);
         }
 
         public bool IsEnabled()
