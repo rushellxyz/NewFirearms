@@ -2,7 +2,6 @@ TODO List - Agents stay away unless stated otherwise
 
  - Do something about RshGun.RemoveMagPart2WhenCuCore
  - Name for loading order
- - Gunsaw genetics voyager hashset?
  - Refactor, like, the whole gun minigame
  - Fix bug when switch hands between famas and gloсk18
  - Random +/- fib on taizer shot

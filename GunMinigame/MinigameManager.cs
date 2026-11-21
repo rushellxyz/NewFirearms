@@ -2379,6 +2379,7 @@ namespace GunMinigame
                     UpdateDrag();
         }
 
+        // TODO Today i couldnt sleep properply, i kept thinking why UpdateDrag() is called twice per frame :tourniqet:
         private void UpdateDrag()
         {
             Vector2 previousGrip = minigame.SliderGripPoint;

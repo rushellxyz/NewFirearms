@@ -88,7 +88,7 @@ namespace NewFirearms
                 Sprite sprite = LoadSprite("BepInEx/plugins/NewFirearms/", "Resources/" + id);
                 if (sprite == null) continue;
                 CUCoreLib.Helpers.CUCoreUtils.EditVanillaItem(id, info =>
-                    Plugin.RegisterRoundCuCore(id, info, sprite));
+                    RegisterRoundCuCore(id, info, sprite));
             }
         }
 
@@ -447,7 +447,7 @@ namespace NewFirearms
             };
             info.SetTags();
 
-            Plugin.RegisterGunCuCore(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
+            RegisterGunCuCore(itemId, info, TextureToSprite(prop.normalTexture, prop.ppu), prop);
 
             Plugin.milkyGuns.Remove(itemId);
             if (prop.milkyCanSell)
@@ -542,7 +542,7 @@ namespace NewFirearms
             prop.emptySprite = LoadConfigSprite(folder, "item", "item sprite");
             if (!string.IsNullOrEmpty(prop.nonEmptySpritePath))
                 prop.nonEmptySprite = LoadConfigSprite(folder, prop.nonEmptySpritePath, "nonEmptySpritePath");
-            Plugin.RegisterMagCuCore(itemId, info, prop.emptySprite, prop);
+            RegisterMagCuCore(itemId, info, prop.emptySprite, prop);
 
             if (prop.milkyCanSell)
                 Plugin.milkyMags.Add(itemId);
@@ -623,7 +623,7 @@ namespace NewFirearms
             };
             info.SetTags();
 
-            Plugin.RegisterRoundCuCore(itemId, info, LoadConfigSprite(folder, "item", "item sprite"), prop.spawnFrequency);
+            RegisterRoundCuCore(itemId, info, LoadConfigSprite(folder, "item", "item sprite"), prop.spawnFrequency);
 
             if (!prop.craftable)
                 return;
@@ -754,6 +754,82 @@ namespace NewFirearms
             if (null == texture)
                 return null;
             return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), ppu);
+        }
+
+        private static readonly HashSet<string> vanillaItems = new HashSet<string> { "boxof12gauge", "riflemagazine", "smallmagazine", "pistol", "shotgun", "rifle", "makeshiftrifle" };
+        public static void RegisterGunCuCore(string id, ItemInfo info, Sprite sprite, GunJson prop)
+        {
+            Plugin.GunDefinitions[id] = prop;
+            CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
+            {
+                category = info.category,
+                slotRotation = info.slotRotation,
+                usable = info.usable,
+                usableOnLimb = info.usableOnLimb,
+                destroyAtZeroCondition = info.destroyAtZeroCondition,
+                combineable = info.combineable,
+                weight = info.weight,
+                useAction = info.useAction,
+                value = info.value,
+                rec = info.rec,
+                tags = info.tags,
+                fullName = info.fullName,
+                description = info.description,
+                onlyHoldInHands = info.onlyHoldInHands,
+
+                Gun = Plugin.nativeClientCompatibilityAvailable ? VanillaGunProxy.CreateDefinition(prop, sprite) : null,
+                VisualOffset = new Vector2(prop.itemSpriteXOffset, prop.itemSpriteYOffset),
+                SpawnComponents = new List<string> { "NewFirearms.RshGun, NewFirearms.dll" }
+            };
+            if (prop.hasLaser)
+                cuInfo.SpawnComponents.Add("NewFirearms.LaserPointer, NewFirearms.dll");
+            if (info.qualities != null)
+                cuInfo.qualities = new List<CraftingQuality>(info.qualities);
+            if (NewDescentsCompatibility.Enabled && !cuInfo.qualities.Any(quality => quality.id == "gun"))
+                cuInfo.qualities.Add(CUCoreLib.Helpers.CUCoreUtils.CreateCraftingQuality("gun", "Gun"));
+            cuInfo.SetTags();
+            CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo, sprite, prop.spawnFrequency);
+            // CUCoreLib installs the native attack delegate for network-only peers.
+            // Locally our existing inventory action must keep operating RshGun.
+            cuInfo.useAction = info.useAction;
+            if (vanillaItems.Contains(id))
+                CCLWorkaround.itemsToDesc[id] = (info.description, info.fullName);
+        }
+
+        public static void RegisterMagCuCore(string id, ItemInfo info, Sprite sprite, MagJson prop)
+        {
+            Plugin.MagazineDefinitions[id] = prop;
+            CUCoreLib.Data.CustomItemInfo cuInfo = new CUCoreLib.Data.CustomItemInfo
+            {
+                category = info.category,
+                slotRotation = info.slotRotation,
+                usable = info.usable,
+                usableOnLimb = info.usableOnLimb,
+                destroyAtZeroCondition = info.destroyAtZeroCondition,
+                combineable = info.combineable,
+                weight = info.weight,
+                scaleWeightWithCondition = info.scaleWeightWithCondition,
+                useAction = info.useAction,
+                value = info.value,
+                rec = info.rec,
+                tags = info.tags,
+                fullName = info.fullName,
+                description = info.description,
+
+                SpawnComponents = new List<string> { "NewFirearms.RshMag, NewFirearms.dll" }
+            };
+            cuInfo.SetTags();
+            CUCoreLib.Registries.ItemRegistry.Register(id, cuInfo, sprite, prop.spawnFrequency);
+        }
+
+        public static void RegisterRoundCuCore(string id, ItemInfo info, Sprite sprite)
+        {
+            CUCoreLib.Registries.ItemRegistry.Register(id, info, sprite);
+        }
+
+        internal static void RegisterRoundCuCore(string id, ItemInfo info, Sprite sprite, float spawnFrequency)
+        {
+            CUCoreLib.Registries.ItemRegistry.Register(id, info, sprite, spawnFrequency);
         }
     }
 }
