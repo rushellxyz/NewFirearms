@@ -487,9 +487,6 @@ namespace NewFirearms
                 if (!CanFitMag(newMag.prop))
                     return false;
 
-                if (GunMinigame.Plugin.useMinigame) // TODO MP Sync
-                    GunMinigame.MinigameManager.GetOrAddInstance().AddHandlingImpulse(1f, 1f);
-
                 Sound.Play(prop.loadMagAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 mag = newMag.it.id;
                 if (prop.feedType == FeedKind.Battery)
@@ -505,6 +502,7 @@ namespace NewFirearms
                 UpdateSprite();
                 if (Plugin.MultiplayerActive)
                     SyncIfHost();
+                NotifyLoadHandling(actor, magazine: true);
                 return true;
             }
        else {
@@ -557,7 +555,7 @@ namespace NewFirearms
                         }
                     }
                else     return false;
-                    FinishLoadingRound(item);
+                    FinishLoadingRound(actor, item);
                     return true;
                 }
             }

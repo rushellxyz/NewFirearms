@@ -7,6 +7,31 @@ namespace NewFirearms
     // Kept off saveable components: Mono cannot reflect signatures with missing optional assemblies.
     internal static class GunNetwork
     {
+        internal const string LoadHandlingMessage = "NewFirearms_GunLoadHandling";
+
+        internal static void SendLoadHandling(RshGun gun, Body actor, bool magazine)
+        {
+            if (!Together.ScavPlayer.BodyToPlayerDict.ContainsKey(actor) ||
+                !(gun.GetMpTracker(false) is Together.SyncInfoGameObjectTracker tracker))
+                return;
+
+            var writer = Together.Multiplayer.CreateNamedWriter(LoadHandlingMessage);
+            writer.Put((ushort)tracker.syncId);
+            writer.Put(magazine);
+            var clientId = Together.ScavPlayer.GetClientIdFromBody(actor);
+            Together.Net.Server_SendToClients(LiteNetLib.DeliveryMethod.ReliableOrdered, in writer, clientId);
+        }
+
+        internal static void ReceiveLoadHandling(LiteNetLib.Utils.NetDataReader reader)
+        {
+            if (reader.AvailableBytes < 3) return;
+            var syncId = new Together.knetid(reader.GetUShort());
+            bool magazine = reader.GetBool();
+            if (Together.ItemSync.TryGetItem(syncId, out _, out var item) &&
+                item != null && item.TryGetComponent<RshGun>(out var gun))
+                gun.PlayLoadHandlingImpulse(magazine);
+        }
+
         public static void ReceiveEjectionVisual(LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);

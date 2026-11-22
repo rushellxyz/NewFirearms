@@ -23,6 +23,24 @@ namespace NewFirearms
             if (requestedRackState == state) requestedRackState = null;
         }
 
+        private void NotifyLoadHandling(Body actor, bool magazine)
+        {
+            if (actor == null) return;
+            if (PlayerCamera.main != null && actor == PlayerCamera.main.body)
+                PlayLoadHandlingImpulse(magazine);
+            else if (Plugin.MultiplayerActive && Plugin.IsHost())
+                GunNetwork.SendLoadHandling(this, actor, magazine);
+        }
+
+        internal void PlayLoadHandlingImpulse(bool magazine)
+        {
+            var manager = GunMinigame.MinigameManager.instance;
+            if (!GunMinigame.Plugin.useMinigame || manager == null || !ReferenceEquals(manager.gun, this))
+                return;
+
+            float strength = magazine ? 1f : 0.5f;
+            manager.AddHandlingImpulse(strength, strength);
+        }
 
         internal sbyte ChamberSpentAmmo
         {

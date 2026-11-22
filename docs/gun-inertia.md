@@ -29,6 +29,8 @@ X is a fraction of minigame window width and Y a fraction of its height, measure
 
 The former `xInertia`/`rotInertia` API fields were removed. Call `AddHandlingImpulse(horizontal, vertical)` for hand-side disturbances or `AddRecoil(knockback, muzzleRise)` for muzzle-side impulses. The bundled plugin and minigame must be updated together.
 
+In Together, the host confirms each successful magazine insertion or single-round load and sends the handling impulse to the player who performed it. The impulse plays when the corresponding gun is shown in that player's minigame. Handling impulses travel separately from periodic gun state snapshots.
+
 Validation uses the production solver and Unity vector math outside the game: directional responses at each anchor, fixed anchor separation, return to rest, heavy/light recoil, braking, bounded sustained fire, pose reconstruction, sustained bolt overpull/release, point-contact torque, extreme pulls and comparison at 30/60/144 FPS. Live playtesting is still needed to tune the feel and individual anchor positions.
 
 The fanny-pack zipper also swings from footsteps, body acceleration/braking, jumps/landings, angular motion, and recoil. A damped angular spring integrates in small time steps, settles after movement stops, and freezes on pause. Hidden/trauma-rig zipper visuals and teleports reset the sway.

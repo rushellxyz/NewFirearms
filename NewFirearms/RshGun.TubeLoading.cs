@@ -43,19 +43,18 @@ namespace NewFirearms
             source.RemoveTopRound();
             source.UpdateSprite();
             if (Plugin.MultiplayerActive) source.SyncIfHost();
-            FinishLoadingRound();
+            FinishLoadingRound(actor);
             return true;
         }
 
-        private void FinishLoadingRound(Item looseRound = null)
+        private void FinishLoadingRound(Body actor, Item looseRound = null)
         {
             Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-            if (GunMinigame.Plugin.useMinigame)
-                GunMinigame.MinigameManager.GetOrAddInstance().AddHandlingImpulse(0.5f, 0.5f);
             if (looseRound != null)
                 UnityEngine.Object.Destroy(looseRound.gameObject);
             UpdateSprite();
             if (Plugin.MultiplayerActive) SyncIfHost(4);
+            NotifyLoadHandling(actor, magazine: false);
         }
     }
 }
