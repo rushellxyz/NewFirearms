@@ -16,6 +16,11 @@ hit claims do not determine damage. A single early shot can wait for the host's
 cycle to finish, without increasing the fire rate. Native shot relays provide
 visuals to other clients; peers with NewFirearms keep the custom visual path.
 
+If a client has NewFirearms but lacks the local definition for a particular gun,
+the native item can still receive standard Together state. The client skips
+NewFirearms snapshots for guns without a ready local `RshGun`. This also covers
+snapshots that arrive before the item spawns, since the host sends state periodically.
+
 Supported interactions:
 
 - Shooting with an already loaded gun, including ordinary automatic fire.

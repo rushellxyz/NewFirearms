@@ -43,12 +43,12 @@ namespace NewFirearms
         }
 
         public static void ClientSync(LiteNetLib.Utils.NetDataReader reader)
-        { // the var is evil
+        {
             reader.Get(out ushort syncId);
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var _, out var it))
-                throw new Exception("[NewFirearms] Recived gun sync info for non-registred gun!");
-            if (!it.TryGetComponent<RshGun>(out var rshGun))
-                throw new Exception("[NewFirearms] Gun sync packet refering to item without RshGun component :tourniqet:");
+            // Snapshots can race item creation or target a gun represented by GunScript on this client.
+            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out _, out var it) ||
+                it == null || !it.TryGetComponent<RshGun>(out var rshGun) || rshGun.prop == null)
+                return;
             if (!rshGun.AcceptSnapshot(reader.GetUInt())) return;
             rshGun.existed = true;
             bool shouldUpdateSprite = false;
@@ -225,32 +225,26 @@ namespace NewFirearms
         public static void ReceiveShoot(LiteNetLib.Utils.NetDataReader reader)
         {
             reader.Get(out ushort syncId);
-            RshGun rshGun = null;
-            if (!Together.ItemSync.TryGetItem(new Together.knetid(syncId), out var si, out var _1))
-                UnityEngine.Debug.LogWarning("[NewFirearms] Recived shoot notify for non-registred item! Are you missing addon?");
-       else if (!si.IsItem())
-                UnityEngine.Debug.LogWarning("[NewFirearms] Shoot notify refering to not item :tourniqet:");
-       else if (!si.go.TryGetComponent<RshGun>(out rshGun))
-                UnityEngine.Debug.LogWarning("[NewFirearms] Shoot notify refering to item without RshGun component :tourniqet:");
-
             reader.Get(out float knockback);
             reader.Get(out float muzzleRise);
             reader.Get(out bool ragdollRecoil);
-            if (null != rshGun)
-                Sound.Play(rshGun.prop.shootAudio, rshGun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(si.item), pitchShift: false);
-            if (null != rshGun && null != rshGun.transform.parent && rshGun.transform.parent.TryGetComponent<InventorySlot>(out InventorySlot slot))
+            if (Together.ItemSync.TryGetItem(new Together.knetid(syncId), out _, out var item) &&
+                item != null && item.TryGetComponent<RshGun>(out var gun) && gun.prop != null)
             {
-                NativeGameFeatures.UnlockFiringAchievement(slot.body);
-                float num = slot.body.isRight ? 1f : (-1f);
-                slot.body.rb.velocity -= (Vector2)rshGun.transform.right * num * knockback;
-                slot.body.lastTimeStepVelocity -= (Vector2)rshGun.transform.right * num * knockback;
-                slot.body.armsAnimator.SetFloat("gunangle", slot.body.armsAnimator.GetFloat("gunangle") + muzzleRise * RshGun.MUZZLE_RISE_MODIFIER);
-                if (PlayerCamera.main.body == slot.body && GunMinigame.Plugin.useMinigame)
-                    GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(knockback, muzzleRise);
-                if (ragdollRecoil)
-                    slot.body.Ragdoll();
+                Sound.Play(gun.prop.shootAudio, gun.transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(item), pitchShift: false);
+                if (gun.transform.parent != null && gun.transform.parent.TryGetComponent<InventorySlot>(out var slot))
+                {
+                    NativeGameFeatures.UnlockFiringAchievement(slot.body);
+                    float direction = slot.body.isRight ? 1f : -1f;
+                    slot.body.rb.velocity -= (Vector2)gun.transform.right * direction * knockback;
+                    slot.body.lastTimeStepVelocity -= (Vector2)gun.transform.right * direction * knockback;
+                    slot.body.armsAnimator.SetFloat("gunangle", slot.body.armsAnimator.GetFloat("gunangle") + muzzleRise * RshGun.MUZZLE_RISE_MODIFIER);
+                    if (PlayerCamera.main.body == slot.body && GunMinigame.Plugin.useMinigame)
+                        GunMinigame.MinigameManager.GetOrAddInstance().AddRecoil(knockback, muzzleRise);
+                    if (ragdollRecoil)
+                        slot.body.Ragdoll();
+                }
             }
-       else     UnityEngine.Debug.LogWarning("[NewFirearms] Host says that gun is being shot, but im unable to find who shoots it, ummm, okay ig???");
             ShootManager.DrawVisuals(ShootVisuals.Deserialize(ref reader));
         }
 
