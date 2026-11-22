@@ -181,7 +181,7 @@ namespace NewFirearms
                     NetworkAction.DenyAction(plr, ModLocale.Get("newfirearms.denied.gun.roundOutOfReach"), canBeFixedWithSwitchingStrictSync:true);
                     return;
                 }
-                rshGun.DragOnto(ontoIt);
+                rshGun.DragOnto(ontoIt, pb.body);
             }
        else if (3 == action)
                 rshGun.RemoveMag(pb.body);

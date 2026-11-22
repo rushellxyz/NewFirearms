@@ -469,9 +469,15 @@ namespace NewFirearms
             RemoveMag(null);
         }
 
-        public bool DragOnto(Item item)
+        // Keep the DragOnto() for dependices
+        [Obsolete()]
+        public bool DragOnto(Item item) => DragOnto(item, PlayerCamera.main?.body);
+
+        public bool DragOnto(Item item, Body actor)
         {
-            if (IsJammed) return false;
+            if (IsJammed || item == null) return false;
+            if (prop?.feedType == FeedKind.Tube && item.TryGetComponent<RshMag>(out var source))
+                return LoadTubeFromMagazine(item, source, actor);
             if (Plugin.MultiplayerActive && RequestHostIfClient(2, item))
                 return true;
             if (item.TryGetComponent<RshMag>(out var newMag))
@@ -516,22 +522,11 @@ namespace NewFirearms
                         rounds[0] = i;
                     }
                else if (FeedKind.Tube == prop.feedType)
-                    { // TODO for tube feed, option to shift rounds in tube forward, like it does irl
-                        int begin = 1;
-                        if (racked)
-                            begin = 0;
-                        bool inserted = false;
-                        for (int j = begin; j < rounds.Count(); j++)
-                        {
-                            if (-2 != rounds[j])
-                                continue;
-
-                            rounds[j] = i;
-                            inserted = true;
-                            break;
-                        }
-                        if (!inserted)
+                    {
+                        int slot = FindTubeLoadSlot();
+                        if (slot < 0)
                             return false;
+                        rounds[slot] = i;
                     }
                else if (racked)
                     {
@@ -562,14 +557,7 @@ namespace NewFirearms
                         }
                     }
                else     return false;
-                    Sound.Play(prop.loadRoundAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
-
-                    if (GunMinigame.Plugin.useMinigame) // TODO MP Sync
-                        GunMinigame.MinigameManager.GetOrAddInstance().AddHandlingImpulse(0.5f, 0.5f);
-                    UnityEngine.Object.Destroy(item.gameObject);
-                    UpdateSprite();
-                    if (Plugin.MultiplayerActive)
-                        SyncIfHost(4);
+                    FinishLoadingRound(item);
                     return true;
                 }
             }

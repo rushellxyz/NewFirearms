@@ -162,11 +162,16 @@ namespace NewFirearms
                 round = prop.ammoTypes[rounds[0]];
        else     UnityEngine.Debug.LogWarning("Removing casing from magazine :hmm:");
             body.AutoPickUpItem(Utils.Create(round, transform.position, 0f).GetComponent<Item>());
-            rounds[0] = -2;
-            Plugin.ShiftLeft(ref rounds);
+            RemoveTopRound();
             UpdateSprite();
             if (Plugin.MultiplayerActive)
                 SyncIfHost(2);
+        }
+
+        internal void RemoveTopRound()
+        {
+            rounds[0] = -2;
+            Plugin.ShiftLeft(ref rounds);
         }
 
         public int TotalRounds()

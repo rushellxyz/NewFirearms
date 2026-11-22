@@ -45,7 +45,7 @@ namespace NewFirearms
             // Call the authoritative loaders directly. Body.CombineItems would
             // re-enter Together's prediction/announcement path.
             bool loaded = gun != null
-                ? gun.prop != null && gun.rounds != null && gun.rounds.Count > 0 && gun.DragOnto(source)
+                ? gun.prop != null && gun.rounds != null && gun.rounds.Count > 0 && gun.DragOnto(source, body)
                 : magazine.prop != null && magazine.DragOnto(source);
             if (loaded) cooldown.Until = Time.unscaledTime + 0.25f;
             return loaded;

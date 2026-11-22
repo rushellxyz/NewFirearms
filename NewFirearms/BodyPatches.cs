@@ -41,12 +41,21 @@ namespace NewFirearms
                 __result = NewDescentsCompatibility.CanLoad(it1, it2);
                 return false;
             }
-            if (it1.TryGetComponent<RshGun>(out var rshGun) && ((it2.TryGetComponent<RshMag>(out var rshMag) && rshGun.CanFitMag(rshMag.prop)) || rshGun.prop.feedType != FeedKind.Battery && rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)) )
+            if (it1.TryGetComponent<RshGun>(out var rshGun) && rshGun.prop != null)
             {
-                __result = true;
-                return false;
+                if (it2.TryGetComponent<RshMag>(out var rshMag) && rshGun.prop.feedType == FeedKind.Tube)
+                {
+                    __result = rshGun.CanLoadTubeFromMagazine(rshMag, __instance);
+                    return false;
+                }
+                if ((rshMag != null && rshGun.CanFitMag(rshMag.prop)) ||
+                    (rshGun.prop.feedType != FeedKind.Battery && rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)))
+                {
+                    __result = true;
+                    return false;
+                }
             }
-        if (it1.TryGetComponent<RshMag>(out var rshMagg) && rshMagg.CanAccept(it2))
+            if (it1.TryGetComponent<RshMag>(out var rshMagg) && rshMagg.CanAccept(it2))
             {
                 __result = true;
                 return false;
@@ -73,7 +82,7 @@ namespace NewFirearms
             }
             if (it1.TryGetComponent<RshGun>(out var rshGun))
             {
-                rshGun.DragOnto(it2);
+                rshGun.DragOnto(it2, __instance);
                 return false;
             }
             if (it1.TryGetComponent<RshMag>(out var rshMag))

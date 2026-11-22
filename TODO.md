@@ -10,7 +10,6 @@ TODO List - Agents stay away unless stated otherwise
  - Make guards use various weapons, or at least drop loaded
  - Escape ending: and may be using other weapons too?
  - Marksmen animation speed depends on concustions
- - Milky quick load from box
  - Port that thing when you can shoot with brain damage onto new firearms
  - High ping (200+) = cant rack?
  - Clients cant load magazines from ground?
