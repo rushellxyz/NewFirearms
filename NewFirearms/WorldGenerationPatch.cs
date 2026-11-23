@@ -64,7 +64,7 @@ namespace NewFirearms
                             it.condition = UnityEngine.Random.value;
                 else        UnityEngine.Debug.LogError("[NewFirearms] Utils.Create in broken pods distribution returned a GameObject without Item component! Cpu Optimization doing funny business?");
                     }
-               else     UnityEngine.Debug.LogError("[NewFirearms] Utils.Create in broken pods distribution returned null! Cpu Optimization doing funny business?")
+               else     UnityEngine.Debug.LogError("[NewFirearms] Utils.Create in broken pods distribution returned null! Cpu Optimization doing funny business?");
                 }
                 for (int l = 0; l < 3; l++)
                 {
