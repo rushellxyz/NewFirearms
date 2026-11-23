@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GameDirectory Condition="'$(GameDirectory)' == '' and '$(CU_PATH)' != ''">$(CU_PATH)</GameDirectory>
+    <GameDirectory Condition="'$(GameDirectory)' == '' and Exists('/home/rushell/Documents/CU/CasualtiesUnknown_Data/Managed/Assembly-CSharp.dll')">/home/rushell/Documents/CU/</GameDirectory>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="mscorlib" Private="false">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard" Private="false">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp" Private="false">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" Private="false">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine" Private="false">
+      <HintPath>$(GameDirectory)/CasualtiesUnknown_Data/Managed/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx" Private="false">
+      <HintPath>$(GameDirectory)/BepInEx/core/BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony" Private="false">
+      <HintPath>$(GameDirectory)/BepInEx/core/0Harmony.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -26,3 +26,4 @@ smth like this
 
 The normal description is on nexus
 
+Because you cant attach multiple archives on thuderstore i come up with ~~костыль~~ newfirearmsmagae

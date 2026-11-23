@@ -2,6 +2,8 @@ GunMinigame/bin/
 GunMinigame/obj/
 NewFirearms/bin/
 NewFirearms/obj/
+NewFirearmsManage/bin/
+NewFirearmsManage/obj/
 *.png~
 agentbox/
 dist/
