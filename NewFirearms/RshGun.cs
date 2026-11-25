@@ -23,23 +23,27 @@ namespace NewFirearms
         public GunJson prop;
         public bool TryGetChamberVisual(out Sprite sprite, out bool liveRound)
         {
+            int visualIndex;
+            if (prop.openBolt)
+                visualIndex = 1;
+       else     visualIndex = 0;
             sprite = null;
             liveRound = false;
-            if (prop == null || prop.feedType == FeedKind.Battery || rounds.Count == 0 ||
-                rounds[0] == -2 || IsJammed) return false;
-            liveRound = rounds[0] >= 0;
+            if (prop == null || prop.feedType == FeedKind.Battery || rounds.Count <= visualIndex ||
+                rounds[visualIndex] == -2 || IsJammed) return false;
+            liveRound = rounds[visualIndex] >= 0;
             if (liveRound)
             {
-                int index = rounds[0] + 1;
+                int index = rounds[visualIndex] + 1;
                 if (prop.minigame?.casingsSprite != null && index < prop.minigame.casingsSprite.Length)
                     sprite = prop.minigame.casingsSprite[index];
             }
             else
             {
-                if (spentAmmoTypes.TryGetValue(0, out sbyte ammo) && ammo >= 0 && ammo < prop.ammoTypes.Count)
+                if (spentAmmoTypes.TryGetValue(visualIndex, out sbyte ammo) && ammo >= 0 && ammo < prop.ammoTypes.Count)
                     sprite = prop.ammoTypes[ammo].loadedMinigameCasingSprite ?? prop.ammoTypes[ammo].loadedCasingSprite;
-                if (sprite == null && prop.minigame?.casingsSprite?.Length > 0)
-                    sprite = prop.minigame.casingsSprite[0];
+                if (sprite == null && prop.minigame?.casingsSprite?.Length > visualIndex)
+                    sprite = prop.minigame.casingsSprite[visualIndex];
             }
             return sprite != null;
         }
