@@ -61,6 +61,7 @@ namespace NewFirearms
         public float barrelOffset;
         public bool hasLaser;
         public bool hasFlashlight;
+        public bool openBolt;
 
         public string normalTexturePath;
         public string rackedTexturePath;

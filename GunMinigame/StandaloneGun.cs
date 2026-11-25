@@ -29,6 +29,7 @@ namespace GunMinigame
             PlayerCamera.main.body != null && PlayerCamera.main.body.GetItem(PlayerCamera.main.body.handSlot) == item;
 
         public bool IsRacked() => gun != null && gun.racked;
+        public bool UsesOpenBolt => false;
         public bool IsReady() => gun != null && !gun.safe && !gun.racked &&
             gun.roundInChamber == GunScript.RoundInChamber.Round;
         public byte CurrentFireMode() => gun == null || gun.safe ? (byte)0 : (byte)((int)gun.firingMode + 1);

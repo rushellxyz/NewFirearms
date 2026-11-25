@@ -12,6 +12,7 @@ namespace GunMinigame
         public string CurrentMag();
         public bool HasEmptyMagazine();
         public bool IsReady();
+        bool UsesOpenBolt { get; }
         public void SetHalfRecoil(bool active);
     }
 

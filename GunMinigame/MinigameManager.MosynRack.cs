@@ -82,7 +82,8 @@ namespace GunMinigame
 
         private void RequestMosynRack(bool target)
         {
-            if (mosynRequestedRacked.HasValue || gun.IsRacked() == target || target && IsSliderOpeningBlocked) return;
+            if (mosynRequestedRacked.HasValue || gun.IsRacked() == target ||
+                (target ? IsSliderOpeningBlocked : UsesOpenBolt)) return;
             mosynRequestedRacked = target;
             mosynRequestTime = Time.unscaledTime;
             gun.Rack();

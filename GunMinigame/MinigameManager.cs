@@ -715,7 +715,7 @@ namespace GunMinigame
             rackTrigger.gameObject.AddComponent<Button>().onClick.AddListener(() =>
             {
                 if (!active || hiden || automatedHandAction || IsAnyGameUIOpen() || !PlayerCamera.main.body.conscious) return;
-                if (info.onlyUnrackedToRacked && gun.IsRacked()) return;
+                if ((info.onlyUnrackedToRacked || UsesOpenBolt) && gun.IsRacked()) return;
                 if (IsSliderOpeningBlocked) return;
                 gun.Rack();
                 EventSystem.current.SetSelectedGameObject(null);
@@ -1140,12 +1140,13 @@ namespace GunMinigame
             handTransform.position = handPos;
             SliderHandle:
             bool racked = gun.IsRacked();
-            bool closingBlocked = info.chargingHandle && racked && gun.HasEmptyMagazine();
+            bool openBolt = UsesOpenBolt;
+            bool closingBlocked = !openBolt && info.chargingHandle && racked && gun.HasEmptyMagazine();
             if (!racked || closingBlocked || holdsSlide) chargingHandleCloseRequested = false;
             if (closingBlocked || string.IsNullOrEmpty(gun.CurrentMag()) || !racked && !holdsSlide)
                 chargingHandleReturnPending = false;
             // Removing an empty magazine does not release an already open action.
-            bool holdOpen = closingBlocked || info.chargingHandle && racked &&
+            bool holdOpen = racked && openBolt || closingBlocked || info.chargingHandle && racked &&
                 (string.IsNullOrEmpty(gun.CurrentMag()) ||
                     !chargingHandleReturnPending);
             if (racked && (!info.rackedOnlyWhenMagazineEmpty || gun.HasEmptyMagazine() || holdOpen))
@@ -1197,12 +1198,12 @@ namespace GunMinigame
                 xPos = (pointer.x - onBeginHoldSlide.x) + sliderHoldOffset.x;
                 xPos = SliderRange.Clamp(xPos, info.sliderMinimumPosition, info.sliderMaximumPosition);
                 xPos = ClampSliderForSafety(xPos);
-                if (!closingBlocked && !IsSliderOpeningBlocked && SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
+                if (!closingBlocked && !(openBolt && racked) && !IsSliderOpeningBlocked && SliderRange.ShouldToggle(xPos, racked, info.sliderMinimumPosition, info.sliderMaximumPosition, info.unrackedToRacked, info.rackedToUnracked))
                 {
                     gun.Rack();
                 }
             }
-       else if (!info.chargingHandle || holdOpen)
+       else if (openBolt || !info.chargingHandle || holdOpen)
             {
                 float target = racked ? info.rackedIdlePosition : info.unrackedIdlePosition;
                 if (closingBlocked)
@@ -1290,9 +1291,9 @@ namespace GunMinigame
                 return;
 
             if (IsSliderOpeningBlocked && (rack || info.ejectMagazineOnFullRack)) return;
-            if (rack)
+            if (rack && !(UsesOpenBolt && gun.IsRacked()))
                 StartCoroutine(AnimateMarksmanRack());
-            else if (!string.IsNullOrEmpty(gun.CurrentMag()))
+            else if (!rack && !string.IsNullOrEmpty(gun.CurrentMag()))
                 StartCoroutine(info.ejectMagazineOnFullRack
                     ? AnimateMarksmanRack(ejectMagazine: true)
                     : AnimateMarksmanMagazineRemoval());
@@ -1587,14 +1588,16 @@ namespace GunMinigame
             if (currentMag == insertedMagazineType)
                 return;
             insertedMagazineType = currentMag;
-            if (null != insertedMagazine)
-                UnityEngine.Object.Destroy(insertedMagazine);
-            if (string.IsNullOrEmpty(currentMag))
+            if (insertedMagazine != null)
+                UnityEngine.Object.Destroy(insertedMagazine.gameObject);
+            insertedMagazine = null;
+            if (string.IsNullOrEmpty(currentMag) || info.magazineSprites == null ||
+                !info.magazineSprites.TryGetValue(currentMag, out var sprite) || sprite == null)
                 return;
             insertedMagazine = new GameObject("InsertedMagazine").AddComponent<Image>();
             insertedMagazine.raycastTarget = false;
             insertedMagazine.transform.SetParent(gunBase.transform);
-            insertedMagazine.sprite = info.magazineSprites[currentMag];
+            insertedMagazine.sprite = sprite;
             if (info.resizeMagazine)
             {
                 insertedMagazine.transform.localScale = new Vector3((1.25f/2560f)*Screen.width, (1.25f/1440f)*Screen.height);
@@ -1844,6 +1847,8 @@ namespace GunMinigame
 
         internal bool IsSliderOpeningBlocked => info != null && info.locksSliderOnSafety &&
             gun != null && !gun.IsRacked() && gun.CurrentFireMode() == 0;
+
+        internal bool UsesOpenBolt => gun?.UsesOpenBolt == true;
 
         internal float ClampSliderForSafety(float position)
         {
@@ -2395,7 +2400,7 @@ namespace GunMinigame
             currentTrackedAngle = minigame.ClampSliderForSafety(currentTrackedAngle);
 
             bool racked = minigame.gun.IsRacked();
-            if (!minigame.IsSliderOpeningBlocked && SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.unrackedToRacked, minigame.info.rackedToUnracked))
+            if (!(minigame.UsesOpenBolt && racked) && !minigame.IsSliderOpeningBlocked && SliderRange.ShouldToggle(currentTrackedAngle, racked, minigame.info.sliderMinimumPosition, minigame.info.sliderMaximumPosition, minigame.info.unrackedToRacked, minigame.info.rackedToUnracked))
             {
                 minigame.gun.Rack();
                 if (minigame.info.lockOpen)

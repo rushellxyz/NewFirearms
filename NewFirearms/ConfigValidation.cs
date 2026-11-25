@@ -90,6 +90,7 @@ namespace NewFirearms
             SpawnFrequency(gun.spawnFrequency);
             Require(Enum.IsDefined(typeof(FeedKind), gun.feedType), "feedType",
                 "expected Magazine (1), Tube (2), Barrel (3), Revolver (4), or Battery (5).");
+            Require(!gun.openBolt || gun.feedType == FeedKind.Magazine, "openBolt", "requires a detachable magazine.");
             Require(!gun.needRetract || gun.feedType == FeedKind.Battery, "needRetract", "requires feedType 5 (battery magazine).");
             Require(gun.batteryDrainPerRetract >= 0f && gun.batteryDrainPerRetract <= 1f,
                 "batteryDrainPerRetract", "must be between 0 and 1 (fraction of full cell charge per manual retraction).");

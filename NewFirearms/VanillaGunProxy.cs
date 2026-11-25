@@ -109,7 +109,18 @@ namespace NewFirearms
             int rounds = gun.rounds.Skip(1).Count(round => round >= 0);
             var chamber = gun.rounds[0] >= 0 ? GunScript.RoundInChamber.Round
                 : gun.rounds[0] == -1 ? GunScript.RoundInChamber.Casing : GunScript.RoundInChamber.None;
-            if (gun.prop.feedType == FeedKind.Battery)
+            if (gun.UsesOpenBolt && !gun.IsJammed)
+            {
+                // The native client requests shots from a closed bolt with a chambered round.
+                racked = !gun.racked;
+                chamber = GunScript.RoundInChamber.None;
+                if (gun.racked && (gun.rounds[0] >= 0 || hasMag && rounds > 0))
+                {
+                    chamber = GunScript.RoundInChamber.Round;
+                    if (gun.rounds[0] < 0) rounds--;
+                }
+            }
+            else if (gun.prop.feedType == FeedKind.Battery)
             {
                 int shots = Mathf.FloorToInt((BatteryCells.Charge(gun.magazineBatteries) + 0.000001f) / gun.prop.batteryDrainPerShot);
                 chamber = shots > 0 ? GunScript.RoundInChamber.Round : GunScript.RoundInChamber.None;

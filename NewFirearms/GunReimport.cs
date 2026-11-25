@@ -102,7 +102,7 @@ namespace NewFirearms
         internal static bool HasCompatibleState(GunJson previous, GunJson next)
             => next != null && previous.feedType == next.feedType &&
                 previous.internalCapacity == next.internalCapacity && previous.hasLaser == next.hasLaser &&
-                previous.needRetract == next.needRetract && next.ammoTypes != null &&
+                previous.needRetract == next.needRetract && previous.openBolt == next.openBolt && next.ammoTypes != null &&
                 previous.ammoTypes.Select(ammo => ammo.round).SequenceEqual(next.ammoTypes.Select(ammo => ammo?.round)) &&
                 (previous.magazineType ?? new List<string>()).SequenceEqual(next.magazineType ?? new List<string>());
 

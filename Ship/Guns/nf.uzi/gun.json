@@ -147,9 +147,11 @@
         },
     ],
     "desiredGasTime": 0.08,
-    "fireModes": [ 3 ],
+    "fireModes": [ 0, 2, 3 ],
     "magazineType": [ "glock17", "smg", ],
     "barrelOffset": 1,
+    "openBolt": true,
+    "spawnUnracked": true,
 
     "normalTexturePath": "normal",
     "rackedTexturePath": "racked",
@@ -174,10 +176,10 @@
     "bulletsSpritesPath": [ "COPY__Resources/bulletEmpty", "COPY__Resources/bulletCasing", "COPY__Guns/nf.glock18/9mmroundIcon", "COPY__Guns/nf.glock18/9mmhollowIcon", "COPY__Guns/nf.glock18/9mmvenomusIcon" ],
     "minigame":
     {
-        "mainExperimentPath": "uiSpriteExpie",
-        "mainMilkyTriggerOnPath": "uiSpriteExpie",
-        "mainMilkyTriggerOffPath": "uiSpriteMilkyOff",
-        "mainDunePath": "uiSpriteDune",
+        "mainExperimentPath": "uiSpriteOn",
+        "mainMilkyTriggerOnPath": "uiSpriteOn",
+        "mainMilkyTriggerOffPath": "uiSpriteOff",
+        "mainDunePath": "uiSpriteOn",
         "sliderFrontPath": "uiSliderFront",
         "sliderBackPath": "uiSliderBack",
         "frontSliderInvisble": true,
@@ -194,7 +196,7 @@
         "magReleasePath": "uiMagRelease",
         "magazinePaths": { "nf.smgmag": "COPY__Guns/nf.mp5/uiSmgmag" },
         "ammosInMagazinePaths": { "nf.smgmag": [ "COPY__Guns/nf.mp5/uiSmgmag9mmround", "COPY__Guns/nf.mp5/uiSmgmag9mmhollow", "COPY__Guns/nf.mp5/uiSmgmag9mmvenomus" ] },
-        "magazineXPosition": -0.064,
+        "magazineXPosition": -0.066,
         "magazineYPosition": -0.034,
         "magazineXSpeed": -0.0,
         "magazineYSpeed": -0.525,
@@ -203,10 +205,14 @@
         "maximumMagazines": 4,
         "magazineDragPath": "uiDragTrigger",
         "casingXPosition": -0.061,
-        "casingYPosition": 0.055,
+        "casingYPosition": 0.054,
         "casingsPath": [ "COPY__Guns/nf.glock18/uiEject9mmroundCasing", "COPY__Guns/nf.glock18/uiEject9mmround", "COPY__Guns/nf.glock18/uiEject9mmhollow", "COPY__Guns/nf.glock18/uiEject9mmvenomus" ],
         "resizeMagazine": true,
         "roundHeight": 2.5,
+        "chargingHandle": true,
+        "fireTogglePath": "uiFireToggleTrigger",
+        "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi", "uiFireModeFull" ],
+        "backLayerPath": "uiBackLayer",
     }
 
 }

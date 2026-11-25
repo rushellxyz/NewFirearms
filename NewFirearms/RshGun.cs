@@ -135,14 +135,17 @@ namespace NewFirearms
             }
             if (gasTime <= 0f)
             {
+                if (UsesOpenBolt && openBoltCycling) OpenBoltAfterShot();
                 UpdateNativeShot();
                 return;
             }
             gasTime -= Time.deltaTime;
+            if (UsesOpenBolt && openBoltCycling && gasTime <= OpenBoltCycleTime * 0.5f)
+                OpenBoltAfterShot();
             if (gasTime <= 0f)
             {
                 gasTime = 0f;
-                if (prop.feedType != FeedKind.Battery)
+                if (!UsesOpenBolt && prop.feedType != FeedKind.Battery)
                 {
                     if (FeedKind.Revolver == prop.feedType || prop.feedType == FeedKind.Barrel && fireMode == BurstFireMode)
                         RotateChambers();
@@ -212,6 +215,7 @@ namespace NewFirearms
 
         public bool IsReady()
         {
+            if (UsesOpenBolt) return CanReleaseOpenBolt() && FindOpenBoltRound() >= 0;
             return !needsRetraction && !IsJammed && (prop.feedType == FeedKind.Battery || !racked) && 0 != fireMode && rounds.Count > 0 &&
                 (prop.feedType == FeedKind.Battery ? HasBatteryPower : 0 <= rounds[0]) && 0.005f < it.condition;
         }
@@ -222,8 +226,9 @@ namespace NewFirearms
                 body = PlayerCamera.main.body;
             Vector2 barrelPosition = GetShotPosition();
             shooter = body;
-            if (!IsReady())
+            if (!(UsesOpenBolt ? ReleaseOpenBolt() : IsReady()))
             {
+                if (UsesOpenBolt && IsJammed) return false;
                 Sound.Play(prop.unshootAudio, transform.position, twoDimensional: PlayerCamera.main.body.HoldingItem(it));
                 if (Plugin.MultiplayerActive)
                     SyncIfHost(2);
@@ -280,7 +285,13 @@ namespace NewFirearms
                 spentAmmoTypes[0] = rounds[0];
                 rounds[0] = -1;
             }
-            if (1 == fireMode)
+            if (UsesOpenBolt)
+            {
+                openBoltCycling = true;
+                gasTime = OpenBoltCycleTime;
+                if (Plugin.MultiplayerActive) SyncIfHost();
+            }
+            else if (1 == fireMode)
             {
                 gasTime = 0f;
                 if (Plugin.MultiplayerActive)
@@ -308,6 +319,7 @@ namespace NewFirearms
 
         public void Rack(bool manual, Body actor)
         {
+            if (UsesOpenBolt && (!manual || racked || openBoltCycling)) return;
             if (prop.feedType == FeedKind.Battery)
             {
                 if (!manual || !prop.needRetract) return;
@@ -496,7 +508,7 @@ namespace NewFirearms
                 UnityEngine.Object.Destroy(item.gameObject);
                 // окак
                 // Release the open action on the host, even when the minigame is hidden or disabled.
-                if (prop.feedType != FeedKind.Battery && racked && prop.minigame?.closeOnMagazineInsert == true &&
+                if (!UsesOpenBolt && prop.feedType != FeedKind.Battery && racked && prop.minigame?.closeOnMagazineInsert == true &&
                     !HasEmptyMagazine())
                     Rack(manual: false);
                 UpdateSprite();
@@ -515,7 +527,7 @@ namespace NewFirearms
 
                     if (FeedKind.Magazine == prop.feedType)
                     {
-                        if (!racked || -2 != rounds[0])
+                        if (UsesOpenBolt || !racked || -2 != rounds[0])
                             return false;
                         rounds[0] = i;
                     }

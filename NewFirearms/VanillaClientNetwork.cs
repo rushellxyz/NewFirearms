@@ -172,6 +172,10 @@ namespace NewFirearms
             {
                 if (!target) gun.Rack(manual: true, actor: body);
             }
+            else if (gun.UsesOpenBolt)
+            {
+                if (!target) gun.Rack(manual: true, actor: body);
+            }
             else if (gun.racked != target && (target || gun.gasTime <= 0f))
                 gun.Rack(manual: true, actor: body);
             gun.SyncIfHost();

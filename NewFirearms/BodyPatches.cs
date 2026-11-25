@@ -49,7 +49,8 @@ namespace NewFirearms
                     return false;
                 }
                 if ((rshMag != null && rshGun.CanFitMag(rshMag.prop)) ||
-                    (rshGun.prop.feedType != FeedKind.Battery && rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)))
+                    (!rshGun.UsesOpenBolt && rshGun.prop.feedType != FeedKind.Battery &&
+                        rshGun.prop.ammoTypes.Any(ammo => ammo.round == it2.id)))
                 {
                     __result = true;
                     return false;

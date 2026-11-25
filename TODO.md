@@ -13,3 +13,4 @@ TODO List - Agents stay away unless stated otherwise
  - Port that thing when you can shoot with brain damage onto new firearms
  - High ping (200+) = cant rack?
  - Clients cant load magazines from ground?
+ - When cant combine mag and gun because, e.g. gun already have a mag

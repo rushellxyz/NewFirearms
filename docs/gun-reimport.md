@@ -25,7 +25,7 @@ are also reimported.
 Ordinary reimport preserves ammunition, condition, attachments' state and action
 position. If the selected firing mode was removed, the first configured mode is
 selected. Existing instances must keep the same `feedType`, `internalCapacity`,
-ammo IDs and their order, `magazineType`, `hasLaser`, and `needRetract`.
+ammo IDs and their order, `magazineType`, `hasLaser`, `needRetract`, and `openBolt`.
 
 Use `--destroy` to bypass those structural restrictions. After JSON validation
 and asset preparation succeed, **all scene instances of that gun ID are deleted**,
