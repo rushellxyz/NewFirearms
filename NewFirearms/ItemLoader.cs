@@ -746,6 +746,7 @@ namespace NewFirearms
                 throw new InvalidDataException($"Could not decode PNG file '{path}'.");
             }
             texture.filterMode = FilterMode.Point;
+            GunMinigame.LoadedAssetMemory<Texture>.Track(texture);
             return texture;
         }
 

@@ -1,5 +1,9 @@
 {
   "other": {
+    "newfirearms.command.memory.description": "Show the runtime memory used by textures and audio clips loaded from disk by New Firearms and Gun Minigame.",
+    "newfirearms.command.memory.textures": "Textures ({0:N0}) — {1:N2} MiB ({2:N0} bytes)",
+    "newfirearms.command.memory.audio": "Audio clips ({0:N0}) — {1:N3} MiB estimated 32-bit PCM ({2:N0} bytes), {3:N0} bytes reported by Unity Profiler",
+    "newfirearms.command.memory.total": "Unity Profiler total — {0:N2} MiB ({1:N0} bytes)",
     "newfirearms.command.reload.description": "Reload a gun's JSON, sprites and audio from disk: nf_reload [id] [--destroy]. --destroy removes existing guns to allow structural changes. Single-player only. May corrupt your save! For development use only. Restart the game afterwards",
     "newfirearms.command.reload.usage": "Usage: nf_reload [registered gun id] [--destroy]. Without an id, hold a NewFirearms gun in your leading hand.",
     "newfirearms.command.reload.multiplayer": "Doesn't work in multiplayer",

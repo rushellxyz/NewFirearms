@@ -103,6 +103,7 @@ namespace NewFirearms
                         return;
                     }
 
+                    GunMinigame.LoadedAssetMemory<AudioClip>.Track(clip);
                     setClip(clip);
                 }
             }
