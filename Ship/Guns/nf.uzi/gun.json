@@ -213,6 +213,8 @@
         "fireTogglePath": "uiFireToggleTrigger",
         "fireModePaths": [ "uiFireModeSafe", "", "uiFireModeSemi", "uiFireModeFull" ],
         "backLayerPath": "uiBackLayer",
+        "grabTrigger": "uiGrabTrigger",
+        "grabType": "Flat",
     }
 
 }
