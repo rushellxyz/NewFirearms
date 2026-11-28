@@ -215,6 +215,7 @@
         "backLayerPath": "uiBackLayer",
         "grabTrigger": "uiGrabTrigger",
         "grabType": "Flat",
+        "independentFrontSlider": true
     }
 
 }

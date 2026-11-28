@@ -98,18 +98,16 @@ namespace GunMinigame
         {
             Vector2 current = sliderFrontImage.transform.localPosition;
             float x = holdsSlide ? mosynMotion.X
-                : SliderAnimation.Move(current.x, mosynMotion.X, Time.deltaTime);
+                : SliderAnimation.Move(BoltSlider.localPosition.x, mosynMotion.X, Time.deltaTime);
             float y = SliderAnimation.Move(current.y, mosynMotion.LockedDown ? 0f : MosynLift, Time.deltaTime);
-            SetMosynSliderPosition(new Vector2(x, y));
+            SetMosynSliderPosition(new Vector2(x, y), driven: holdsSlide);
         }
 
-        private void SetMosynSliderPosition(Vector2 position)
+        private void SetMosynSliderPosition(Vector2 position, bool driven = false)
         {
-            sliderFrontImage.transform.localPosition = position;
-            sliderBackImage.transform.localPosition = new Vector2(position.x, 0f);
+            SetSliderPosition(position, driven);
             sliderFrontImage.transform.localRotation = Quaternion.identity;
             sliderBackImage.transform.localRotation = Quaternion.identity;
-            sliderLastXPos = position.x;
         }
 
         private IEnumerator AnimateMosynRack(bool ejectMagazine)
@@ -159,7 +157,13 @@ namespace GunMinigame
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                SetMosynSliderPosition(Vector2.Lerp(start, target, SliderAnimation.Ease(elapsed / duration)));
+                Vector2 previousGrip = info.independentFrontSlider ? SliderPointOnGun(gripPoint) : Vector2.zero;
+                SetMosynSliderPosition(Vector2.Lerp(start, target, SliderAnimation.Ease(elapsed / duration)), driven: true);
+                if (info.independentFrontSlider)
+                {
+                    Vector2 grip = SliderPointOnGun(gripPoint);
+                    AddSliderImpulse(grip - previousGrip, grip);
+                }
                 handPos = sliderFrontImage.transform.TransformPoint(gripPoint);
                 handTransform.position = handPos;
                 yield return null;

@@ -75,10 +75,9 @@ namespace GunMinigame
                     ResetOutsidePump();
                 hadRacked = true;
             }
-            sliderFrontImage.transform.localPosition = new Vector3(position, 0f);
-            sliderBackImage.transform.localPosition = new Vector3(position, 0f);
-            AddSliderImpulse(new Vector2(position - sliderLastXPos, 0f));
-            sliderLastXPos = position;
+            float previousX = info.independentFrontSlider ? sliderFrontImage.transform.localPosition.x : sliderLastXPos;
+            SetSliderPosition(new Vector2(position, 0f), driven: true);
+            AddSliderImpulse(new Vector2(position - previousX, 0f));
             DrawPumpGuide(progress);
             if (outsidePumpOpened && !gun.IsRacked() && !outsidePumpRequest.HasValue && progress <= 0.02f)
                 ResetOutsidePump();

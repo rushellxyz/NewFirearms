@@ -91,13 +91,18 @@ namespace GunMinigame
             //handTransform.rotation = sliderFrontImage.transform.rotation * sliderHandRotationOffset;
         }
 
-        internal Vector2 SliderGripPoint => gunBase.transform.InverseTransformPoint(
-            sliderFrontImage.transform.TransformPoint(sliderGripActive ? sliderGripLocalPoint : Vector2.zero));
+        internal Vector2 SliderGripPoint => SliderPointOnGun(sliderGripActive ? sliderGripLocalPoint : Vector2.zero);
+
+        private Vector2 SliderPointOnGun(Vector3 localPoint) => gunBase.transform.InverseTransformPoint(
+            sliderFrontImage.transform.TransformPoint(localPoint));
 
         internal void AddSliderImpulse(Vector2 pixels)
+            => AddSliderImpulse(pixels, SliderGripPoint);
+
+        private void AddSliderImpulse(Vector2 pixels, Vector2 gripPoint)
         {
             Vector2 impulse = maskBase.transform.InverseTransformVector(gunBase.transform.TransformVector(pixels));
-            inertia.ImpulseAtPoint(SliderGripPoint / Mathf.Max(size.x, 1f), impulse / Mathf.Max(size.x, 1f) * 1.5f);
+            inertia.ImpulseAtPoint(gripPoint / Mathf.Max(size.x, 1f), impulse / Mathf.Max(size.x, 1f) * 1.5f);
         }
 
         private void UpdateSliderPull()
